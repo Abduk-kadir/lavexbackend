@@ -48,17 +48,12 @@ const invoiceSchema=mongoose.Schema({
 
     },
     poNo:{
-        type:String,     
-        validate: {
-         validator: function(v) {
-            console.log('po no is',v)
-            
-          return true
-         },
-         message: props => `${props.value}  please provide a valid email!`
+        type:String,
+        unique:true,
+        required:[true,'po no is required']     
+        
        },
-        required:[true,'po number is required'],
-    },
+       
     cashAccounting:{
         type:Boolean,
         required:[true,'cashaccounting is required']
