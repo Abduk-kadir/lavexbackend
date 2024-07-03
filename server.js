@@ -5,6 +5,7 @@ require('./config/dbConfig')
 let userRoute=require('./routes/userRoute')
 let invoiceRouter=require('./routes/invoiceRoute')
 let porfarmaRouter=require('./routes/porformaRoute')
+let devitNoteRouter=require('./routes/debitNoteRoute')
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -14,9 +15,10 @@ app.use(function(req,res,next){
         "GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD"
 
     );
+    res.header("Access-Control-Expose-Headers","Authorization,X-Auth-Token")
     res.header(
         "Access-Control-Allow-Headers",
-        "Origin,X-Requested-With ,Content-Type, Accept"
+        "Origin,X-Requested-With ,Content-Type, Accept,Authorization"
 
     );
     next();
@@ -30,3 +32,4 @@ app.listen(port,()=>console.log(`app is listining is port ${port}`))
 app.use('/api/user',userRoute)
 app.use('/api/invoice',invoiceRouter)
 app.use('/api/porfarma',porfarmaRouter)
+app.use('/api/debitnote',devitNoteRouter)

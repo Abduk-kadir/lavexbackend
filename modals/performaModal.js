@@ -70,6 +70,33 @@ const performaSchema=mongoose.Schema({
           }
     
        },
+       gstRegistration:{
+        type:Boolean,
+        required:[true,'you should tell about gst registration(true or false)']
+  
+     },
+     gstNumber:{
+        type:String,
+        default:null
+     },
+     individual:{
+        type:Boolean,
+        required:[true,'you should tell about individual(true or false)']
+  
+     },
+     shortCode:{
+        type:String,
+        default:null
+     },
+     gstRegistration:{
+        type:Boolean,
+        required:[true,'you should tell about gst registration(true or false)']
+  
+     },
+     gstNumber:{
+        type:String,
+        default:null
+     },
        
        selectCurrency:{
         type:String,
