@@ -6,6 +6,8 @@ let userRoute=require('./routes/userRoute')
 let invoiceRouter=require('./routes/invoiceRoute')
 let porfarmaRouter=require('./routes/porformaRoute')
 let devitNoteRouter=require('./routes/debitNoteRoute')
+let creditNoteRouter=require('./routes/creditNoteRoute')
+let myInvoicRouter=require('./routes/myInvoices')
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -33,3 +35,8 @@ app.use('/api/user',userRoute)
 app.use('/api/invoice',invoiceRouter)
 app.use('/api/porfarma',porfarmaRouter)
 app.use('/api/debitnote',devitNoteRouter)
+app.use('/api/creditnote',creditNoteRouter)
+
+
+/*searching all type of invoices*/
+ app.use('/api/invoices',myInvoicRouter);

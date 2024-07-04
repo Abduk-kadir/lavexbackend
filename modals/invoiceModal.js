@@ -50,7 +50,7 @@ const invoiceSchema=mongoose.Schema({
     poNo:{
         type:String,
         unique:true,
-        required:[true,'po no is required']     
+        required:[true,'po no is requ']     
         
        },
        
@@ -70,6 +70,24 @@ const invoiceSchema=mongoose.Schema({
         required:[true,"for to shipped is required"]
       }
 
+   },
+   individual:{
+      type:Boolean,
+      required:[true,'you should tell about individual(true or false)']
+
+   },
+   shortCode:{
+      type:String,
+      default:null
+   },
+   gstRegistration:{
+      type:Boolean,
+      required:[true,'you should tell about gst registration(true or false)']
+
+   },
+   gstNumber:{
+      type:String,
+      default:null
    },
    
    selectCountry:{

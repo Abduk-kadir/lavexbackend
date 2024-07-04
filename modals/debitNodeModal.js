@@ -2,15 +2,6 @@ const mongoose=require('mongoose');
 var valid = require('validator');
 const debitnoteS=mongoose.Schema({
     suplierDetail:{
-        toInvoiceNumber:{
-            type:String,
-            required:true
-        },
-        fromDate:{
-           type:Date,
-           required:[true,'from Date is required']
-        },
-
         suplier:{
             type:String,
             required:[true,'client is required'],
@@ -35,12 +26,20 @@ const debitnoteS=mongoose.Schema({
         
     
        },
-       porfarmaDetail:{
-        porfarmaNo:{
-            type:String,
+       debitNoteDetail:{
+        debitNoteNo:{
+            type:Number,
             required:[true,'invoice no is required'],
             
         },
+        toInvoiceNumber:{
+         type:String,
+         required:true
+     },
+     fromDate:{
+        type:Date,
+        required:[true,'from Date is required']
+     },
         invoiceDate:{
             type:Date,
             required:[true,'invoice date is required']
@@ -56,8 +55,7 @@ const debitnoteS=mongoose.Schema({
     
         },
         poNo:{
-            type:String,
-           // unique:true,
+            type:Number,
             required:[true,'po no is requ']     
             
            },
@@ -75,7 +73,8 @@ const debitnoteS=mongoose.Schema({
      },
      shortCode:{
         type:String,
-        default:null
+        default:null,
+        
      },
      gstRegistration:{
         type:Boolean,
