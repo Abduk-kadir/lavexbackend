@@ -90,7 +90,7 @@ const invoiceSchema=mongoose.Schema({
       default:null
    },
    
-   selectCountry:{
+   selectCurrency:{
     type:String,
     enum:['India','pakistan','nepal'],
     required:[true,'country is required']

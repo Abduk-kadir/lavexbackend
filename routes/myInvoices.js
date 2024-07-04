@@ -54,6 +54,137 @@ router.get('/myInvoices',async(req,res)=>{
     }
 
 })
+
+
+router.delete('/update/:type/:id',async(req,res)=>{
+ 
+
+   let {type,id}=req.params
+   if(type=='porforma'){
+    try{
+      let result = await Porfarma.deleteOne({ _id:id })
+      if(result.deletedCount){
+      res.send({
+        message:" data is successfully deleted",
+        success:true
+      })
+    }
+    else{
+        res.send({
+            message:" please provide correct id",
+            success:true
+          })
+    }
+     
+      
+    }
+    catch(err){
+        res.send({
+            message:'please provide correct id',
+            success:false
+          })
+
+
+    }
+  }
+  
+  if(type=='invoice'){
+    try{
+      let result = await Invoice.deleteOne({ _id:id })
+      if(result.deletedCount){
+      res.send({
+        message:" data is successfully deleted",
+        success:true
+      })
+    }
+    else{
+        res.send({
+            message:" please provide correct id",
+            success:true
+          })
+    }
+     
+      
+    }
+    catch(err){
+        res.send({
+            message:'please provide correct id',
+            success:false
+          })
+
+
+    }
+  }
+  
+  if(type=='creditnote'){
+    try{
+      let result = await creditNote.deleteOne({ _id:id })
+      if(result.deletedCount){
+      res.send({
+        message:" data is successfully deleted",
+        success:true
+      })
+    }
+    else{
+        res.send({
+            message:" please provide correct id",
+            success:true
+          })
+    }
+     
+      
+    }
+    catch(err){
+        res.send({
+            message:'please provide correct id',
+            success:false
+          })
+
+
+    }
+  }
+  
+  if(type=='debitnote'){
+    try{
+      let result = await DebitNote.deleteOne({ _id:id })
+      if(result.deletedCount){
+      res.send({
+        message:" data is successfully deleted",
+        success:true
+      })
+    }
+    else{
+        res.send({
+            message:" please provide correct id",
+            success:true
+          })
+    }
+     
+      
+    }
+    catch(err){
+        res.send({
+            message:'please provide correct id',
+            success:false
+          })
+
+
+    }
+  }
+    
+  else{
+     res.send({
+      message:"please fill correct type which we have to delete",
+      success:null
+
+
+     })
+  }
+ 
+         
+  
+})
+
 module.exports=router;
 
 
