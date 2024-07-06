@@ -37,20 +37,20 @@ const debitnoteS=mongoose.Schema({
          required:true
      },
      fromDate:{
-        type:Date,
+        type:String,
         required:[true,'from Date is required']
      },
         invoiceDate:{
-            type:Date,
+            type:String,
             required:[true,'invoice date is required']
         },
         dueDate:{
-            type:Date,
+            type:String,
             required:[true,'due date is required']
     
         },
         maturityDate:{
-            type:Date,
+            type:String,
             required:[true,'maturity date is required']
     
         },

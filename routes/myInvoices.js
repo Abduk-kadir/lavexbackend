@@ -186,14 +186,15 @@ router.delete('/delete/:type/:id',async(req,res)=>{
 })
 
 
+    
+
+
 
 router.put('/update/:type/:id',async(req,res)=>{
   let {type,id}=req.params
   let {body}=req
   let result;
  
- 
-  
 
   try{
     switch(type){
@@ -224,16 +225,9 @@ router.put('/update/:type/:id',async(req,res)=>{
         success:false,
         data:null
       })
+      break;
     }
       
-    if(result==null){
-      res.send({
-        message:'please provide exit id',
-        success:false,
-        data:null
-      })
-
-    }
     res.send({
       message:'data is successfully updated',
       success:true,
@@ -254,6 +248,7 @@ router.put('/update/:type/:id',async(req,res)=>{
   
 
 })
+  
 
 module.exports=router;
 
