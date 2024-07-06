@@ -33,16 +33,16 @@ const performaSchema=mongoose.Schema({
             
         },
         invoiceDate:{
-            type:Date,
+            type:String,
             required:[true,'invoice date is required']
         },
         dueDate:{
-            type:Date,
+            type:String,
             required:[true,'due date is required']
     
         },
         maturityDate:{
-            type:Date,
+            type:String,
             required:[true,'maturity date is required']
     
         },

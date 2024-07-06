@@ -186,10 +186,6 @@ router.delete('/delete/:type/:id',async(req,res)=>{
 })
 
 
-    
-
-
-
 router.put('/update/:type/:id',async(req,res)=>{
   let {type,id}=req.params
   let {body}=req
