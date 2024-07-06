@@ -56,7 +56,7 @@ router.get('/myInvoices',async(req,res)=>{
 })
 
 
-router.delete('/update/:type/:id',async(req,res)=>{
+router.delete('/delete/:type/:id',async(req,res)=>{
  
 
    let {type,id}=req.params
@@ -183,6 +183,76 @@ router.delete('/update/:type/:id',async(req,res)=>{
  
          
   
+})
+
+
+
+router.put('/update/:type/:id',async(req,res)=>{
+  let {type,id}=req.params
+  let {body}=req
+  let result;
+ 
+ 
+  
+
+  try{
+    switch(type){
+    case 'porforma':
+     console.log('inporfarma') 
+     result =await Porfarma.findByIdAndUpdate(id,body)
+     console.log('result')
+       break;
+      
+    case 'invoice':
+       console.log('invoice')
+      result=await Invoice.findByIdAndUpdate(id,body)
+      console.log(result)
+    
+     break;
+
+     case 'creditnote':
+     result= await creditNote.findByIdAndUpdate(id,body)
+      break;
+     
+    case 'debitnote':
+      result=await DebitNote.findByIdAndUpdate(id,body)
+      break;
+     default:
+      console.log('********')
+      res.send({
+        message:"please provide correct type",
+        success:false,
+        data:null
+      })
+    }
+      
+    if(result==null){
+      res.send({
+        message:'please provide exit id',
+        success:false,
+        data:null
+      })
+
+    }
+    res.send({
+      message:'data is successfully updated',
+      success:true,
+      data:body
+    })
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+      data:null
+    })
+  }
+
+
+
+  
+  
+
 })
 
 module.exports=router;
