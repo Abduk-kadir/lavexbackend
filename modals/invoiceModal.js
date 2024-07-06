@@ -34,7 +34,7 @@ const invoiceSchema=mongoose.Schema({
         
     },
     invoiceDate:{
-        type:Stirng,
+        type:String,
         required:[true,'invoice date is required']
     },
     dueDate:{
