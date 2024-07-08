@@ -2,6 +2,10 @@ const mongoose=require('mongoose');
 
 var valid = require('validator');
 const invoiceSchema=mongoose.Schema({
+   t:{
+      type:String,
+      default:['Invoice']
+   },
    clientDetail:{
     client:{
         type:String,

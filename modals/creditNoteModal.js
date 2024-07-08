@@ -2,6 +2,11 @@ const mongoose=require('mongoose');
 var valid = require('validator');
 const creditNoteS=mongoose.Schema({
     clientDetail:{
+        t:{
+         type:String,
+         default:"CreditNote"
+
+        },
         client:{
             type:String,
             required:[true,'client is required'],

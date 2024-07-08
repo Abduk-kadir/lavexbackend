@@ -2,6 +2,10 @@ const mongoose=require('mongoose');
 var valid = require('validator');
 const performaSchema=mongoose.Schema({
     clientDetail:{
+        t:{
+         type:String,
+         default:'Proforma'
+        },
         client:{
             type:String,
             required:[true,'client is required'],
