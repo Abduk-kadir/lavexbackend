@@ -2,6 +2,10 @@ const mongoose=require('mongoose');
 var valid = require('validator');
 const debitnoteS=mongoose.Schema({
     suplierDetail:{
+        t:{
+         type:String,
+         default:'DebitNote'
+        },
         suplier:{
             type:String,
             required:[true,'client is required'],

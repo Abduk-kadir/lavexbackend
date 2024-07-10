@@ -30,6 +30,37 @@ router.post('/addClient',async(req,res)=>{
 
 })
 
+
+router.get('/detailforInvoice',async(req,res)=>{
+    let {type}=req.query
+    let result=await Client.findOne({client:type},{shipTo:1,gstNumber:1})
+    res.send(result)
+})
+
+router.get('/clientdropdown',async(req,res)=>{
+    try{
+
+        let arr= await Client.find({},{client:1,_id:0})
+        let dropdown=arr.map(elem=>elem.client)
+        res.send({
+            message:"data is fetched successfully",
+            data:dropdown,
+            success:true
+        })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            data:null,
+            success:false
+        })
+    }
+   
+
+
+})
+
 router.delete('/deleteClient/:id',async(req,res)=>{
     let {id}=req.params
     

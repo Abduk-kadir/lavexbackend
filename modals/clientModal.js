@@ -9,7 +9,7 @@ const clientSchema=mongoose.Schema({
     
     clientShortCode:{
         type:String,
-        required:[true,'client short code is important']
+        default:"CLI"
     },
     area:{
         type:String,

@@ -11,6 +11,10 @@ let myInvoicRouter=require('./routes/myInvoices')
 let clientRouter=require('./routes/clientRoute')
 let SupplierRouter=require('./routes/supplerRoute')
 let DeliveryChalanRouter=require('./routes/deliveryChalanRoute')
+let PaymentRouter=require('./routes/paymentRoute')
+
+let CompanyRouter=require('./routes/companyRoute')
+
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -42,6 +46,18 @@ app.use('/api/creditnote',creditNoteRouter)
 app.use('/api/client',clientRouter)
 app.use('/api/supplier',SupplierRouter)
 app.use('/api/delivery',DeliveryChalanRouter)
+app.use('/api/payment',PaymentRouter);
+
+/* here i am using api for company*/
+app.use('/api/company',CompanyRouter);
+
+
+
+
+
+/* ending of company api*/
+
+
 
 
 /*searching all type of invoices*/

@@ -19,37 +19,101 @@ router.get('/myInvoices',async(req,res)=>{
      switch(type){
         case "proforma":
             arr=await Porfarma.find({},{'clientDetail.client':1,'porfarmaDetail.invoiceDate':1,item:1})
-            console.log(arr)
+            arr= arr.map(elem=>{
+                  
+              let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+             let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+             let js={withgstTotal:val2+val,withoutgstTotal:val2,client:elem.clientDetail.client,type:elem.t,date:elem.porfarmaDetail.invoiceDate}
+              return js
+         
+        })
             break;
             case "invoice":
             arr=await Invoice.find({},{'clientDetail.client':1,'invoiceDetail.invoiceDate':1,item:1})
+            arr= arr.map(elem=>{
+                  
+              let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+             let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+             let js={withgstTotal:val2+val,withoutgstTotal:val2,client:elem.clientDetail.client,type:elem.t,date:elem.invoiceDetail.invoiceDate}
+              return js
+         
+         })
             break;
             case "creditnote":
             
             arr=await creditNote.find({},{'clientDetail.client':1,'creditNoteDetail.fromDate':1,item:1})
+            arr= arr.map(elem=>{
+                  
+              let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+             let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+             let js={withgstTotal:val2+val,withoutgstTotal:val2,clientDetail:elem.clientDetail.client,type:elem.t,date:elem.creditNoteDetail.fromDate}
+              return js
+         
+        })
             break;
 
             case "debitnote":
              console.log('in debit note') 
              arr=await DebitNote.find({},{'suplierDetail.suplier':1,'debitNoteDetail.fromDate':1,item:1})
-             
-            let agg=await DebitNote.aggregate([{$group:{_id:"item"}}])
+            
+            let agg= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id",total:{$sum:{$subtract:[{ $multiply: [ "$item.price", "$item.quantity" ] },"$item.gst"]}   },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
             console.log(agg)
-            /*f= arr.map(elem=>{
-             let val=elem.item.reduce((acc,elem2)=>elem2.price-elem2.gst,0)
-              console.log('total:',val)
-              return {...elem,total:val}
+             arr= arr.map(elem=>{
+                  
+                  let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+                 let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+                 let js={withgstTotal:val2+val,withoutgstTotal:val2,suplier:elem.suplierDetail.suplier,type:elem.t,date:elem.debitNoteDetail.fromDate}
+                  return js
              
             })
-            console.log(f)*/
+            
             
             break;
             default:
+               console.log('in nothig field')
                 let arr1=await Porfarma.find({},{'clientDetail.client':1,'porfarmaDetail.invoiceDate':1,item:1})
-                let arr2=await Invoice.find({'clientDetail.client':1,'invoiceDetail.invoiceDate':1,item:1})
-                let arr3=await creditNote.find({'clientDetail.client':1,'creditNoteDetail.fromDate':1,item:1})
+                arr1= arr1.map(elem=>{
+                  
+                  let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+                 let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+                 let js={withgstTotal:val2+val,withoutgstTotal:val2,client:elem.clientDetail.client,type:elem.t,date:elem.porfarmaDetail.invoiceDate}
+                  return js
+             
+            })
+
+           
+
+                let arr2=await Invoice.find({},{'clientDetail.client':1,'invoiceDetail.invoiceDate':1,item:1})
+                arr2= arr2.map(elem=>{
+                  
+                  let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+                 let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+                 let js={withgstTotal:val2+val,withoutgstTotal:val2,client:elem.clientDetail.client,type:elem.t,date:elem.invoiceDetail.invoiceDate}
+                  return js
+             
+             })
+
+
+                let arr3=await creditNote.find({},{'clientDetail.client':1,'creditNoteDetail.fromDate':1,item:1})
+                arr3= arr3.map(elem=>{
+                  
+                  let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+                 let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+                 let js={withgstTotal:val2+val,withoutgstTotal:val2,clientDetail:elem.clientDetail.client,type:elem.t,date:elem.creditNoteDetail.fromDate}
+                  return js
+             
+            })
                 let arr4=await DebitNote.find({},{'suplierDetail.suplier':1,'debitNoteDetail.fromDate':1,item:1})
-                arr=[...arr1,...arr2,...arr3,...arr4]
+                arr4= arr4.map(elem=>{
+                  
+                  let val= elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity*curr.gst/100,0)
+                 let val2=elem.item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+                 let js={withgstTotal:val2+val,withoutgstTotal:val2,suplier:elem.suplierDetail.suplier,type:elem.t,date:elem.debitNoteDetail.fromDate}
+                  return js
+             
+            })
+            
+                arr=[...arr1,arr2,arr3,arr4]
 
            
     }
@@ -70,6 +134,7 @@ router.get('/myInvoices',async(req,res)=>{
             "success":true,
             "data":newarr,
             "length":newarr.length
+           
         })
     
     
