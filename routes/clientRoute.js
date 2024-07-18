@@ -33,7 +33,7 @@ router.post('/addClient',async(req,res)=>{
 
 router.get('/detailforInvoice',async(req,res)=>{
     let {type}=req.query
-    let result=await Client.findOne({client:type},{shipTo:1,gstNumber:1})
+    let result=await Client.findOne({client:type})
     res.send(result)
 })
 

@@ -50,11 +50,7 @@ router.put('/addTransaltion/:id',async(req,res)=>{
     try
     {  
         console.log("arman")
-        let f=await Company.findById(req.params.id)   
-        let js={...req.body,mobile:f.mobile,panNumber:f.panNumber,gstNumber:f.gstNumber,email:f.email,stateCode:f.stateCode,website:f.website,bankDetail:f.bankDetail,chooseLogoFile:f.chooseLogoFile}
-        await Company.findByIdAndUpdate(req.params.id,js)
-        
-       
+        await Company.updateOne({_id:req.params.id},{$set:req.body})
         res.send({
             message:"translation is successfully updated",
             success:false

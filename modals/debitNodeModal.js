@@ -1,11 +1,17 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
 const debitnoteS=mongoose.Schema({
+   tpye:{
+      type:String,
+      default:'DebitNote'
+     },
+      companyname:{
+      type:String,
+      required:[true,'company name is required']
+      
+     },
     suplierDetail:{
-        t:{
-         type:String,
-         default:'DebitNote'
-        },
+       
         suplier:{
             type:String,
             required:[true,'client is required'],
@@ -26,13 +32,32 @@ const debitnoteS=mongoose.Schema({
            stateCode:{
             type:String,
             required:[true,'state code is required']
-           }
+           },
+           shortCode:{
+            type:String,
+            default:null
+         },
+         gstRegistration:{
+            type:Boolean,
+            default:false
+      
+         },
+         gstNumber:{
+            type:String,
+            default:null
+         },
+         individual:{
+            type:Boolean,
+            default:false
+      
+         },
         
     
        },
        debitNoteDetail:{
         debitNoteNo:{
-            type:Number,
+            type:String,
+            unique:true,
             required:[true,'invoice no is required'],
             
         },
@@ -42,16 +67,36 @@ const debitnoteS=mongoose.Schema({
      },
      fromDate:{
         type:String,
+        validate: {
+         validator: function(v) {
+          return valid.isDate(v,{format:'dd/mm/yyyy'})
+         },
+         message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+       },
+        
         required:[true,'from Date is required']
      },
         invoiceDate:{
             type:String,
+            validate: {
+               validator: function(v) {
+                return valid.isDate(v,{format:'dd/mm/yyyy'})
+               },
+               message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+             },
             required:[true,'invoice date is required']
         },
         dueDate:{
             type:String,
-            required:[true,'due date is required']
-    
+           
+            validate: {
+               validator: function(v) {
+                return valid.isDate(v,{format:'dd/mm/yyyy'})
+               },
+               message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+             },
+             required:[true,'due date is required']
+             
         },
         maturityDate:{
             type:String,
@@ -70,29 +115,10 @@ const debitnoteS=mongoose.Schema({
         }
     
        },
-       individual:{
-        type:Boolean,
-        required:[true,'you should tell about individual(true or false)']
-  
-     },
-     shortCode:{
-        type:String,
-        default:null,
-        
-     },
-     gstRegistration:{
-        type:Boolean,
-        required:[true,'you should tell about gst registration(true or false)']
-  
-     },
-     gstNumber:{
-        type:String,
-        default:null
-     },
-       
+      
        selectCurrency:{
         type:String,
-        enum:['IndianCurrency','pakistanCurrency','nepalCurrency'],
+        enum:['India','Pakistan'],
         required:[true,'type of currency is required']
       },
      

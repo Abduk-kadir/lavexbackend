@@ -2,9 +2,14 @@ const mongoose=require('mongoose');
 
 var valid = require('validator');
 const invoiceSchema=mongoose.Schema({
-   t:{
+   type:{
       type:String,
-      default:['Invoice']
+      default:'Invoice'
+   },
+   companyname:{
+      type:String,
+      required:['compayname is required']
+
    },
    clientDetail:{
     client:{
@@ -27,81 +32,93 @@ const invoiceSchema=mongoose.Schema({
        stateCode:{
         type:String,
         required:[true,'state code is required']
-       }
+       },
+       toShipped:{
+         type:String,
+         required:[true,'to shipped detail is required']
+       },
+       forToShipped:{
+         type:String,
+         required:[true,"for to shipped is required"]
+       },
+       shortCode:{
+         type:String,
+         default:null
+      },
+      gstRegistration:{
+         type:Boolean,
+         default:false
+   
+      },
+      gstNumber:{
+         type:String,
+         default:null
+      },
+      individual:{
+         type:Boolean,
+         default:false
+   
+      },
     
 
    },
    invoiceDetail:{
     invoiceNo:{
         type:String,
+        unique:true,
         required:[true,'invoice no is required'],
         
     },
     invoiceDate:{
         type:String,
+        validate: {
+         validator: function(v) {
+          return valid.isDate(v,{format:'dd/mm/yyyy'})
+         },
+         message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+       },
         required:[true,'invoice date is required']
     },
     dueDate:{
         type:String,
+        validate: {
+         validator: function(v) {
+          return valid.isDate(v,{format:'dd/mm/yyyy'})
+         },
+         message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+       },
         required:[true,'due date is required']
 
     },
+    indicateMaturityDat:{
+      type:Boolean,
+      default:false
+    },
     maturityDate:{
         type:String,
-        required:[true,'maturity date is required']
+        default:null
 
     },
     poNo:{
-        type:String,
-        unique:true,
-        required:[true,'po no is requ']     
+        type:String,    
         
        },
        
     cashAccounting:{
         type:Boolean,
-        required:[true,'cashaccounting is required']
+        default:false
     }
 
-   },
-   shippedDetail:{
-      toShipped:{
-        type:String,
-        required:[true,'to shipped detail is required']
-      },
-      forToShipped:{
-        type:String,
-        required:[true,"for to shipped is required"]
-      }
-
-   },
-   individual:{
-      type:Boolean,
-      required:[true,'you should tell about individual(true or false)']
-
-   },
-   shortCode:{
-      type:String,
-      default:null
-   },
-   gstRegistration:{
-      type:Boolean,
-      required:[true,'you should tell about gst registration(true or false)']
-
-   },
-   gstNumber:{
-      type:String,
-      default:null
    },
    
    selectCurrency:{
     type:String,
-    enum:['India','pakistan','nepal'],
+    enum:['India','pakistan','Nepal'],
     required:[true,'country is required']
   },
-  chanlanType:{
+  deliveryChalan:{
     type:String,
-    required:[true,'chanlan type is required']
+    default:null
   },
   
   item:[{

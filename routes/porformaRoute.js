@@ -2,15 +2,15 @@ const express=require('express')
 const Porfarma=require('../modals/performaModal')
 router=express.Router()
 router.post('/porpharmaCreate',async(req,res)=>{
+    let {type}=req.query;
+    let js={...req.body,companyname:type}
     try{
-     let body=req.body;
-    
-     let porfarma=new Porfarma(body);
+     let porfarma=new Porfarma(js);
      await porfarma.save();
      res.send({
         message:"data is successfully added",
         success:true,
-        data:body
+       
     
      })
           
@@ -27,4 +27,6 @@ router.post('/porpharmaCreate',async(req,res)=>{
 
     }
 })
+
+
 module.exports=router

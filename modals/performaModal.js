@@ -1,110 +1,117 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
 const performaSchema=mongoose.Schema({
-    clientDetail:{
-        t:{
+   type:{
+      type:String,
+      default:'Proforma'
+   },
+   companyname:{
+      type:String,
+      required:['compayname is required']
+
+   },
+   
+       clientDetail:{
+         client:{
          type:String,
-         default:'Proforma'
+         required:[true,'client is required'],
+     
         },
-        client:{
-            type:String,
-            required:[true,'client is required'],
-        
-           },
-           address:{
-            type:String,
-            required:['true','address is required']
-           },
-           city:{
-            type:String,
-            required:['true','city is required']
-           },
-           country:{
-            type:String,
-            required:[true,'country is required']
-           },
-           stateCode:{
-            type:String,
-            required:[true,'state code is required']
-           }
-        
+        address:{
+         type:String,
+         required:['true','address is required']
+        },
+        city:{
+         type:String,
+         required:['true','city is required']
+        },
+        country:{
+         type:String,
+         required:[true,'country is required']
+        },
+        stateCode:{
+         type:String,
+         required:[true,'state code is required']
+        },
+        toShipped:{
+          type:String,
+          required:[true,'to shipped detail is required']
+        },
+        forToShipped:{
+          type:String,
+          required:[true,"for to shipped is required"]
+        },
+        shortCode:{
+          type:String,
+          default:null
+       },
+       gstRegistration:{
+          type:Boolean,
+          default:false
     
        },
+       gstNumber:{
+          type:String,
+          default:null
+       },
+       individual:{
+          type:Boolean,
+          default:false
+    
+       }},
+            
+    
+       
        porfarmaDetail:{
         porfarmaNo:{
             type:String,
+            unique:true,
             required:[true,'invoice no is required'],
             
         },
         invoiceDate:{
             type:String,
+            validate: {
+               validator: function(v) {
+                return valid.isDate(v,{format:'dd/mm/yyyy'})
+               },
+               message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+             },
             required:[true,'invoice date is required']
         },
         dueDate:{
             type:String,
+            validate: {
+               validator: function(v) {
+                return valid.isDate(v,{format:'dd/mm/yyyy'})
+               },
+               message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
+             },
             required:[true,'due date is required']
     
         },
         maturityDate:{
             type:String,
-            required:[true,'maturity date is required']
+            default:null
     
         },
         poNo:{
             type:String,
-           // unique:true,
-            required:[true,'po no is requ']     
-            
+           
            },
            
         cashAccounting:{
             type:Boolean,
-            required:[true,'cashaccounting is required']
+            default:false
         }
     
        },
-       shippedDetail:{
-          toShipped:{
-            type:String,
-            required:[true,'to shipped detail is required']
-          },
-          forToShipped:{
-            type:String,
-            required:[true,"for to shipped is required"]
-          }
-    
-       },
-       gstRegistration:{
-        type:Boolean,
-        required:[true,'you should tell about gst registration(true or false)']
-  
-     },
-     gstNumber:{
+      
+   
+      
+        selectCurrency:{
         type:String,
-        default:null
-     },
-     individual:{
-        type:Boolean,
-        required:[true,'you should tell about individual(true or false)']
-  
-     },
-     shortCode:{
-        type:String,
-        default:null
-     },
-     gstRegistration:{
-        type:Boolean,
-        required:[true,'you should tell about gst registration(true or false)']
-  
-     },
-     gstNumber:{
-        type:String,
-        default:null
-     },
-       
-       selectCurrency:{
-        type:String,
-        enum:['IndianCurrency','pakistanCurrency','nepalCurrency'],
+        enum:['India','Pakistan'],
         required:[true,'type of currency is required']
       },
      

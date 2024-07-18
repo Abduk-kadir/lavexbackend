@@ -12,6 +12,10 @@ let clientRouter=require('./routes/clientRoute')
 let SupplierRouter=require('./routes/supplerRoute')
 let DeliveryChalanRouter=require('./routes/deliveryChalanRoute')
 let PaymentRouter=require('./routes/paymentRoute')
+let invardRouter=require('./routes/storeallRoute/inwardRoute')
+let ProductionRouter=require('./routes/storeallRoute/productionRoute')
+let ItemMasterRouter=require('./routes/storeallRoute/itemMasterRoute')
+let BomRouter=require('./routes/storeallRoute/bomRoute')
 
 let CompanyRouter=require('./routes/companyRoute')
 
@@ -48,16 +52,13 @@ app.use('/api/supplier',SupplierRouter)
 app.use('/api/delivery',DeliveryChalanRouter)
 app.use('/api/payment',PaymentRouter);
 
-/* here i am using api for company*/
+
 app.use('/api/company',CompanyRouter);
 
-
-
-
-
-/* ending of company api*/
-
-
+app.use('/api/inward',invardRouter)
+app.use('/api/itemMaster',ItemMasterRouter)
+app.use('/api/bom',BomRouter)
+app.use('/api/production',ProductionRouter)
 
 
 /*searching all type of invoices*/
