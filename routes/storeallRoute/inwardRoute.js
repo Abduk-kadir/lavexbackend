@@ -25,10 +25,10 @@ router.post('/addInward',async(req,res)=>{
 
             })
            
-          //console.log('*******',body) 
+          
           let result2= await Inward.updateOne({suplierName:body.suplierName},{$set:{item:body.item}})
           console.log(result2)
-         // await inward.save();
+        
 
 
         }
@@ -40,10 +40,6 @@ router.post('/addInward',async(req,res)=>{
         
 
 
-
-        
-       
-      
         res.send({
            message:"data is successfully added",
            success:true, 
@@ -69,7 +65,7 @@ router.get('/allInward',async(req,res)=>{
         res.send({
             message:"data is successfully fetched",
             success:true, 
-            data:result.length
+            data:result
          })
        
 
