@@ -24,6 +24,11 @@ BomSchema=mongoose.Schema({
                 type:Number,
                 required:[true,'gst is important']
             },
+            brand:{
+              type:String,
+              required:[true,'brand is required']
+
+            }
         },
     raw:[
         {
@@ -43,9 +48,15 @@ BomSchema=mongoose.Schema({
             type:Number,
             required:[true]
           },
+          
           gst:{
             type:Number,
             required:[true,'gst is required']
+
+          },
+          brand:{
+            type:String,
+            required:[true,'brand is required']
 
           }
         }

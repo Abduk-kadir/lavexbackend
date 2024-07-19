@@ -25,11 +25,32 @@ router.post('/addItemMaster',async(req,res)=>{
        }
 
 })
+router.get('/allItemMaster',async(req,res)=>{
+    try{
+      let result=await ItemMaster.find()
+      res.send({
+        message:"data is fetched successfully",
+        success:true,
+        data:result
+
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+    
+          })
+
+    }
+
+})
 
 router.get('/rawItem/:name',async(req,res)=>{
   
     try{
-        let result=await ItemMaster.findOne({name:req.params.name},{name:1,qty:1,price:1,qtyType:1,gst:1})
+        let result=await ItemMaster.findOne({name:req.params.name},{name:1,qty:1,price:1,qtyType:1,gst:1,brand:1})
         console.log(result)
         if(result==null){
           

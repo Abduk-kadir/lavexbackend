@@ -1,21 +1,27 @@
 let express=require('express')
 let router=express.Router()
 const Production= require('../../modals/store/production');
+const production = require('../../modals/store/production');
 router.post('/addProducton',async(req,res)=>{
-    
+    let body=req.body
     try{
-        let body=req.body;
-        let data=await Production.find()
-       
-        let val=data.reduce((acc,curr)=>curr.movementNumber>acc?curr.movementNumber:acc,0)
-          val=val+1
-        let production=new Production({...body,movementNumber:val});
-        await production.save();
-        res.send({
-           message:"data is successfully added",
-           success:true, 
+
+        let data=await Production.find();
+        data.map(elem=>{
+           // console.log('json is:',elem)
+            elem.readyStock.find(elem2=>{
+               let js= body.readyStock.find(elem3=>elem3.brand==elem2.brand)
+               console.log(js)
+
+            })
         })
+
+       
+       // let production=new Production(body);
+       // await production.save();
+        res.send(data)
        }
+        
        catch(err){
            res.send({
                message:err.message,

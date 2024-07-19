@@ -3,9 +3,9 @@ const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 
 const productionSchema=mongoose.Schema({
-    forUnit:{
+   /* forUnit:{
         type:String,
-        default:"FOIL"
+        default:"Unit1"
 
      },
      status:{
@@ -31,7 +31,7 @@ const productionSchema=mongoose.Schema({
       required:[true,'currency is required'],
       enum:["INR","$"]
      },
-     movementNumber:{
+    movementNumber:{
         type:Number,
         unique:true,
         required:[true,'movement number is required'],
@@ -56,33 +56,36 @@ const productionSchema=mongoose.Schema({
         type:String,
         required:[true,'accepted is required']
 
-     }
-     ,
-     item:[{
-        name:{
-           type:String,
-           required:[true,'name of item is required'],
-        },
-        brand:{
-           type:String,
-           required:[true,'name of brand is required'],
-        },
-        quantity:{
-           type:Number,
-           required:[true,'quantity  is required'],
-           
-        },
-        gst:{
-           type:Number,
-           required:[true,'gst  is required'],
-           
-        },
-        price:{
-           type:Number,
-           required:[true,'quantity  is required'],
-           
-        }
-   
+     },
+    */
+     readyStock:[
+     
+      {
+         name:{
+            type:String,
+            required:[true,'name of item is required'],
+         },
+         brand:{
+            type:String,
+            required:[true,'name of brand is required'],
+         },
+         qty:{
+            type:Number,
+            required:[true,'quantity  is required'],
+            
+         },
+         gst:{
+            type:Number,
+            required:[true,'gst  is required'],
+            
+         },
+         price:{
+            type:Number,
+            required:[true,'quantity  is required'],
+            
+         }
+    
+      
      }]
 
 })
