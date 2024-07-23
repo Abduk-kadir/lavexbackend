@@ -41,6 +41,16 @@ ItemMasterSchema=mongoose.Schema({
         required:[true,'brand is required']
 
     },
+    manufacturar:{
+        type:String,
+        default:null
+        
+    },
+    suplier:{
+        type:String,
+        default:null
+
+    },
     stockStatus:{
         type:String,
         enum:['Part','ReadyStock','Fixasset','Raw']

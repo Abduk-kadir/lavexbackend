@@ -130,7 +130,7 @@ const invoiceSchema=mongoose.Schema({
         type:String,
         required:[true,'name of brand is required'],
      },
-     quantity:{
+     qty:{
         type:Number,
         required:[true,'quantity  is required'],
         

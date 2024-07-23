@@ -46,7 +46,7 @@ BomSchema=mongoose.Schema({
           },
           price:{
             type:Number,
-            required:[true]
+            required:[true,'price is required']
           },
           
           gst:{

@@ -1,37 +1,105 @@
 let express=require('express')
 let router=express.Router()
 const Production= require('../../modals/store/production');
-const production = require('../../modals/store/production');
+const Inward=require('../../modals/store/inwardModal')
+
 router.post('/addProducton',async(req,res)=>{
-    let body=req.body
-    try{
+   let body=req.body;
+   let {readyStock,raw}=body; 
+   let parr=[]
+   try{
 
-        let data=await Production.find();
-        data.map(elem=>{
-           // console.log('json is:',elem)
-            elem.readyStock.find(elem2=>{
-               let js= body.readyStock.find(elem3=>elem3.brand==elem2.brand)
-               console.log(js)
-
-            })
-        })
-
-       
-       // let production=new Production(body);
-       // await production.save();
-        res.send(data)
-       }
-        
-       catch(err){
-           res.send({
-               message:err.message,
-               success:false,
-        
-           })
+    //this is code for updating raw store
    
+    for(let i=0;i<raw.length;i++){
+        let {name,brand,qty}=raw[i]
+       let supplier= await Inward.findOne({suplierName:raw[i].suplier})
+      
+       if(supplier){
+        let f=await Inward.updateOne( {item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+
        }
+      
+ 
+    }
+
+    //this is code for updating store of production
+    
+    for(let i=0;i<readyStock.length;i++){
+    let {name,brand,qty}=readyStock[i]   
+    let f=await Production.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+     if(f.matchedCount==0){
+         let elem=readyStock[i]
+         parr.push(elem)
+     }
+    }
+    if(parr.length>0){
+      let product=new Production({readyStock:parr})
+      await product.save()
+    }
+      
+    res.send({
+        message:"data is added success fully added",
+        success:true,
+    })
+   
+   } 
+   catch(err){
+    res.send(err.message)
+   }  
 
 })
+
+router.get('/allProduction',async(req,res)=>{
+    try
+    {
+      let result=await Production.find()
+      res.send({
+        message:'all prodution is successfully fetched',
+        success:true,
+        data:result
+       })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+           })
+    }
+})
+
+router.get('/prod/:id',async(req,res)=>{
+      console.log(req.params.id)
+    try{
+     let prod=await Production.find({_id:req.params.id})
+     res.send({
+        message:'data is successfully',
+        success:true,
+        data:prod
+       })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+           })
+
+    }
+
+
+
+})
+
+
+
+
+
+
+
+
+
 
 
 router.get('/review/:movmentno',async(req,res)=>{
@@ -93,24 +161,7 @@ router.put('/changestatus/:no',async(req,res)=>{
 
 })
 
-router.get('/allProduction',async(req,res)=>{
-    try
-    {
-      let result=await Production.find()
-      res.send({
-        message:'all prodution is successfully fetched',
-        success:true,
-        data:result
-       })
-    }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-           })
-    }
-})
+
 
 
 router.get('/cancelList',async(req,res)=>{

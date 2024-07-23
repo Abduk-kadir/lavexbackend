@@ -1,23 +1,32 @@
 const express=require('express')
 const Invoice=require('../modals/invoiceModal')
-router=express.Router()
+router=express.Router();
+const Production=require('./../modals/store/production')
 
 router.post('/invoiceCreate',async(req,res)=>{
     let {type}=req.query;
+    let {item}=req.body
     let js={...req.body,companyname:type}
+    let parr=[]
     try{
      let body=req.body;
-    
      let invoice=new Invoice(js);
      await invoice.save();
+
+     for(let i=0;i<item.length;i++){
+        let {name,brand,qty}=item[i]   
+        let f=await Production.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+         
+        }
+        
+
+
+
      res.send({
         message:"data is successfully added",
         success:true,
         data:body
-    
      })
-          
-
     }
     catch(err){
         res.send({
