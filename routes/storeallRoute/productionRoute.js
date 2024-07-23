@@ -13,14 +13,8 @@ router.post('/addProducton',async(req,res)=>{
    
     for(let i=0;i<raw.length;i++){
         let {name,brand,qty}=raw[i]
-       let supplier= await Inward.findOne({suplierName:raw[i].suplier})
-      
-       if(supplier){
         let f=await Inward.updateOne( {item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
-
-       }
-      
- 
+   
     }
 
     //this is code for updating store of production

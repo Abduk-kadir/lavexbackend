@@ -46,11 +46,7 @@ ItemMasterSchema=mongoose.Schema({
         default:null
         
     },
-    suplier:{
-        type:String,
-        default:null
-
-    },
+   
     stockStatus:{
         type:String,
         enum:['Part','ReadyStock','Fixasset','Raw']

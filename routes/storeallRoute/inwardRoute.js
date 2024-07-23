@@ -15,7 +15,6 @@ router.post('/addInward',async(req,res)=>{
         
        
         if(sup){
-          
          body.item.map(elem=>{
               let val3=sup.item.find(elem2=>elem2.name==elem.name&&elem2.brand==elem.brand)
               if(val3){
@@ -24,12 +23,8 @@ router.post('/addInward',async(req,res)=>{
               }
 
             })
-           
-          
           let result2= await Inward.updateOne({suplierName:body.suplierName},{$set:{item:body.item}})
           console.log(result2)
-        
-
 
         }
         else{

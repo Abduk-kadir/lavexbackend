@@ -46,6 +46,28 @@ router.get('/allItemMaster',async(req,res)=>{
     }
 
 })
+router.get('/allbystatus/:status',async(req,res)=>{
+      try{
+        let result=await ItemMaster.find({stockStatus:req.params.status})
+        res.send({
+          message:"data is fetched successfully",
+          success:true,
+          data:result
+  
+        })
+
+      }
+      catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+    
+          })
+
+      }
+
+})
 
 router.get('/rawItem/:name',async(req,res)=>{
   
