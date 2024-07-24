@@ -39,11 +39,32 @@ router.get('/getBom/:id',async(req,res)=>{
             message:err.message,
             success:false,
             data:null
-    
-    
            })
 
      }
+
+})
+
+router.get('/allbom',async(req,res)=>{
+
+    try{
+      let allbom=await BillOfMaterial.find()
+      res.send({
+        message:'bill of material successfully fetched',
+        success:false,
+        data:allbom
+       })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+    
+           })
+
+    }
 
 })
 module.exports=router

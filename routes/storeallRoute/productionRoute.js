@@ -5,7 +5,7 @@ const Inward=require('../../modals/store/inwardModal')
 
 router.post('/addProducton',async(req,res)=>{
    let body=req.body;
-   let {readyStock,raw}=body; 
+   let {readyStock,raw,remark,dateCreated,accepted,prodNum}=body; 
    let parr=[]
    try{
 
@@ -28,7 +28,9 @@ router.post('/addProducton',async(req,res)=>{
      }
     }
     if(parr.length>0){
-      let product=new Production({readyStock:parr})
+      console.log('hit') 
+    
+      let product=new Production({prodNum:prodNum,remark:remark,dateCreated:dateCreated,accepted:accepted,readyStock:parr})
       await product.save()
     }
       

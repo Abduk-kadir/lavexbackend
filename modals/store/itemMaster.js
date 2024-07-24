@@ -12,6 +12,11 @@ ItemMasterSchema=mongoose.Schema({
         required:['item code is required']
 
     },
+    hsnCode:{
+        type:Number,
+        required:[true,'hsn code is required']
+        
+    },
     qty:{
         type:Number,
         required:[true,'quantity is required']
@@ -23,13 +28,27 @@ ItemMasterSchema=mongoose.Schema({
     },
     qtyType:{
         type:String,
+        enum:['Box','Roll,Pcs','Pkt'],
         required:[true,'type of quantity is required']
 
+    },
+    qtyType2:{
+        type:String,
+        required:[true,'type2 of quantity is required']
     },
     gst:{
         type:Number,
         required:[true,'gst is required']
 
+    },
+    lawqty:{
+        type:Number,
+        required:[true,'law qty is important']
+
+    },
+    category:{
+        type:String,
+        required:[true]
     },
     store:{
         type:String,
