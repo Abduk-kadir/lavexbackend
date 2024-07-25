@@ -1,8 +1,13 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const productionSchema=mongoose.Schema({
+    status:{
+      type:String,
+      default:"pending"
+    },
      prodNum:{
         type:Number,
+        unique:[true,'production number is required'],
         required:[true,'prodnumber is required']
     },
     dateCreated:{
@@ -28,6 +33,34 @@ const productionSchema=mongoose.Schema({
      
 
    },
+
+    raw:[ {
+      name:{
+         type:String,
+         required:[true,'name of item is required'],
+      },
+      brand:{
+         type:String,
+         required:[true,'name of brand is required'],
+      },
+      quantity:{
+         type:Number,
+         required:[true,'quantity  is required'],
+         
+      },
+      gst:{
+         type:Number,
+         required:[true,'gst  is required'],
+         
+      },
+      price:{
+         type:Number,
+         required:[true,'quantity  is required'],
+         
+      }
+ 
+   
+  }],
      
      readyStock:[
      

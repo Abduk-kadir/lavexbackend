@@ -1,8 +1,64 @@
 let express=require('express')
 let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
-const e = require('express');
-router.post('/addInward',async(req,res)=>{
+const PurchaseStore=require('../../modals/store/purchaseStore')
+
+
+router.post('/addinward2',async(req,res)=>{
+        try{
+        let parr=[]    
+        let inward;
+        let body=req.body;
+        let {item}=body
+        let data=await Inward.find()
+        let val=data.reduce((acc,curr)=>curr.movementNumber>acc?curr.movementNumber:acc,0)
+        val=val+1
+        inward=new Inward({...body,movementNumber:val});
+        await inward.save();
+
+
+       //this code for updating and pushing value in purchaseStore
+       for(let i=0;i<item.length;i++){
+        let {name,brand,quantity,price,gst}=item[i]  
+        console.log(quantity) 
+        let f=await PurchaseStore.updateOne( { item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+         if(f.matchedCount==0){
+             let elem=item[i]
+             parr.push(elem)
+         }
+        }
+        if(parr.length>0){
+          console.log('hit') 
+          console.log(parr)
+          let product=new PurchaseStore({item:parr})
+          await product.save()
+        }
+      //ending here
+
+       
+
+        res.send({
+            message:"data is successfully added",
+            success:true, 
+         })
+      }
+      catch(err){
+        res.send({
+            message:err.message,
+            success:false, 
+         })
+
+      }
+
+        
+
+
+
+})
+
+
+
+/*router.post('/addInward',async(req,res)=>{
     try{
         
         let inward;
@@ -50,7 +106,7 @@ router.post('/addInward',async(req,res)=>{
        }
 
 })
-
+*/
 
 router.get('/allInward',async(req,res)=>{
    

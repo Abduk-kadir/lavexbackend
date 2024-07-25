@@ -28,7 +28,7 @@ ItemMasterSchema=mongoose.Schema({
     },
     qtyType:{
         type:String,
-        enum:['Box','Roll,Pcs','Pkt'],
+        enum:['Box','Roll','Pcs','Pkt'],
         required:[true,'type of quantity is required']
 
     },

@@ -2,7 +2,11 @@ const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 BomSchema=mongoose.Schema({
-
+         status:{
+          type:String,
+          enum:['Draft','Created'],
+          required:[true,'status is required']
+         },
          readyStock:{
               name:{
               type:String,
