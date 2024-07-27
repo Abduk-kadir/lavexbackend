@@ -1,6 +1,7 @@
 let express=require('express')
 let router=express.Router()
 const ItemMaster = require('../../modals/store/itemMaster');
+const BillOfMaterial = require('../../modals/store/bomModal');
 router.post('/addItemMaster',async(req,res)=>{
     try{
         
@@ -46,6 +47,62 @@ router.get('/allItemMaster',async(req,res)=>{
     }
 
 })
+
+router.put('/updatingItemMater/:id',async(req,res)=>{
+    console.log(req.params.id)
+    let body=req.body
+    try{
+        let rs= await ItemMaster.findByIdAndUpdate({_id:req.params.id},req.body)
+        const allbill=await BillOfMaterial.find()  
+        if(rs.stockStatus=='Raw'||rs.stockStatus=='Part'||rs.stockStatus=='Fixed_Asset')
+        {
+         
+            allbill.map(elem=>{
+                elem.raw.map(elem2=>{
+                    console.log(elem2)
+                })
+            })
+
+         /* let f=await BillOfMaterial.updateOne( { raw: { $elemMatch: { name:name } } },
+            { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
+          )   
+         */
+              
+
+
+        }
+        else{
+
+          //  let f=await BillOfMaterial.updateOne( { raw: { $elemMatch: { name:name } } },
+             //   { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
+           //   ) 
+
+
+
+        }
+
+        
+        res.send({
+            message:"item is sussessfully updated",
+            success:true,
+           
+           
+    
+          })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+           
+    
+          })
+
+    }
+
+})
+
+
 router.get('/allbystatus/:status',async(req,res)=>{
       try{
         let result=await ItemMaster.find({stockStatus:req.params.status})

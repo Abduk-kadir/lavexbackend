@@ -16,6 +16,7 @@ let invardRouter=require('./routes/storeallRoute/inwardRoute')
 let ProductionRouter=require('./routes/storeallRoute/productionRoute')
 let ItemMasterRouter=require('./routes/storeallRoute/itemMasterRoute')
 let BomRouter=require('./routes/storeallRoute/bomRoute')
+let PaymentNameRouter=require('./routes/paymentNameRoute')
 
 let CompanyRouter=require('./routes/companyRoute')
 
@@ -59,6 +60,8 @@ app.use('/api/inward',invardRouter)
 app.use('/api/itemMaster',ItemMasterRouter)
 app.use('/api/bom',BomRouter)
 app.use('/api/production',ProductionRouter)
+
+app.use('/api/nameofPayment',PaymentNameRouter)
 
 
 /*searching all type of invoices*/

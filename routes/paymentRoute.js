@@ -2,7 +2,7 @@ const express=require('express')
 const Payment=require('../modals/paymentModel')
 router=express.Router()
 
-router.post('/addPayment',async(req,res)=>{
+router.post('/addPaymentName',async(req,res)=>{
     try{
      let body=req.body;
      let payment=new Payment(body);

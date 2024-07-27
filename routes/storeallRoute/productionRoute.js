@@ -171,7 +171,7 @@ router.get('/prod/statuswithprev/:id',async(req,res)=>{
     try{
      let prod=await Production.findOne({_id:req.params.id})
      let {readyStock}=prod;
-     let allProduction=await productionStore.find()
+     let allProduction=await ProductionStore.find()
      allProduction.map(elem=>{
       elem.readyStock.map(elem=>{
         arr.push(elem)
@@ -261,6 +261,52 @@ router.get('/allStock',async(req,res)=>{
 
 })
 
+router.get('/purchaseStore',async(req,res)=>{
+
+     try{
+        
+        let allpurchasesore=await PurchaseStore.find()
+        res.send({
+            message:'data is successfully',
+            success:true,
+            data:allpurchasesore
+           })
+        
+
+     }
+     catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+         })
+
+    }
+
+})
+
+router.get('/productionStore',async(req,res)=>{
+
+    try{
+       let allprodcutionStore=await ProductionStore.find()
+       res.send({
+           message:'data is successfully',
+           success:true,
+           data:allprodcutionStore
+          })
+       
+
+    }
+    catch(err){
+       res.send({
+           message:err.message,
+           success:false,
+           data:null
+        })
+
+   }
+
+})
 
 
 

@@ -8,7 +8,7 @@ ItemMasterSchema=mongoose.Schema({
 
     },
     itemCode:{
-        type:String,
+        type:Number,
         required:['item code is required']
 
     },
