@@ -58,55 +58,35 @@ router.post('/addinward2',async(req,res)=>{
 
 
 
-/*router.post('/addInward',async(req,res)=>{
+router.get('/getInwardbySup/:name',async(req,res)=>{
     try{
         
-        let inward;
-        let body=req.body;
-        let data=await Inward.find()
-        let val=data.reduce((acc,curr)=>curr.movementNumber>acc?curr.movementNumber:acc,0)
-        val=val+1
-        
-        let sup=await Inward.findOne({suplierName:body.suplierName})
-        
-       
-        if(sup){
-         body.item.map(elem=>{
-              let val3=sup.item.find(elem2=>elem2.name==elem.name&&elem2.brand==elem.brand)
-              if(val3){
-              elem.quantity+=val3.quantity
-             
-              }
-
-            })
-          let result2= await Inward.updateOne({suplierName:body.suplierName},{$set:{item:body.item}})
-          console.log(result2)
+        let data=await Inward.find({suplierName:req.params.name})
+        if(data.length==0){
+            res.send({
+                message:"No invoice found by this supler",
+                success:true, 
+             })
 
         }
         else{
-            inward=new Inward({...body,movementNumber:val});
-            await inward.save();
-            
+        res.send({
+            message:"data is successfully added",
+            success:true, 
+            data:data
+         })
         }
         
-
-
+     }
+     catch(err){
         res.send({
-           message:"data is successfully added",
-           success:true, 
-        })
-       }
-       catch(err){
-           res.send({
-               message:err.message,
-               success:false,
-        
-           })
-   
-       }
+            message:err.message,
+            success:false, 
+         })
 
+     }
+       
 })
-*/
 
 router.get('/allInward',async(req,res)=>{
    
@@ -132,39 +112,18 @@ router.get('/allInward',async(req,res)=>{
     }
 
 })
-/*
-router.put('/changeStatus/:no',async(req,res)=>{
-    try{
-        console.log(req.body)
-        let result=await Inward.updateOne({movementNumber:req.params.no},{$set:req.body})
-        
-     
-        res.send({
-           message:'status is successfully update',
-           success:true,
-          
-          })
-   
-      }
-      catch(err){
-       res.send({
-           message:err.message,
-           success:false,
-          
-          })
-   
-      }
-   
-
-})
 
 router.delete('/delInward/:id',async(req,res)=>{
     let {id}=req.params
-    console.log(id)
-    
     try{
 
         let rs=await Inward.findByIdAndDelete(id);
+        let item=rs.item
+
+        for(let i=0;i<item.length;i++){
+            let {name,brand,quantity,price,gst}=item[i]  
+            let f=await PurchaseStore.updateOne( { item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": -quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+            }
        
         if(rs){
             res.send({
@@ -197,7 +156,19 @@ router.delete('/delInward/:id',async(req,res)=>{
 
 router.put('/updateInward/:id',async(req,res)=>{
     try{
+        let bodyarr=req.body.item;
+        let value=await Inward.findOne({_id:req.params.id})
+        let prevarr=value.item
         let result=await Inward.findByIdAndUpdate(req.params.id,req.body)
+        for(let i=0;i<prevarr.length;i++){
+            let {name,brand,quantity,price,gst}=prevarr[i]  
+            let f=await PurchaseStore.updateOne( { item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": -quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+            }
+
+            for(let i=0;i<bodyarr.length;i++){
+                let {name,brand,quantity,price,gst}=bodyarr[i]  
+                let f=await PurchaseStore.updateOne( { item: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "item.$[elem].quantity": quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+                }    
        
         res.send({
           message:"data is successfully updated",
@@ -214,5 +185,5 @@ router.put('/updateInward/:id',async(req,res)=>{
   
       }
 })
-*/
+
 module.exports=router
