@@ -51,7 +51,7 @@ router.get('/allbom',async(req,res)=>{
       let allbom=await BillOfMaterial.find()
       res.send({
         message:'bill of material successfully fetched',
-        success:false,
+        success:true,
         data:allbom
        })
 
