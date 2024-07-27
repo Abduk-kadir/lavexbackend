@@ -51,33 +51,22 @@ router.get('/allItemMaster',async(req,res)=>{
 router.put('/updatingItemMater/:id',async(req,res)=>{
     console.log(req.params.id)
     let body=req.body
+    let name=body.name
     try{
         let rs= await ItemMaster.findByIdAndUpdate({_id:req.params.id},req.body)
-        const allbill=await BillOfMaterial.find()  
         if(rs.stockStatus=='Raw'||rs.stockStatus=='Part'||rs.stockStatus=='Fixed_Asset')
         {
          
-            allbill.map(elem=>{
-                elem.raw.map(elem2=>{
-                    console.log(elem2)
-                })
-            })
-
-         /* let f=await BillOfMaterial.updateOne( { raw: { $elemMatch: { name:name } } },
-            { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
-          )   
-         */
-              
-
-
+                let f=await BillOfMaterial.updateMany( { raw: { $elemMatch: { name:name } } },
+                    { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
+                 )  
+               
+        
         }
         else{
 
-          //  let f=await BillOfMaterial.updateOne( { raw: { $elemMatch: { name:name } } },
-             //   { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
-           //   ) 
-
-
+                let f=await BillOfMaterial.updateMany({"readyStock.name":name},{$set:{readyStock:body}})
+                   
 
         }
 
@@ -85,8 +74,6 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
         res.send({
             message:"item is sussessfully updated",
             success:true,
-           
-           
     
           })
     }
