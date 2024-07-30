@@ -1,8 +1,7 @@
 const express=require('express')
 const Invoice=require('../modals/invoiceModal')
 router=express.Router();
-const Production=require('./../modals/store/production')
-
+const ProductionStore=require('./../modals/store/productionStore')
 router.post('/invoiceCreate',async(req,res)=>{
     let {type}=req.query;
     let {item}=req.body
@@ -15,7 +14,7 @@ router.post('/invoiceCreate',async(req,res)=>{
 
      for(let i=0;i<item.length;i++){
         let {name,brand,qty}=item[i]   
-        let f=await Production.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+        let f=await ProductionStore.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
          
         }
         

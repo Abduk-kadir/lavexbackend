@@ -61,7 +61,28 @@ router.post('/addinward2',async(req,res)=>{
 router.get('/getInwardbySup/:name',async(req,res)=>{
     try{
         
-        let data=await Inward.find({suplierName:req.params.name})
+         let data=await Inward.aggregate([{$match:{suplierName:req.params.name}},
+            {$project:{suplierInvoiceNo:1,dateCreated:1,
+                calculatedAmount:{
+                $reduce:{
+                    input:"$item",
+                    initialValue:0,
+                    in:{$add:["$$value",{$multiply:["$$this.price","$$this.quantity",{$add:[1,{$divide:["$$this.gst",100]}]}]}]}
+                }
+              },
+             
+            }
+           },
+           {
+            $project: {
+                suplierInvoiceNo: 1,
+                dateCreated: 1,
+                invoiceAmount: "$calculatedAmount",
+                balanceAmount: "$calculatedAmount"
+            }
+          }
+        ])
+        console.log(data)
         if(data.length==0){
             res.send({
                 message:"No invoice found by this supler",

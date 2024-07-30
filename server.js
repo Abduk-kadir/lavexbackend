@@ -11,14 +11,13 @@ let myInvoicRouter=require('./routes/myInvoices')
 let clientRouter=require('./routes/clientRoute')
 let SupplierRouter=require('./routes/supplerRoute')
 let DeliveryChalanRouter=require('./routes/deliveryChalanRoute')
-let PaymentRouter=require('./routes/paymentRoute')
 let invardRouter=require('./routes/storeallRoute/inwardRoute')
 let ProductionRouter=require('./routes/storeallRoute/productionRoute')
 let ItemMasterRouter=require('./routes/storeallRoute/itemMasterRoute')
 let BomRouter=require('./routes/storeallRoute/bomRoute')
 let PaymentNameRouter=require('./routes/paymentNameRoute')
-
 let CompanyRouter=require('./routes/companyRoute')
+let SupplerPayRouter=require('./routes/suppallPayRoute/supplerPayment')
 
 const app=express()
 app.use(express.json())
@@ -51,7 +50,6 @@ app.use('/api/creditnote',creditNoteRouter)
 app.use('/api/client',clientRouter)
 app.use('/api/supplier',SupplierRouter)
 app.use('/api/delivery',DeliveryChalanRouter)
-app.use('/api/payment',PaymentRouter);
 
 
 app.use('/api/company',CompanyRouter);
@@ -62,6 +60,7 @@ app.use('/api/bom',BomRouter)
 app.use('/api/production',ProductionRouter)
 
 app.use('/api/nameofPayment',PaymentNameRouter)
+app.use('/api/suppPayment',SupplerPayRouter)
 
 
 /*searching all type of invoices*/

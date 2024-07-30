@@ -1,6 +1,6 @@
 const express=require('express')
 const creditNote=require('../modals/creditNoteModal')
-const Production=require('../modals/store/production')
+const ProductionStore=require('./../modals/store/productionStore')
 router=express.Router()
 router.post('/creditNoteCreate',async(req,res)=>{
     try{
@@ -13,8 +13,9 @@ router.post('/creditNoteCreate',async(req,res)=>{
      //this is used for updting production
 
      for(let i=0;i<item.length;i++){
-        let {name,brand,qty}=item[i]   
-        let f=await Production.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+        let {name,brand,quantity}=item[i] 
+        
+        let f=await ProductionStore.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
          
         }
 

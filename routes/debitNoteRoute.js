@@ -1,7 +1,7 @@
 const express=require('express')
 const DebitNote=require('../modals/debitNodeModal')
 router=express.Router()
-let Production=require('../modals/store/production')
+let ProductionStore=require('./../modals/debitNodeModal')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type}=req.query;
@@ -13,8 +13,8 @@ router.post('/debitNoteCreate',async(req,res)=>{
      //this code for updating production
 
      for(let i=0;i<item.length;i++){
-        let {name,brand,qty}=item[i]   
-        let f=await Production.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
+        let {name,brand,quantity}=item[i]   
+        let f=await ProductionStore.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
          
         }
      //this is ending here
