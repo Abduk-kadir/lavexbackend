@@ -1,11 +1,11 @@
 let express=require('express')
 let router=express.Router()
-const SupplierPayment= require('../../modals/supplierPayment/supPayment');
-router.post('/addsupplerPayment',async(req,res)=>{
+const ClientPayment= require('../../modals/clientPayment/clientPayment');
+router.post('/addclientPayment',async(req,res)=>{
     try{
         let body=req.body;
-        let supplerPayment=new SupplierPayment(body);
-        await supplerPayment.save();
+        let clientPayment=new ClientPayment(body);
+        await clientPayment.save();
         res.send({
            message:"data is successfully added",
            success:true, 
@@ -21,9 +21,9 @@ router.post('/addsupplerPayment',async(req,res)=>{
        }
 
 })
-router.put('/updateSuppPay/:id',async(req,res)=>{
+router.put('/updateClientPay/:id',async(req,res)=>{
     try{
-     let result= await SupplierPayment.findByIdAndUpdate({_id:req.params.id},req.body)
+     let result= await ClientPayment.findByIdAndUpdate({_id:req.params.id},req.body)
      res.send({
         message:"data is successfully updated",
         success:true, 
@@ -37,9 +37,9 @@ router.put('/updateSuppPay/:id',async(req,res)=>{
 
     }
 })
-router.delete('/deleteSuppPay/:id',async(req,res)=>{
+router.delete('/deleteClientPay/:id',async(req,res)=>{
     try{
-     let result= await SupplierPayment.findByIdAndDelete(req.params.id)
+     let result= await ClientPayment.findByIdAndDelete(req.params.id)
      res.send({
         message:"data is successfully deleted",
         success:true, 

@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 var valid = require('validator');
-const SuplierPaymentSchema=mongoose.Schema({
+const ClientPaymentSchema=mongoose.Schema({
     paymentNumber:{
         type:Number,
        required:[true,'payment number is required']
@@ -24,7 +24,7 @@ const SuplierPaymentSchema=mongoose.Schema({
         type:String,
         required:[true,'bank name is required']
     },
-    supplierName:{
+    clientName:{
         type:String,
         required:[true,'suplername name is required']
     },
@@ -52,7 +52,7 @@ const SuplierPaymentSchema=mongoose.Schema({
                 required:[true,'invoice date is created is required']
 
             },
-            suplierInvoiceNo:{
+            clientInvoiceNo:{
                 type:Number,
                 required:[true,'invoice number is required']
 
@@ -81,4 +81,4 @@ const SuplierPaymentSchema=mongoose.Schema({
     ]
   
 })
-module.exports=mongoose.model('SupplierPayment',SuplierPaymentSchema)
+module.exports=mongoose.model('ClientPayment',ClientPaymentSchema)

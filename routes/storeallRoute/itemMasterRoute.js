@@ -2,6 +2,46 @@ let express=require('express')
 let router=express.Router()
 const ItemMaster = require('../../modals/store/itemMaster');
 const BillOfMaterial = require('../../modals/store/bomModal');
+router.delete('/delItemMater/:id',async(req,res)=>{
+    console.log(req.params.id)
+    try{
+        let rs= await ItemMaster.findByIdAndDelete({_id:req.params.id})
+        if(rs.stockStatus=='Raw'||rs.stockStatus=='Part'||rs.stockStatus=='Fixed_Asset')
+        {
+                console.log('rs.name:',rs.name)
+                let f=await BillOfMaterial.updateMany( {},{ $pull: { raw: { name: rs.name } } } )  
+                console.log(f)
+        }
+        else
+        {
+                let f=await BillOfMaterial.deleteMany({"readyStock.name":rs.name})
+        }
+
+        
+        res.send({
+            message:"item is sussessfully deleted",
+            success:true,
+    
+          })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+           
+    
+          })
+
+    }
+
+})
+
+
+
+
+
+
+
 router.post('/addItemMaster',async(req,res)=>{
     try{
         

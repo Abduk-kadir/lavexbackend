@@ -1,10 +1,29 @@
 let express=require('express')
 let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
+
+router.delete('/delBom/:id',async(req,res)=>{
+    try{
+        let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
+        res.send({
+            message:"data is successfully deleted",
+            success:true, 
+         })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+     
+        })
+
+    }
+})
+
 router.post('/addBom',async(req,res)=>{
     try{
         let body=req.body;
-        
         let billOfMaterial=new BillOfMaterial(body);
         await billOfMaterial.save();
         res.send({

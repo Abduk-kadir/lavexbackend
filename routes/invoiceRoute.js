@@ -2,6 +2,63 @@ const express=require('express')
 const Invoice=require('../modals/invoiceModal')
 router=express.Router();
 const ProductionStore=require('./../modals/store/productionStore')
+router.get('/invoicesbyClient/:clientname',async(req,res)=>{
+    try{
+        let result=await Invoice.aggregate([{$match:{"clientDetail.client":req.params.clientname}},
+         {$project:{
+            "clientDetail.client":1,
+            "invoiceDetail.invoiceNo":1,
+            "invoiceDetail.dueDate":1,
+            calculatedAmount:{
+                "$reduce":{
+                    "input":"$item",
+                    initialValue:0,
+                    in:{$add:["$$value",{$multiply:["$$this.price","$$this.qty",{$add:[1,{$divide:["$$this.gst",100]}]}]}]}
+                }
+            }
+           }},
+           {$project:{
+             "invoiceAmount":"$calculatedAmount",
+             "balanceAmount":"$calculatedAmount"
+           }}
+
+
+        ])
+       
+        if(result.length==0){
+          res.send({
+              message:"no invoice found for this client",
+              success:false,
+              data:null
+          })
+  
+        }
+        else{
+         res.send({
+          message:"invoice is fetched successfully fetched",
+          success:true,
+          data:result
+         })
+       }
+       
+       }
+       catch(err){
+          res.send({
+              message:err.message,
+              success:false,
+              data:null
+  
+          })
+       }
+  
+
+
+
+})
+
+
+
+
 router.post('/invoiceCreate',async(req,res)=>{
     let {type}=req.query;
     let {item}=req.body

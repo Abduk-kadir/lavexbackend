@@ -3,6 +3,7 @@ let router=express.Router()
 const Production= require('../../modals/store/production');
 const PurchaseStore=require('../../modals/store/purchaseStore')
 const ProductionStore=require('../../modals/store/productionStore');
+const production = require('../../modals/store/production');
 
 
 
@@ -47,6 +48,7 @@ router.put('/changestatus/:id/',async(req,res)=>{
 
       if(status=='pending'&&preStatus=='confirmed'){
         let {raw,readyStock}=prod;
+        console.log('i am here');
         //here updating purchase store
         for(let i=0;i<raw.length;i++){
           let {name,brand,quantity,price,gst}=raw[i]  
@@ -63,6 +65,12 @@ router.put('/changestatus/:id/',async(req,res)=>{
                  parr.push(elem)
              }
             }
+          
+         let rs= await ProductionStore.updateMany({},{$pull:{readyStock:{qty:0}}})
+         let rs2= await ProductionStore.deleteMany({ readyStock: { $size: 0 } });
+         console.log(rs2)
+         
+         console.log('deleted')
         //ending
 
       }
