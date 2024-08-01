@@ -40,6 +40,8 @@ router.put('/changestatus/:id/',async(req,res)=>{
                  }
                 } 
             await Production.deleteOne({_id:req.params.id}) 
+             let rs= await ProductionStore.updateMany({},{$pull:{readyStock:{qty:0}}})
+             let rs2= await ProductionStore.deleteMany({ readyStock: { $size: 0 } });
 
         }
       }
