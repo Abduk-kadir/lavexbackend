@@ -4,9 +4,6 @@ const Production= require('../../modals/store/production');
 const PurchaseStore=require('../../modals/store/purchaseStore')
 const ProductionStore=require('../../modals/store/productionStore');
 const production = require('../../modals/store/production');
-
-
-
 router.put('/changestatus/:id/',async(req,res)=>{
     let parr=[]
     try{
@@ -42,6 +39,7 @@ router.put('/changestatus/:id/',async(req,res)=>{
             await Production.deleteOne({_id:req.params.id}) 
              let rs= await ProductionStore.updateMany({},{$pull:{readyStock:{qty:0}}})
              let rs2= await ProductionStore.deleteMany({ readyStock: { $size: 0 } });
+             console.log('result is:',rs2)
 
         }
       }
