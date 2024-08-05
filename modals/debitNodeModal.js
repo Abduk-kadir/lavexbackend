@@ -12,7 +12,7 @@ const debitnoteS=mongoose.Schema({
      },
     suplierDetail:{
        
-        suplier:{
+        client:{
             type:String,
             required:[true,'client is required'],
         
