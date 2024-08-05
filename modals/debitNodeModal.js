@@ -56,7 +56,7 @@ const debitnoteS=mongoose.Schema({
        },
        debitNoteDetail:{
         debitNoteNo:{
-            type:String,
+            type:Number,
             unique:true,
             required:[true,'invoice no is required'],
             

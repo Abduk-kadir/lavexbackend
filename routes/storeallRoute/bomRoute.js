@@ -2,6 +2,28 @@ let express=require('express')
 let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
 
+router.put('/updatingBom/:id',async(req,res)=>{
+    try{
+        let js=await BillOfMaterial.findByIdAndUpdate(req.params.id,req.body)
+        res.send({
+            message:"data is successfully updated",
+            success:true, 
+         })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+     
+        })
+
+    }
+
+})
+
+
+
 router.delete('/delBom/:id',async(req,res)=>{
     try{
         let js= await BillOfMaterial.findByIdAndDelete(req.params.id)

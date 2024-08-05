@@ -1,7 +1,7 @@
 const express=require('express')
 const DebitNote=require('../modals/debitNodeModal')
 router=express.Router()
-let ProductionStore=require('./../modals/debitNodeModal')
+let ProductionStore=require('../modals/store/productionStore')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type}=req.query;
@@ -14,6 +14,7 @@ router.post('/debitNoteCreate',async(req,res)=>{
 
      for(let i=0;i<item.length;i++){
         let {name,brand,quantity}=item[i]   
+        console.log(name,brand,quantity)
         let f=await ProductionStore.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -quantity } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
          
         }

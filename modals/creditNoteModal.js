@@ -11,10 +11,9 @@ const creditNoteS=mongoose.Schema({
 
    },
    creditNoteNo:{
-      type:String,
+      type:Number,
       unique:true,
-      required:[true,'invoice no is required'],
-      
+      required:[true,'invoice no is required'], 
    },
     clientDetail:{
       

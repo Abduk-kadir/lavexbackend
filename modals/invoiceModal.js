@@ -1,5 +1,4 @@
 const mongoose=require('mongoose');
-
 var valid = require('validator');
 const invoiceSchema=mongoose.Schema({
    type:{
@@ -64,7 +63,7 @@ const invoiceSchema=mongoose.Schema({
    },
    invoiceDetail:{
     invoiceNo:{
-        type:String,
+        type:Number,
         unique:true,
         required:[true,'invoice no is required'],
         

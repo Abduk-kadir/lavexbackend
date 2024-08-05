@@ -64,7 +64,7 @@ const performaSchema=mongoose.Schema({
        
        porfarmaDetail:{
         porfarmaNo:{
-            type:String,
+            type:Number,
             unique:true,
             required:[true,'invoice no is required'],
             
