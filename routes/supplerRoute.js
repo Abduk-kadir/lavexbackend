@@ -100,7 +100,7 @@ router.get('/allSupplier',async(req,res)=>{
 
 router.get('/suplierDropdown',async(req,res)=>{
     try{
-        let arr= await Supplier.find({},{supplier:1,_id:0})
+        let arr= await Supplier.find({},{supplier:1})
         res.send({
             message:"all suplier is successfully fetched",
             data:arr,

@@ -79,10 +79,11 @@ router.post('/addItemMaster',async(req,res)=>{
 router.get('/allItemMaster',async(req,res)=>{
     try{
       let result=await ItemMaster.find()
+     let arr= result.map(elem=>({...elem,status:"active",useinbom:["1","2"]}))
       res.send({
         message:"data is fetched successfully",
         success:true,
-        data:result
+        data:arr
 
       })
     }
