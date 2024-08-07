@@ -4,23 +4,36 @@ let Supplier=require('../modals/supplierModal')
 
 router.post('/addSupplier',async(req,res)=>{
     try{
+
+        let data=await Supplier.findOne({supplier:req.body.supplier})
+        if(!data){
         let body=req.body;    
         let supplier=new Supplier(body);
         await supplier.save();
         res.send({
            message:"data is successfully added",
            success:true,
-           data:body
+          
        
         })
-             
+       }
+       else{
+
+        res.send({
+            message:"this supplier is already exist",
+            success:false,
+         
+        
+         })
+
+       }    
    
        }
        catch(err){
            res.send({
                message:err.message,
                success:false,
-               data:null
+             
    
    
            })

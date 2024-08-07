@@ -7,6 +7,8 @@ const Hsncode=require('../modals/drop/hsnCode')
 const Gst=require('../modals/drop/gstDropdown')
 const Lowquantity=require('../modals/drop/lowQuantity');
 const gstDropdown = require('../modals/drop/gstDropdown');
+const StatusDropdown = require('../modals/drop/stockStatus');
+
 
 router.get('/allDropdown',async(req,res)=>{
     try{
@@ -33,6 +35,42 @@ router.get('/allDropdown',async(req,res)=>{
     }
 
 })
+router.post('/createStockStatus',async(req,res)=>{
+    try{
+        let body=req.body;
+        let data=await StatusDropdown.findOne({status:body.status})
+        console.log(data)
+        console.log(!data)
+        if(!data){
+        let status=new StatusDropdown(body);
+        await status.save();
+        res.send({
+           message:"data is successfully added",
+           success:true, 
+        })
+       }
+       else{
+        res.send({
+            message:"status of stock is already exist",
+            success:false, 
+         })
+
+       }
+      }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
+})
+
+
+
+
+
 
 router.post('/createBrand',async(req,res)=>{
     try{
