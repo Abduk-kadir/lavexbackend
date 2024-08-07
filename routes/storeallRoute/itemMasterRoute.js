@@ -5,31 +5,32 @@ const BillOfMaterial = require('../../modals/store/bomModal');
 router.delete('/delItemMater/:id',async(req,res)=>{
     console.log(req.params.id)
     try{
+       let rs= await ItemMaster.findById({_id:req.params.id})
+       let {status}=rs
+       if(status=='active'){
+        res.send({
+            message:'status is active can not delete ',
+            success:false,
+          })
+
+       }
+       else{
         let rs= await ItemMaster.findByIdAndDelete({_id:req.params.id})
-        if(rs.stockStatus=='Raw'||rs.stockStatus=='Part'||rs.stockStatus=='Fixed_Asset')
-        {
-                console.log('rs.name:',rs.name)
-                let f=await BillOfMaterial.updateMany( {},{ $pull: { raw: { name: rs.name } } } )  
-                console.log(f)
-        }
-        else
-        {
-                let f=await BillOfMaterial.deleteMany({"readyStock.name":rs.name})
-        }
+        res.send({
+            message:'data is successfully deleted ',
+            success:false,
+          })
+        
+       }
+
 
         
-        res.send({
-            message:"item is sussessfully deleted",
-            success:true,
-    
-          })
+        
     }
     catch(err){
         res.send({
             message:err.message,
             success:false,
-           
-    
           })
 
     }
@@ -100,31 +101,15 @@ router.get('/allItemMaster',async(req,res)=>{
 router.put('/updatingItemMater/:id',async(req,res)=>{
     console.log(req.params.id)
     let body=req.body
-    let name=body.name
+   
     try{
-        let rs= await ItemMaster.findByIdAndUpdate({_id:req.params.id},req.body)
-        if(rs.stockStatus=='Raw'||rs.stockStatus=='Part'||rs.stockStatus=='Fixed_Asset')
-        {
-         
-                let f=await BillOfMaterial.updateMany( { raw: { $elemMatch: { name:name } } },
-                    { $set: { "raw.$[elem]":body } }, { arrayFilters: [ { "elem.name":name }]}
-                 )  
-               
+       
+      let js=await ItemMaster.findByIdAndUpdate(req.params.id,body) 
+      res.send({
+        message:'data is successfully updated',
+        success:true,
+      }) 
         
-        }
-        else{
-
-                let f=await BillOfMaterial.updateMany({"readyStock.name":name},{$set:{readyStock:body}})
-                   
-
-        }
-
-        
-        res.send({
-            message:"item is sussessfully updated",
-            success:true,
-    
-          })
     }
     catch(err){
         res.send({

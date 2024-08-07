@@ -6,7 +6,6 @@ router.post('/addSupplier',async(req,res)=>{
     try{
         let body=req.body;    
         let supplier=new Supplier(body);
-        
         await supplier.save();
         res.send({
            message:"data is successfully added",
@@ -29,7 +28,7 @@ router.post('/addSupplier',async(req,res)=>{
        }
 
 })
-
+/*
 router.delete('/deleteSupplier/:id',async(req,res)=>{
     let {id}=req.params
     
@@ -64,7 +63,7 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
     }
 
 })
-
+*/
 router.get('/allSupplier',async(req,res)=>{
     try{
 

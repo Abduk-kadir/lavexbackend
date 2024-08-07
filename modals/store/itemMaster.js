@@ -61,8 +61,8 @@ ItemMasterSchema=mongoose.Schema({
         required:[true,'stockStatus is required']
     },
     usedInBom:{
-        type:String,
-        required:[true,'used in bom']
+        type:Array,
+        default:[]
     }
 })
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)

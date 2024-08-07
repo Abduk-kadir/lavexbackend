@@ -5,7 +5,34 @@ const Category = require('../modals/drop/category');
 const QuantityType=require('../modals/drop/quantityType')
 const Hsncode=require('../modals/drop/hsnCode')
 const Gst=require('../modals/drop/gstDropdown')
-const Lowquantity=require('../modals/drop/lowQuantity')
+const Lowquantity=require('../modals/drop/lowQuantity');
+const gstDropdown = require('../modals/drop/gstDropdown');
+
+router.get('/allDropdown',async(req,res)=>{
+    try{
+       let brandDrop=await Brand.find({},{_id:0})
+       let categDrop=await Category.find({},{_id:0})
+       let qtyDrop=await QuantityType.find({},{_id:0})
+       let hsnDrop=await Hsncode.find({},{_id:0})
+       let gstDrop=await Gst.find({},{_id:0})
+       let lowDrop=await Lowquantity.find({},{_id:0})
+       let js={brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop,lowDrop:lowDrop}
+       res.send({
+        message:"data is successfully added",
+        success:true, 
+        data:js
+     })
+    }
+    catch(err){
+        res.send({
+            message:"data is successfully added",
+            success:true, 
+            data:null
+         })
+        
+    }
+
+})
 
 router.post('/createBrand',async(req,res)=>{
     try{
