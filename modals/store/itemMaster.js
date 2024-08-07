@@ -52,10 +52,14 @@ ItemMasterSchema=mongoose.Schema({
         type:String,
         required:[true]
     },
+
     stockStatus:{
         type:String,
-        required:[true,'stockStatus is required']
+        default:" "
     },
-  
+    usedInBom:{
+        type:Array,
+        default:[]
+    }
 })
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)
