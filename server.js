@@ -20,7 +20,7 @@ let CompanyRouter=require('./routes/companyRoute')
 let SupplerPayRouter=require('./routes/suppallPayRoute/supplerPayment')
 let CleintPayRouter=require('./routes/clientAllPayRoute/clientpayment')
 let ManufecturerRouter=require('./routes/manufacturerRoute')
-let BrandRouter=require('./routes/brandRoute')
+let DropdownRouter=require('./routes/dropdownRoute')
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -64,7 +64,7 @@ app.use('/api/production',ProductionRouter)
 app.use('/api/nameofPayment',PaymentNameRouter)
 app.use('/api/suppPayment',SupplerPayRouter)
 app.use('/api/clientPayment',CleintPayRouter)
-app.use('/api/brand',BrandRouter)
+app.use('/api',DropdownRouter)
 app.use('/api/manufecturer',ManufecturerRouter)
 
 

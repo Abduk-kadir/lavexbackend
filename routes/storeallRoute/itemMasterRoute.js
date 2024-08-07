@@ -46,16 +46,25 @@ router.post('/addItemMaster',async(req,res)=>{
     try{
         
         let body=req.body;
-        let data=await ItemMaster.find()
-        let val=data.reduce((acc,curr)=>curr.itemCode>acc?curr.itemCode:acc,0)
-        val=val+1
-        let itemmaster=new ItemMaster({...body,itemCode:val});
+        let data=await ItemMaster.findOne({name:body.name})
+        console.log(data)
+        console.log(!data)
+        if(!data){
+        let itemmaster=new ItemMaster(body);
         await itemmaster.save();
         res.send({
            message:"data is successfully added",
            success:true, 
         })
        }
+       else{
+        res.send({
+            message:"this name is already exist",
+            success:false, 
+         })
+
+       }
+      }
        catch(err){
            res.send({
                message:err.message,
