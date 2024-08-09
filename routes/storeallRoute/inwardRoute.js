@@ -1,9 +1,191 @@
 let express=require('express')
 let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
-const PurchaseStore=require('../../modals/store/purchaseStore')
+const PurchaseStore = require('../../modals/store/purchaseStore');
+router.put('/changestatus/:id',async(req,res)=>{
+    let parr=[]
+    try{
+      let status=req.body.status
+      let prod=await   Inward.findOne({_id:req.params.id})
+      let result=await Inward.updateOne({_id:req.params.id},{$set:{status:req.body.status}})
+      let preStatus=prod.status
+      console.log('previsous status:',preStatus)
+      console.log('current status',status)
+      
+      if(status=='canceled'){
+        if(preStatus=='pending'){
+            await Inward.deleteOne({_id:req.params.id})
+            console.log('in pending')
+        }
+        else if(preStatus=='confirmed'){
+            let {item}=prod;
+            console.log('i am here');
+            //here updating purchase store
+            for(let i=0;i<item.length;i++){
+                let {id,quantity}=item[i]  
+                console.log(id)
+                console.log(quantity)
+                const f = await PurchaseStore.updateOne(
+                    {item:{$elemMatch:{id:id}}},
+                    { $inc: { "item.$[elem].quantity":-quantity } },
+                    { arrayFilters: [{ "elem.id": id }] }
+                  );
+              
+               
+                }
+           await Inward.deleteOne({_id:req.params.id}) 
+           
+
+        }
+      }
+ 
+     
+
+      if(status=='pending'&&preStatus=='confirmed'){
+        let {item}=prod;
+        console.log('i am here');
+        //here updating purchase store
+        for(let i=0;i<item.length;i++){
+            let {id,quantity}=item[i]  
+            console.log(id)
+            console.log(quantity)
+            const f = await PurchaseStore.updateOne(
+                {item:{$elemMatch:{id:id}}},
+                { $inc: { "item.$[elem].quantity":-quantity } },
+                { arrayFilters: [{ "elem.id": id }] }
+              );
+          
+           
+            }
+       
+         //ending
+
+       
+        
+          
+        
+        
+
+      }
 
 
+
+
+     
+
+
+      if(status=='confirmed'&&preStatus!='confirmed'){
+       let {item}=prod;
+      //here updating purchase store
+      for(let i=0;i<item.length;i++){
+        let {id,quantity}=item[i]  
+        console.log(id)
+        console.log(quantity)
+        console.log(quantity)
+        const f = await PurchaseStore.updateOne(
+            {item:{$elemMatch:{id:id}}},
+            { $inc: { "item.$[elem].quantity": quantity } },
+            { arrayFilters: [{ "elem.id": id }] }
+          );
+        console.log(f)
+        if(f.matchedCount==0){
+            let elem=item[i]
+            parr.push(elem)
+        }
+        }
+        if(parr.length>0){
+          
+            let purchaseStore=new PurchaseStore({item:parr})
+            await purchaseStore.save()
+           
+        }
+       //ending
+    
+      }
+      res.send({
+         message:'status is successfully update',
+         success:true,
+        
+        })
+ 
+    }
+    catch(err){
+     res.send({
+         message:err.message,
+         success:false,
+        
+        })
+ 
+    }
+ 
+ 
+ })
+
+
+
+
+
+
+
+
+
+
+
+router.get('/allInward',async(req,res)=>{
+ 
+    try{
+        let result=await Inward.find()
+        res.send({
+          message:"data is fetched successfully",
+          success:true,
+          data:result
+  
+        })
+      }
+      catch(err){
+          res.send({
+              message:err.message,
+              success:false,
+              data:null
+      
+            })
+  
+      }
+
+
+})
+
+
+
+
+
+router.post('/addinward3',async(req,res)=>{
+
+    try{
+        console.log('ihfdh')
+        let body=req.body;
+        let inward=new Inward(body);
+        await inward.save();
+        console.log('hi')
+        res.send({
+            message:"data is successfully added",
+            success:true, 
+         })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false, 
+         })
+
+
+    }
+
+})
+
+
+
+/*
 router.post('/addinward2',async(req,res)=>{
         try{
         let parr=[]    
@@ -16,7 +198,7 @@ router.post('/addinward2',async(req,res)=>{
         inward=new Inward({...body,movementNumber:val});
         await inward.save();
 
-
+     
        //this code for updating and pushing value in purchaseStore
        for(let i=0;i<item.length;i++){
         let {name,brand,quantity,price,gst}=item[i]  
@@ -206,5 +388,5 @@ router.put('/updateInward/:id',async(req,res)=>{
   
       }
 })
-
+*/
 module.exports=router

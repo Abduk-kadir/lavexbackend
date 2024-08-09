@@ -2,7 +2,7 @@ let express=require('express')
 let router=express.Router()
 const ItemMaster = require('../../modals/store/itemMaster');
 const BillOfMaterial = require('../../modals/store/bomModal');
-router.delete('/delItemMater/:id',async(req,res)=>{
+/*router.delete('/delItemMater/:id',async(req,res)=>{
     console.log(req.params.id)
     try{
        let rs= await ItemMaster.findById({_id:req.params.id})
@@ -37,7 +37,7 @@ router.delete('/delItemMater/:id',async(req,res)=>{
 
 })
 
-
+*/
 
 
 
@@ -99,6 +99,8 @@ router.get('/allItemMaster',async(req,res)=>{
 
 })
 
+
+/*
 router.put('/updatingItemMater/:id',async(req,res)=>{
     console.log(req.params.id)
     let body=req.body
@@ -122,11 +124,9 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
 
     }
 
-})
-
-
-router.get('/allbystatus/:status',async(req,res)=>{
-      try{
+})*/
+router.get('/allitem/:status',async(req,res)=>{
+    try{
         let result=await ItemMaster.find({stockStatus:req.params.status})
         res.send({
           message:"data is fetched successfully",
@@ -144,76 +144,8 @@ router.get('/allbystatus/:status',async(req,res)=>{
     
           })
 
-      }
+      } 
 
-})
-
-router.get('/rawItem/:name',async(req,res)=>{
-  
-    try{
-        let result=await ItemMaster.findOne({name:req.params.name},{name:1,qty:1,price:1,qtyType:1,gst:1,brand:1})
-        console.log(result)
-        if(result==null){
-          
-            res.send({
-                message:"please provide correct raw Item name",
-                success:false,
-                data:result
-               })
-            
-        }
-        else{
-           
-            res.send({
-                message:"data is successfully fectched",
-                success:true,
-                data:result
-               })
-        }
-
-    }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-           })
-
-    }
-})
-
-router.get('/ready/:name',async(req,res)=>{
-  
-    try{
-        let result=await ItemMaster.findOne({name:req.params.name},{name:1,qty:1,price:1,qtyType:1,gst:1})
-        console.log(result)
-        if(result==null){
-          
-            res.send({
-                message:"please provide correct ready Item name",
-                success:false,
-                data:result
-               })
-            
-        }
-        else{
-           
-            res.send({
-                message:"data is successfully fectched",
-                success:true,
-                data:result
-               })
-        }
-
-    }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-           })
-
-    }
 })
 
 

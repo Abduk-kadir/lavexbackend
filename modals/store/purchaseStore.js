@@ -1,8 +1,12 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const PurchaseSchema=mongoose.Schema({
-
+   
     item:[{
+        id:{
+         type:String,
+         required:[true,'id is required']
+        },
         name:{
            type:String,
            required:[true,'name of item is required'],

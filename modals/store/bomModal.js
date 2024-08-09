@@ -2,16 +2,16 @@ const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 BomSchema=mongoose.Schema({
-         status:{
-          type:String,
-          enum:['Draft','Created'],
-          required:[true,'status is required']
-         },
          readyStock:{
-              name:{
+             id:{
+               type:String,
+               required:[true,'id is required of item ']
+             },
+             name:{
               type:String,
               required:[true,'name is required']
             },
+           
             qty:{
               type:Number,
               required:[true,'quantity is required']
@@ -20,9 +20,13 @@ BomSchema=mongoose.Schema({
               type:String,
               required:[true,'type of quantity is required']
             },
-            price:{
+            qtyType2:{
+              type:String,
+              required:[true,'type of quantity is required']
+            },
+            lowqty:{
               type:Number,
-              required:[true]
+              required:[true,'low quantity is required']
             },
             gst:{
                 type:Number,
@@ -32,44 +36,60 @@ BomSchema=mongoose.Schema({
               type:String,
               required:[true,'brand is required']
 
+            },
+            hsnCode:{
+              type:Number,
+              required:[true,'hsncode is required']
             }
+            
         },
-    raw:[
+     raw:[
         {
+         id:{
+            type:String,
+            required:[true,'id is required of item ']
+          },
           name:{
-            type:String,
-            required:[true,'name is required']
-          },
-          qty:{
-            type:Number,
-            required:[true,'quantity is required']
-          },
-          qtyType:{
-            type:String,
-            required:[true,'type of quantity is required']
-          },
-          price:{
-            type:Number,
-            required:[true,'price is required']
-          },
-          
-          gst:{
-            type:Number,
-            required:[true,'gst is required']
+           type:String,
+           required:[true,'name is required']
+         },
+         quantity:{
+           type:Number,
+           required:[true,'quantitiy is required']
 
-          },
-          brand:{
-            type:String,
-            required:[true,'brand is required']
+         },
+         qty:{
+           type:Number,
+           required:[true,'quantity is required']
+         },
+         qtyType:{
+           type:String,
+           required:[true,'type of quantity is required']
+         },
+         qtyType2:{
+           type:String,
+           required:[true,'type of quantity is required']
+         },
+         lowqty:{
+           type:Number,
+           required:[true,'low quantity is required']
+         },
+         gst:{
+             type:Number,
+             required:[true,'gst is important']
+         },
+         brand:{
+           type:String,
+           required:[true,'brand is required']
 
-          }
+         },
+         hsnCode:{
+          type:Number,
+          required:[true,'hsncode is required']
         }
+        }
+        
     ]
-        
-        
-
-    
-    
     
    
 })

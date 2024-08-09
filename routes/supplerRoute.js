@@ -41,6 +41,27 @@ router.post('/addSupplier',async(req,res)=>{
        }
 
 })
+
+router.get('/suplier/:id',async(req,res)=>{
+    try{
+        let data=await Supplier.findById(req.params.id)
+        res.send({
+            message:"data is successfully fectced",
+            success:true,
+            data:data
+        })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:true,
+            data:null
+        })
+
+    }
+    
+})
+   
 /*
 router.delete('/deleteSupplier/:id',async(req,res)=>{
     let {id}=req.params

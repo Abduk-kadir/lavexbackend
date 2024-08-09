@@ -3,14 +3,13 @@ const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 
 const invardSchema=mongoose.Schema({
-    
     name:{
         type:String,
         required:[true,'name is required of supplier']
     },
     gstNumber:{
         type:String,
-        default:null,
+        default:[true,'gst number is required'],
        
      },
      address:{
@@ -35,6 +34,10 @@ const invardSchema=mongoose.Schema({
      suplierInvoiceNo:{
         type:String,
         required:[true,'invoce number of suplier is important']
+     },
+     paymentType:{
+      type:String,
+      required:[true,'payment  type is required']
      },
      item:[{
         "id":{
@@ -68,9 +71,18 @@ const invardSchema=mongoose.Schema({
            type:Number,
            required:[true,'quantity  is required'],
            
+        },
+        quantity:{
+         type:Number,
+         required:[true,'quantity is required']
         }
    
-     }]
+     }],
+     status:{
+      type:String,
+      default:"pending"
+     }
+     
 
 })
      
