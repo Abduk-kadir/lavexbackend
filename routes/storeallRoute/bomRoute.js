@@ -1,7 +1,7 @@
 let express=require('express')
 let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
-
+const authMidd=require('..//../middleware/authmiddleware')
 router.put('/updatingBom/:id',async(req,res)=>{
     try{
         let js=await BillOfMaterial.findByIdAndUpdate(req.params.id,req.body)

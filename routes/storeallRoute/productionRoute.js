@@ -4,6 +4,7 @@ const Production = require("../../modals/store/production");
 const PurchaseStore = require("../../modals/store/purchaseStore");
 const ProductionStore = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
+const authMidd=require('../../middleware/authmiddleware')
 router.put("/changestatus/:id/", async (req, res) => {
   let parr = [];
   try {
@@ -13,11 +14,9 @@ router.put("/changestatus/:id/", async (req, res) => {
       { _id: req.params.id },
       { $set: { status: req.body.status } }
     );
-
     let preStatus = prod.status;
     console.log("previsous status:", preStatus);
     console.log("current status", status);
-
     if (status == "canceled") {
       if (preStatus == "pending") {
         await Production.deleteOne({ _id: req.params.id });
@@ -147,48 +146,6 @@ router.post("/production3", async (req, res) => {
   }
 });
 
-router.post("/addProduction2", async (req, res) => {
-  console("********");
-  let body = req.body;
-  try {
-    let data = await Production.find();
-    let val = data.reduce(
-      (acc, curr) => (curr.prodNum > acc ? curr.prodNum : acc),
-      0
-    );
-    console.log("val before :", val);
-    val = val + 1;
-    console.log(val);
-    let production = Production({ ...body, prodNum: val });
-    await production.save();
-    res.send({
-      message: "data is added success fully added",
-      success: true,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-      success: false,
-    });
-  }
-});
-
-router.get("/allProduction", async (req, res) => {
-  try {
-    let result = await Production.find();
-    res.send({
-      message: "all prodution is successfully fetched",
-      success: true,
-      data: result,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-      success: false,
-      data: null,
-    });
-  }
-});
 
 router.get("/prod/statuswithprev/:id", async (req, res) => {
   let arr = [];
@@ -295,7 +252,6 @@ router.get("/allStock", async (req, res) => {
     });
   }
 });
-
 router.get("/purchaseStore", async (req, res) => {
   try {
     let allpurchasesore = await PurchaseStore.find();

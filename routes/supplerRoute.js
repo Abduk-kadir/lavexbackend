@@ -1,7 +1,7 @@
 let express=require('express')
 let router=express.Router()
 let Supplier=require('../modals/supplierModal')
-
+let authMidd=require('../middleware/authmiddleware')
 router.post('/addSupplier',async(req,res)=>{
     try{
 

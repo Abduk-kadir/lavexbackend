@@ -1,33 +1,36 @@
 let express=require('express')
 let router=express.Router()
 let Client=require('../modals/clientModal')
-
+const authMidd=require('../middleware/authmiddleware')
 router.post('/addClient',async(req,res)=>{
     try{
+        let data=await Client.findOne({client:req.body.client})
+        if(data){
+            res.send({
+                message:"client is already exist",
+                success:false, 
+             })
+
+        }
+        else{
         let body=req.body;
-       
         let client=new Client(body);
         await client.save();
         res.send({
            message:"data is successfully added",
            success:true,
-           data:body
        
         })
-             
-   
+
+        }
+        
        }
        catch(err){
            res.send({
                message:err.message,
                success:false,
-               data:null
-   
-   
            })
-   
        }
-
 })
 
 

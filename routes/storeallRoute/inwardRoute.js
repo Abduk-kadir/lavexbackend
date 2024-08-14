@@ -2,6 +2,7 @@ let express=require('express')
 let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
+const authMidd=require('..//../middleware/authmiddleware')
 router.put('/changestatus/:id',async(req,res)=>{
     let parr=[]
     try{

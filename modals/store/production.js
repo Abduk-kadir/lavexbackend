@@ -49,6 +49,7 @@ const productionSchema=mongoose.Schema({
         type:Number,
         required:[true,'low quantity is required']
       },
+      
       gst:{
           type:Number,
           required:[true,'gst is important']
@@ -70,6 +71,7 @@ const productionSchema=mongoose.Schema({
         type:Number,
         required:['price is required']
       }
+        
         
    }   
  ],

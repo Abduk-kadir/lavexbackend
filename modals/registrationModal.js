@@ -37,11 +37,11 @@ const registrationSchema=mongoose.Schema({
             message: props => `${props.value} should be contain country code and only digit`
           },
         required:[true]  
+    },
+    isAdmin:{
+      type:Boolean,
+      default:false
     }
    
-  
-
-
-
 })
 module.exports=mongoose.model('Registration',registrationSchema)

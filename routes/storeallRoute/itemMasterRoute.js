@@ -1,104 +1,76 @@
-let express=require('express')
-let router=express.Router()
-const ItemMaster = require('../../modals/store/itemMaster');
-const BillOfMaterial = require('../../modals/store/bomModal');
-/*router.delete('/delItemMater/:id',async(req,res)=>{
-    console.log(req.params.id)
-    try{
-       let rs= await ItemMaster.findById({_id:req.params.id})
-       let {status}=rs
-       if(status=='active'){
-        res.send({
-            message:'status is active can not delete ',
-            success:false,
-          })
-
-       }
-       else{
-        let rs= await ItemMaster.findByIdAndDelete({_id:req.params.id})
-        res.send({
-            message:'data is successfully deleted ',
-            success:false,
-          })
-        
-       }
-
-
-        
-        
+let express = require("express");
+let router = express.Router();
+const ItemMaster = require("../../modals/store/itemMaster");
+const BillOfMaterial = require("../../modals/store/bomModal");
+const authMidd=require('../../middleware/authmiddleware')
+router.get("/usedInBom/:id", async (req, res) => {
+  console.log(req.params.id);
+  let inbomdata;
+  try {
+    let rs = await ItemMaster.findById({ _id: req.params.id });
+    if (rs.stockStatus == "Raw") {
+      inbomdata = await BillOfMaterial.find({
+        raw: { $elemMatch: { id: rs.id } },
+      });
+    } else {
+      inbomdata = await BillOfMaterial.find({ "readyStock.id": rs.id });
     }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-          })
+    res.send({
+      message:"this item master already used in following bom",
+      success:true,
+      data:inbomdata
+    })
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    });
+  }
+});
 
-    }
-
-})
-
-*/
-
-
-
-
-
-router.post('/addItemMaster',async(req,res)=>{
-    try{
-        
-        let body=req.body;
-        let data=await ItemMaster.findOne({name:body.name})
-        console.log(data)
-        console.log(!data)
-        if(!data){
-        let itemmaster=new ItemMaster(body);
-        await itemmaster.save();
-        res.send({
-           message:"data is successfully added",
-           success:true, 
-        })
-       }
-       else{
-        res.send({
-            message:"this name is already exist",
-            success:false, 
-         })
-
-       }
-      }
-       catch(err){
-           res.send({
-               message:err.message,
-               success:false,
-        
-           })
-   
-       }
-
-})
-router.get('/allItemMaster',async(req,res)=>{
-    try{
-      let result=await ItemMaster.find()
-     
+router.post("/addItemMaster", async (req, res) => {
+  try {
+    let body = req.body;
+    let data = await ItemMaster.findOne({ name: body.name });
+    console.log(data);
+    console.log(!data);
+    if (!data) {
+      let itemmaster = new ItemMaster(body);
+      await itemmaster.save();
       res.send({
-        message:"data is fetched successfully",
-        success:true,
-        data:result
-
-      })
+        message: "data is successfully added",
+        success: true,
+      });
+    } else {
+      res.send({
+        message: "this name is already exist",
+        success: false,
+      });
     }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-    
-          })
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    });
+  }
+});
+router.get("/allItemMaster", async (req, res) => {
+  try {
+    let result = await ItemMaster.find();
 
-    }
-
-})
-
+    res.send({
+      message: "data is fetched successfully",
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+      data: null,
+    });
+  }
+});
 
 /*
 router.put('/updatingItemMater/:id',async(req,res)=>{
@@ -125,29 +97,21 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
     }
 
 })*/
-router.get('/allitem/:status',async(req,res)=>{
-    try{
-        let result=await ItemMaster.find({stockStatus:req.params.status})
-        res.send({
-          message:"data is fetched successfully",
-          success:true,
-          data:result
-  
-        })
+router.get("/allitem/:status", async (req, res) => {
+  try {
+    let result = await ItemMaster.find({ stockStatus: req.params.status });
+    res.send({
+      message: "data is fetched successfully",
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+      data: null,
+    });
+  }
+});
 
-      }
-      catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-    
-          })
-
-      } 
-
-})
-
-
-
-module.exports=router
+module.exports = router;

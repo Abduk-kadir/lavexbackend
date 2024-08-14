@@ -5,7 +5,6 @@ const router=express.Router()
 const Registration=require('../modals/registrationModal')
 const bcrypt = require('bcryptjs');
 
-
 router.post('/register',async(req,res)=>{
     let {body}=req;
    let {email,password}=body
@@ -47,12 +46,10 @@ router.post('/register',async(req,res)=>{
 router.post('/login',async(req,res)=>{
     try{
     let user=await Registration.findOne({email:req.body.email})
-    
     if(user){
      let fpass=await bcrypt.compare(req.body.password,user.password)
      if(fpass){
-      let token=jsonwebToken.sign({email:req.body.emil},process.env.secretKey,{expiresIn:60})
-
+     let token=jsonwebToken.sign({role:user.isAdmin},process.env.secretKey,{expiresIn:'1w'})
         res.send({
             message:'user is successfully login',
             success:true,
