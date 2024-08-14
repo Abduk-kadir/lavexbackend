@@ -43,6 +43,10 @@ const ItemSchema = mongoose.Schema({
     type:String,
     required:[true,'category is requied']
 
+  },
+  quantity:{
+    type:Number,
+    required:true
   }
 }, { _id: false });  // This disables the _id field for the raw materials
 
