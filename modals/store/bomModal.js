@@ -46,7 +46,7 @@ const ItemSchema = mongoose.Schema({
   },
   quantity:{
     type:Number,
-    required:true
+    default:0
   }
 }, { _id: false });  // This disables the _id field for the raw materials
 

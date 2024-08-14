@@ -67,12 +67,8 @@ const productionSchema=mongoose.Schema({
         type:Number,
         required:[true,'quantity is required']
       },
-      price:{
-        type:Number,
-        required:['price is required']
-      }
-        
-        
+      
+    
    }   
  ],
      
