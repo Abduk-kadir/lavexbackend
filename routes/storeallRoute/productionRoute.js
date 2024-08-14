@@ -146,6 +146,25 @@ router.post("/production3", async (req, res) => {
   }
 });
 
+router.get('/allProdcution',async(req,res)=>{
+    
+     try{
+         let data=await Production.find()
+         res.send({
+          message: 'data is succfully fetched',
+          success: true,
+          data:data
+        });
+     }
+     catch(err){
+      res.send({
+        message: err.message,
+        success: false,
+        data:null
+      });
+
+     }
+})
 
 router.get("/prod/statuswithprev/:id", async (req, res) => {
   let arr = [];
