@@ -18,7 +18,8 @@ router.get('/allDropdown',async(req,res)=>{
        let hsnDrop=await Hsncode.find({},{_id:0})
        let gstDrop=await Gst.find({},{_id:0})
        let lowDrop=await Lowquantity.find({},{_id:0})
-       let js={brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop,lowDrop:lowDrop}
+       let statusDropdown=await StatusDropdown.find({},{_id:0})
+       let js={statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop,lowDrop:lowDrop}
        res.send({
         message:"data is successfully added",
         success:true, 
