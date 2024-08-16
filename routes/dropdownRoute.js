@@ -239,7 +239,7 @@ router.post('/createLowQuantity',async(req,res)=>{
         let lowqty=new Lowquantity(body);
         await lowqty.save();
         res.send({
-           message:"gst is successfully added",
+           message:"low is successfully added",
            success:true, 
         })
        }
