@@ -57,8 +57,6 @@ router.get('/invoicesbyClient/:clientname',async(req,res)=>{
 })
 
 
-
-
 router.post('/invoiceCreate',async(req,res)=>{
     let {type}=req.query;
     let {item}=req.body
@@ -78,9 +76,33 @@ router.post('/invoiceCreate',async(req,res)=>{
           { $inc: { "readyStock.$[elem].quantity":-quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
+       console.log('find data is:',f) 
        
       }
-      //in future here i want to add these item in sister company
+      //ending
+      
+      //here i adding  data in sister company
+      for (let i = 0; i < item.length; i++) {
+        let { id, quantity } = item[i];
+        const f = await ProductionStore2.updateOne(
+          { readyStock: { $elemMatch: { id: id } } },
+          { $inc: { "readyStock.$[elem].quantity": quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+        if (f.matchedCount == 0) {
+          let elem = item[i];
+          elem.company="arman"
+          console.log(elem)
+          parr.push(elem);
+        }
+      }
+      if (parr.length > 0) {
+        console.log("hit");
+        console.log(parr);
+        let product = new ProductionStore({ readyStock: parr });
+        await product.save();
+      }
+     //ending here 
 
      }
     

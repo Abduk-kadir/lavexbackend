@@ -33,7 +33,7 @@ const invoiceSchema=mongoose.Schema({
      },
      
      fcDays:{
-         type:String,
+         type:Number,
          required:[true,'first credit days is required']
      },
      
@@ -42,7 +42,7 @@ const invoiceSchema=mongoose.Schema({
          required:[true,'second credit limit is required']
      },
      scDays:{
-         type:String,
+         type:Number,
          required:[true,'second credit days is required']
      },
       

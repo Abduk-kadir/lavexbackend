@@ -99,7 +99,7 @@ const clientSchema=mongoose.Schema({
             message: props => `${props.value}  please provide a valid email!`
           },
 
-        required:[true]
+       
     },
     contactPerson:{
         type:String,
