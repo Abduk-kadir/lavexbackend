@@ -82,7 +82,7 @@ router.post('/invoiceCreate',async(req,res)=>{
       //ending
       
       //here i adding  data in sister company
-      for (let i = 0; i < item.length; i++) {
+     /* for (let i = 0; i < item.length; i++) {
         let { id, quantity } = item[i];
         const f = await ProductionStore2.updateOne(
           { readyStock: { $elemMatch: { id: id } } },
@@ -101,9 +101,9 @@ router.post('/invoiceCreate',async(req,res)=>{
         console.log(parr);
         let product = new ProductionStore({ readyStock: parr });
         await product.save();
-      }
+      }*/
      //ending here 
-
+    
      }
     
      res.send({

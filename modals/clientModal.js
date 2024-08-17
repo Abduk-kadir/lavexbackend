@@ -94,7 +94,7 @@ const clientSchema=mongoose.Schema({
         type:String,
         validate: {
             validator: function(v) {
-             return valid.isEmail(v)
+             return v?valid.isEmail(v):true
             },
             message: props => `${props.value}  please provide a valid email!`
           },
