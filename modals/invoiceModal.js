@@ -14,60 +14,45 @@ const invoiceSchema=mongoose.Schema({
     client:{
         type:String,
         required:[true,'client is required'],
-    
        },
+       grade:{
+       type:String,
+       default:" "
+       }, 
        address:{
         type:String,
         required:['true','address is required']
        },
-       city:{
-        type:String,
-        required:['true','city is required']
-       },
-       country:{
-        type:String,
-        required:[true,'country is required']
-       },
-       stateCode:{
-        type:String,
-        required:[true,'state code is required']
-       },
-       toShipped:{
-         type:String,
-         required:[true,'to shipped detail is required']
-       },
-       forToShipped:{
-         type:String,
-         required:[true,"for to shipped is required"]
-       },
-       shortCode:{
-         type:String,
-         default:null
-      },
-      gstRegistration:{
-         type:Boolean,
-         default:false
-   
-      },
       gstNumber:{
          type:String,
          default:null
       },
-      individual:{
-         type:Boolean,
-         default:false
-   
-      },
-    
-
+      fcAmount:{
+         type:Number,
+         required:[true,'first credit limit is required']
+     },
+     
+     fcDays:{
+         type:String,
+         required:[true,'first credit days is required']
+     },
+     
+     scAmount:{
+         type:Number,
+         required:[true,'second credit limit is required']
+     },
+     scDays:{
+         type:String,
+         required:[true,'second credit days is required']
+     },
+      
+     shipTo:{
+         type:String,
+         required:[true,'shipto is required']
+     },
+      
    },
    invoiceDetail:{
-    invoiceNo:{
-        type:Number,
-        unique:true,
-        required:[true,'invoice no is required'],
-        
-    },
     invoiceDate:{
         type:String,
         validate: {
@@ -76,7 +61,7 @@ const invoiceSchema=mongoose.Schema({
          },
          message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
        },
-        required:[true,'invoice date is required']
+       required:[true,'invoice date is required']
     },
     dueDate:{
         type:String,
@@ -89,33 +74,12 @@ const invoiceSchema=mongoose.Schema({
         required:[true,'due date is required']
 
     },
-    indicateMaturityDat:{
-      type:Boolean,
-      default:false
-    },
-    maturityDate:{
-        type:String,
-        default:null
-
-    },
     poNo:{
         type:String,    
-        
        },
-       
-    cashAccounting:{
-        type:Boolean,
-        default:false
-    }
 
    },
-   
-   selectCurrency:{
-    type:String,
-    enum:['India','pakistan','Nepal'],
-    required:[true,'country is required']
-  },
-  deliveryChalan:{
+  selectDc:{
     type:String,
     default:null
   },
@@ -129,10 +93,13 @@ const invoiceSchema=mongoose.Schema({
         type:String,
         required:[true,'name of brand is required'],
      },
-     qty:{
+     quantity:{
         type:Number,
         required:[true,'quantity  is required'],
         
+     },
+     qtyType:{
+
      },
      gst:{
         type:Number,
@@ -144,9 +111,6 @@ const invoiceSchema=mongoose.Schema({
         required:[true,'quantity  is required'],
         
      }
-
   }]
-  
- 
 })
 module.exports=mongoose.model('InVoice',invoiceSchema)

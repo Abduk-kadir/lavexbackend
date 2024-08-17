@@ -43,4 +43,6 @@ const ProductionSchema = mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("ProductionStore", ProductionSchema);
+const ProductionStore = mongoose.model("ProductionStore", ProductionSchema);
+const ProductionStore2 = mongoose.model("ProductionStore2", ProductionSchema);
+module.exports = { ProductionStore, ProductionStore2 };

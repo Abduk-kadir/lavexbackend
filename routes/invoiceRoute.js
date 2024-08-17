@@ -1,7 +1,7 @@
 const express=require('express')
 const Invoice=require('../modals/invoiceModal')
 router=express.Router();
-const ProductionStore=require('./../modals/store/productionStore')
+const {ProductionStore,ProductionStore2}=require('./../modals/store/productionStore')
 router.get('/invoicesbyClient/:clientname',async(req,res)=>{
     try{
         let result=await Invoice.aggregate([{$match:{"clientDetail.client":req.params.clientname}},
@@ -67,17 +67,23 @@ router.post('/invoiceCreate',async(req,res)=>{
     try{
      let body=req.body;
      let invoice=new Invoice(js);
-     await invoice.save();
+     await invoice.save();   
+     if(!req.body.selectDc){
+       //updating production store
+      for (let i = 0; i < item.length; i++) {
+        let { id, quantity } = item[i];
+        console.log(quantity, id);
+        const f = await ProductionStore.updateOne(
+          { readyStock: { $elemMatch: { id: id } } },
+          { $inc: { "readyStock.$[elem].quantity":-quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+       
+      }
+      //in future here i want to add these item in sister company
 
-     for(let i=0;i<item.length;i++){
-        let {name,brand,qty}=item[i]   
-        let f=await ProductionStore.updateOne( { readyStock: { $elemMatch: { name: name, brand:brand } } }, { $inc: { "readyStock.$[elem].qty": -qty } }, { arrayFilters: [ { "elem.name": name, "elem.brand": brand }]})
-         
-        }
-        
-
-
-
+     }
+    
      res.send({
         message:"data is successfully added",
         success:true,

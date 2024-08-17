@@ -4,7 +4,7 @@ var valid = require('validator');
 const hsnSchema=mongoose.Schema({
     code:{
         type:Number,
-        required:[true,'manufacturer name is required']
+        required:[true,' hsn is required']
     },
      
 })

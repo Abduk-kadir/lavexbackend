@@ -1,50 +1,50 @@
-const express=require('express')
-const Company=require('../modals/companyModal')
-router=express.Router()
-router.post('/addCompany',async(req,res)=>{
-    try{
-     let body=req.body;
-     let company=new Company(body);
-     await company.save();
-     res.send({
-        message:"data is successfully added",
-        success:true,
-        data:body
-    
-     })
-          
-
-    }
-    catch(err){
+const express = require("express");
+const Company = require("../modals/companyModal");
+router = express.Router();
+router.post("/addCompany", async (req, res) => {
+  try {
+    let body = req.body;
+    let data = await Company.findOne({ company: body.company });
+    if (data) {
         res.send({
-            message:err.message,
+            message:"this company is already exit",
             success:false,
-            data:null
-
-
         })
-
-    }
-})
- router.get('/allcompany',async(req,res)=>{
-      try{
-       let result=await Company.find()
-       res.send({
-        message:'data is fetched successfully',
-        success:true,
-        data:result
-       })
-      }
-      catch(err){
+     
+    } else {
+        let company = new Company(body);
+        await company.save();
         res.send({
-            message:err.message,
-            success:false,
-            data:null
-
-        })
-      }
- })
-
+          message: "company is successfully added",
+          success: true,
+         
+        });
+    }
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+     
+    });
+  }
+});
+router.get("/allcompany", async (req, res) => {
+  try {
+    let result = await Company.find();
+    res.send({
+      message: "data is fetched successfully",
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+      data: null,
+    });
+  }
+});
+/*
 router.put('/addTransaltion/:id',async(req,res)=>{
     
     try
@@ -136,6 +136,6 @@ router.delete('/deleteCompany/:id',async(req,res)=>{
 
 })
     
+*/
 
-
-module.exports=router
+module.exports = router;
