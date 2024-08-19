@@ -85,6 +85,10 @@ const invoiceSchema=mongoose.Schema({
   },
   
   item:[{
+    id:{
+      type:"String",
+      required:[true,'id is important of item']
+    },
      name:{
         type:String,
         required:[true,'name of item is required'],

@@ -109,14 +109,14 @@ router.post('/invoiceCreate',async(req,res)=>{
      res.send({
         message:"data is successfully added",
         success:true,
-        data:body
+      
      })
     }
     catch(err){
         res.send({
             message:err.message,
             success:false,
-            data:null
+          
 
 
         })

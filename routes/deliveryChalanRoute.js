@@ -1,17 +1,32 @@
 const express=require('express')
 const DeliveryChalan=require('../modals/deliveryChalan')
+const {ProductionStore}=require('../modals/store/productionStore')
 router=express.Router()
 router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type}=req.query
-    console.log(type)
+    let {item}=req.body
     try{
      let js={...req.body,companyname:type}
      let delivery=new DeliveryChalan(js);
      await delivery.save();
+     
+     //updating production store
+      for (let i = 0; i < item.length; i++) {
+        let { id, quantity } = item[i];
+        console.log(quantity, id);
+        const f = await ProductionStore.updateOne(
+          { readyStock: { $elemMatch: { id: id } } },
+          { $inc: { "readyStock.$[elem].quantity":-quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+    
+      }
+      //ending
+
      res.send({
         message:"data is successfully added",
         success:true,
-        data:js
+      
     
      })
           
@@ -21,7 +36,7 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
         res.send({
             message:err.message,
             success:false,
-            data:null
+           
 
 
         })

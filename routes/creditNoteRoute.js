@@ -8,7 +8,7 @@ router.post('/creditNoteCreate',async(req,res)=>{
     let js={...req.body,companyname:type}
     let {item}=req.body
     
-     let debitnote=new creditNote(js);
+     let creditn=new creditNote(js);
      await debitnote.save();
      //this is used for updting production
 
