@@ -12,8 +12,7 @@ const creditNoteS=mongoose.Schema({
    },
    onAccount:{
       type:Boolean,
-      default:false
-
+      required:[true,'onaccount is required']
 
    },
    clientDetail:{

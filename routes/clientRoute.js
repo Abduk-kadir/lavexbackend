@@ -64,7 +64,7 @@ router.get('/clientdropdown',async(req,res)=>{
 
 })
 
-router.delete('/deleteClient/:id',async(req,res)=>{
+/*router.delete('/deleteClient/:id',async(req,res)=>{
     let {id}=req.params
     
     try{
@@ -98,7 +98,7 @@ router.delete('/deleteClient/:id',async(req,res)=>{
     }
 
 })
-
+*/
 router.get('/allClient',async(req,res)=>{
     try{
 
