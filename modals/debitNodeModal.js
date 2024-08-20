@@ -11,6 +11,11 @@ const debitnoteS=mongoose.Schema({
 
    },
    clientDetail:{
+      id:{
+         type:String,
+         required:[true,'id is required']
+         
+      },
     client:{
         type:String,
         required:[true,'client is required'],

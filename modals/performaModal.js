@@ -11,6 +11,10 @@ const performaSchema=mongoose.Schema({
 
    },
    clientDetail:{
+      id:{
+         type:String,
+         default:[true,'id is required']
+      },
     client:{
         type:String,
         required:[true,'client is required'],

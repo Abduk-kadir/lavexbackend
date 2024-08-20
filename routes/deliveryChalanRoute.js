@@ -44,12 +44,13 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
     }
 })
 
-router.get('/chalan/:number/:name',async(req,res)=>{
-    console.log(req.params.number)
+router.get('/chalan/:id/:name',async(req,res)=>{
+    console.log(req.params.id)
     console.log(req.params.name)
+    console.log('hi arman')
    
      try{
-      let result=await DeliveryChalan.findOne({$and:[{companyname:req.params.name},{'deliveryDetail.deliveryChNo':req.params.number}]})
+      let result=await DeliveryChalan.findOne({$and:[{companyname:req.params.name},{'clientDetail.id':req.params.id}]})
       if(result==null){
         res.send({
             message:"please fill correct company name and invoiceNo",
