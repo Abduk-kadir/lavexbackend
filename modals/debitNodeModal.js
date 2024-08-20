@@ -10,7 +10,7 @@ const debitnoteS=mongoose.Schema({
       required:[true,'company name is required']
       
      },
-    suplierDetail:{
+    clientDetail:{
        
         client:{
             type:String,
