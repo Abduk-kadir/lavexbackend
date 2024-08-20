@@ -3,6 +3,7 @@ const DebitNote=require('../modals/debitNodeModal')
 const Porfarma=require('../modals/performaModal')
 const Invoice=require('../modals/invoiceModal')
 const creditNote=require('../modals/creditNoteModal')
+const Deliverynote=require('../modals/deliveryChalan')
 const router=express.Router();
 const Company=require('../modals/companyModal')
 let arr=null
@@ -52,6 +53,10 @@ router.get('/myInvoices',async(req,res)=>{
 
             case "debitnote":
              arr= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+
+            case "deliverynote":
+              case "debitnote":
+             arr= await Deliverynote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])   
           
             
             
@@ -66,7 +71,8 @@ router.get('/myInvoices',async(req,res)=>{
 
               let  arr4= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.suplier" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
               
-             arr=[...arr1,...arr2,...arr3,...arr4]
+              let  arr5= await Deliverynote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.suplier" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+             arr=[...arr1,...arr2,...arr3,...arr4,...arr5]
 
            
     }
