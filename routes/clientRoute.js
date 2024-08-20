@@ -3,8 +3,10 @@ let router=express.Router()
 let Client=require('../modals/clientModal')
 const authMidd=require('../middleware/authmiddleware')
 router.post('/addClient',async(req,res)=>{
+    let company=req.query.company
+   
     try{
-        let data=await Client.findOne({client:req.body.client})
+        let data=await Client.findOne({$and:[{client:req.body.client},{company:company}]})
         if(data){
             res.send({
                 message:"client is already exist",
@@ -14,6 +16,7 @@ router.post('/addClient',async(req,res)=>{
         }
         else{
         let body=req.body;
+        body.company=company
         let client=new Client(body);
         await client.save();
         res.send({

@@ -1,6 +1,10 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
 const clientSchema=mongoose.Schema({
+    company:{
+        type:String,
+        required:[true,'company name is required']
+    },
     client:{
         type:String,
         required:[true,'client name is required']
