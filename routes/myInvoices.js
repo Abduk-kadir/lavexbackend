@@ -40,7 +40,7 @@ router.get('/myInvoices',async(req,res)=>{
     console.log(`page=${page} and limit=${limit} and type=${type}`)
      switch(type){
         case "proforma":
-           arr= await Porfarma.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", suplier: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+           arr= await Porfarma.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
             break;
             case "invoice":
               arr= await Invoice.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
@@ -51,20 +51,20 @@ router.get('/myInvoices',async(req,res)=>{
             break;
 
             case "debitnote":
-             arr= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", suplier: { $first: "$suplierDetail.suplier" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+             arr= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
           
             
             
             break;
             default:
-              let arr1= await Porfarma.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", suplier: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+              let arr1= await Porfarma.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
               console.log('arr1:',arr1)
             
               let  arr2= await Invoice.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
              
               let  arr3= await creditNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
 
-              let  arr4= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", suplier: { $first: "$suplierDetail.suplier" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+              let  arr4= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.suplier" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
               
              arr=[...arr1,...arr2,...arr3,...arr4]
 
