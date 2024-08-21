@@ -3,7 +3,7 @@ var valid = require('validator');
 const debitnoteS=mongoose.Schema({
    type:{
       type:String,
-      default:'Porfarma'
+      default:'DebitNote'
    },
    companyname:{
       type:String,

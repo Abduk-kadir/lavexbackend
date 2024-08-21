@@ -158,7 +158,7 @@ const clientSchema=mongoose.Schema({
         required:[true,'shipto is required']
     },
     createdAt: {
-        type: Date,
+        type:String,
         default: Date.now() // Automatically sets the date when a document is created
     }
       
