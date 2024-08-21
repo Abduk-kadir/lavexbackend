@@ -67,8 +67,9 @@ router.post('/invoiceCreate',async(req,res)=>{
      let body=req.body;
      let invoice=new Invoice(js);
      await invoice.save();   
-     req.body.selectDc.map(elem=>{
-       DeliveryChalan.findByIdAndDelete(elem)
+     req.body.selectDc.map(async(elem)=>{
+      console.log('delivery Id:',elem)
+       await DeliveryChalan.findByIdAndDelete(elem)
      })
      if(req.body.selectDc.length==0){
        //updating production store
