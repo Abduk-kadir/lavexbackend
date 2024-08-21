@@ -1,5 +1,6 @@
 const express=require('express')
 const Invoice=require('../modals/invoiceModal')
+const DeliveryChalan=require('../modals/deliveryChalan')
 router=express.Router();
 const {ProductionStore,ProductionStore2}=require('./../modals/store/productionStore')
 router.get('/invoicesbyClient/:clientname',async(req,res)=>{
@@ -66,7 +67,10 @@ router.post('/invoiceCreate',async(req,res)=>{
      let body=req.body;
      let invoice=new Invoice(js);
      await invoice.save();   
-     if(!req.body.selectDc){
+     req.body.selectDc.map(elem=>{
+       DeliveryChalan.findByIdAndDelete(elem)
+     })
+     if(req.body.selectDc.length==0){
        //updating production store
       for (let i = 0; i < item.length; i++) {
         let { id, quantity } = item[i];
