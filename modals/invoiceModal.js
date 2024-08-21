@@ -80,8 +80,8 @@ const invoiceSchema=mongoose.Schema({
 
    },
   selectDc:{
-    type:String,
-    default:null
+    type:Array,
+    default:[]
   },
   
   item:[{

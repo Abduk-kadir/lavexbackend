@@ -179,17 +179,14 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
     });
     let prevarr = arr.filter((elem) =>
       readyStock.find(
-        (elem2) => elem2.name == elem.name && elem2.brand == elem.brand
+        (elem2) => elem2.id == elem.id
       )
     );
-    let js1 = { prev: prevarr };
-    let js2 = { now: readyStock };
-    let finalarr = [js1, js2];
-
+    let js3={prev:prevarr,now:readyStock}
     res.send({
       message: "data is successfully fetched",
       success: true,
-      data: finalarr,
+      data:js3,
     });
   } catch (err) {
     res.send({
@@ -200,7 +197,6 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
 });
 
 router.get("/prod/status/:id", async (req, res) => {
-  console.log(req.params.id);
   try {
     let prod = await Production.aggregate([
       {
@@ -212,13 +208,13 @@ router.get("/prod/status/:id", async (req, res) => {
               in: {
                 name: "$$item.name",
                 brand: "$$item.brand",
-                qty: "$$item.qty",
+                quantity: "$$item.quantity",
                 gst: "$$item.gst",
                 price: "$$item.price",
                 total: {
                   $multiply: [
                     "$$item.price",
-                    "$$item.qty",
+                    "$$item.quantity",
                     { $add: [1, { $divide: ["$$item.gst", 100] }] },
                   ],
                 },
