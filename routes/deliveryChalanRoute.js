@@ -50,7 +50,7 @@ router.get('/chalan/:id/:name',async(req,res)=>{
     console.log('hi arman')
    
      try{
-      let result=await DeliveryChalan.findOne({$and:[{companyname:req.params.name},{'clientDetail.id':req.params.id}]})
+      let result=await DeliveryChalan.find({$and:[{companyname:req.params.name},{'clientDetail.id':req.params.id}]})
       if(result==null){
         res.send({
             message:"please fill correct company name and invoiceNo",
