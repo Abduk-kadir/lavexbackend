@@ -55,7 +55,6 @@ router.get('/myInvoices',async(req,res)=>{
              arr= await DebitNote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
 
             case "deliverynote":
-              case "debitnote":
              arr= await Deliverynote.aggregate([{$unwind:{path:"$item"}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])   
           
             
