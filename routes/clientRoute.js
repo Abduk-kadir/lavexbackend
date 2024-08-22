@@ -2,19 +2,15 @@ let express=require('express')
 let router=express.Router()
 let Client=require('../modals/clientModal')
 const authMidd=require('../middleware/authmiddleware')
+const Porfarma=require('../modals/performaModal')
+const Invoice=require('../modals/invoiceModal')
+const CreditNote=require('../modals/creditNoteModal')
+const deliveryChalan = require('../modals/deliveryChalan')
+
 router.post('/addClient',async(req,res)=>{
     let company=req.query.company
    
     try{
-        let data=await Client.findOne({$and:[{client:req.body.client},{company:company}]})
-        if(data){
-            res.send({
-                message:"client is already exist",
-                success:false, 
-             })
-
-        }
-        else{
         let body=req.body;
         body.company=company
         let client=new Client(body);
@@ -24,8 +20,6 @@ router.post('/addClient',async(req,res)=>{
            success:true,
        
         })
-
-        }
         
        }
        catch(err){
@@ -67,25 +61,31 @@ router.get('/clientdropdown',async(req,res)=>{
 
 })
 
-/*router.delete('/deleteClient/:id',async(req,res)=>{
+router.delete('/deleteClient/:id',async(req,res)=>{
     let {id}=req.params
     
     try{
-
-        let rs=await Client.findByIdAndDelete(id);
-        if(rs){
+        let p=await Porfarma.findOne({"clientDeltail.id":id})
+        let d=await deliveryChalan.findOne({"clientDetail.id":id})
+        let c=await CreditNote.findOne({"clientDeltail.id":id})
+        let i=await Invoice.findOne({"clientDetail.id":id})
+        console.log('porfarma:',p);
+        console.log('deliveryChalan:',d)
+        console.log("creditnote:",c)
+        console.log('invoice:',i)
+      
+        if(p||d||c||i){
             res.send({
-                message:"client deleted is successfully",
-                data:rs,
-                success:true
+                message:"client can not delete it is used invoices",
+                success:false
             })
 
         }
         else{
+           // let rs=await Client.findByIdAndDelete(id);
             res.send({
-                message:"please fill correct id",
-                data:null,
-                success:false
+                message:"client is successfully deleted",
+                success:true
             })
         }
        
@@ -94,14 +94,13 @@ router.get('/clientdropdown',async(req,res)=>{
     catch(err){
         res.send({
             message:err.message,
-            data:null,
             success:false
         })
 
     }
 
 })
-*/
+
 router.get('/allClient',async(req,res)=>{
     try{
 
