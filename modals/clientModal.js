@@ -3,7 +3,7 @@ var valid = require('validator');
 const clientSchema=mongoose.Schema({
     company:{
         type:String,
-        required:[true,'company name is required']
+        required:[true,'client name is required']
     },
     client:{
         type:String,

@@ -4,27 +4,16 @@ router = express.Router();
 router.post("/addCompany", async (req, res) => {
   try {
     let body = req.body;
-    let data = await Company.findOne({ company: body.company });
-    if (data) {
-        res.send({
-            message:"this company is already exit",
-            success:false,
-        })
-     
-    } else {
-        let company = new Company(body);
-        await company.save();
-        res.send({
-          message: "company is successfully added",
-          success: true,
-         
-        });
-    }
+    let company = new Company(body);
+    await company.save();
+    res.send({
+      message: "company is successfully added",
+      success: true,
+    });
   } catch (err) {
     res.send({
       message: err.message,
       success: false,
-     
     });
   }
 });

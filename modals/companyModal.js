@@ -4,16 +4,14 @@ const valid=require('validator')
 const companySchema=mongoose.Schema({
     company:{
         type:String,
+        unique: true ,
         required:[true,'client name is required']
     },
-    grade:{
+    Branch:{
         type:String,
         default:" "
     },
-    shortCode:{
-        type:String,
-        default:"CLI"
-    },
+   
     gstNumber:{
         type:String,
         validate:{
@@ -36,10 +34,6 @@ const companySchema=mongoose.Schema({
       required:[true,'adress is required']
     },
      
-    location:{
-        type:String,
-        required:[true,'location is required']
-    },
     area:{
         type:String,
         required:[true,'area is required']
@@ -129,33 +123,15 @@ const companySchema=mongoose.Schema({
           },
         required:[true]
     },
-   
-    fcAmount:{
-        type:Number,
-        required:[true,'first credit limit is required']
-    },
     
-    fcDays:{
-        type:String,
-        required:[true,'first credit days is required']
-    },
-    
-    scAmount:{
-        type:Number,
-        required:[true,'second credit limit is required']
-    },
-    scDays:{
-        type:String,
-        required:[true,'second credit days is required']
-    },
-     
-    shipTo:{
-        type:String,
-        required:[true,'shipto is required']
-    },
     createdAt: {
-        type: Date,
-        default: Date.now // Automatically sets the date when a document is created
+        type:String,
+        default: Date() // Automatically sets the date when a document is created
+    },
+    role:{
+        type:String,
+        required:[true,'role is required']
+        
     }
       
 })
