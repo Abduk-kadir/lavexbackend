@@ -61,6 +61,43 @@ router.get('/clientdropdown',async(req,res)=>{
 
 })
 
+router.put('/updateClient/:id',async(req,res)=>{
+    let {id}=req.params
+    try{
+        let p=await Porfarma.findOne({"clientDeltail.id":id})
+        let d=await deliveryChalan.findOne({"clientDetail.id":id})
+        let c=await CreditNote.findOne({"clientDeltail.id":id})
+        let i=await Invoice.findOne({"clientDetail.id":id})
+        if(p||d||c||i){
+            res.send({
+                message:"client can not update it is used invoices",
+                success:false
+            })
+
+        }
+        else{
+           await Client.findByIdAndUpdate(id,req.body,{runValidators: true });
+            res.send({
+                message:"client is successfully updated",
+                success:true
+            })
+        }
+       
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false
+        })
+
+    }
+
+
+})
+
+
+
 router.delete('/deleteClient/:id',async(req,res)=>{
     let {id}=req.params
     
@@ -69,11 +106,6 @@ router.delete('/deleteClient/:id',async(req,res)=>{
         let d=await deliveryChalan.findOne({"clientDetail.id":id})
         let c=await CreditNote.findOne({"clientDeltail.id":id})
         let i=await Invoice.findOne({"clientDetail.id":id})
-        console.log('porfarma:',p);
-        console.log('deliveryChalan:',d)
-        console.log("creditnote:",c)
-        console.log('invoice:',i)
-      
         if(p||d||c||i){
             res.send({
                 message:"client can not delete it is used invoices",
@@ -82,7 +114,7 @@ router.delete('/deleteClient/:id',async(req,res)=>{
 
         }
         else{
-           // let rs=await Client.findByIdAndDelete(id);
+           await Client.findByIdAndDelete(id);
             res.send({
                 message:"client is successfully deleted",
                 success:true
@@ -101,10 +133,9 @@ router.delete('/deleteClient/:id',async(req,res)=>{
 
 })
 
-router.get('/allClient',async(req,res)=>{
+router.get('/allClient/:company',async(req,res)=>{
     try{
-
-        let arr= await Client.find()
+        let arr= await Client.find({company:req.params.company})
         res.send({
             message:"data is fetched successfully",
             data:arr,

@@ -42,7 +42,7 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
     
     if(inbomdata.length>0){
       res.send({
-        message:"this item master used in following bom can not delete",
+        message:"this item master used in  boms can not delete",
         success:false,
       })
 
@@ -79,7 +79,7 @@ router.delete('/deletingItemMater/:id',async(req,res)=>{
     
     if(inbomdata.length>0){
       res.send({
-        message:"this item master used in following bom can not delete",
+        message:"this item master used in bom can not delete",
         success:false,
       })
 
