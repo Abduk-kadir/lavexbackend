@@ -37,10 +37,10 @@ router.get('/detailforInvoice',async(req,res)=>{
     res.send(result)
 })
 
-router.get('/clientdropdown',async(req,res)=>{
+router.get('/clientdropdown/:company',async(req,res)=>{
     try{
 
-        let arr= await Client.find({},{client:1,_id:0})
+        let arr= await Client.find({company:req.params.company},{client:1,_id:0})
         let dropdown=arr.map(elem=>elem.client)
         res.send({
             message:"data is fetched successfully",
