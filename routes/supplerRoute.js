@@ -2,9 +2,10 @@ let express=require('express')
 let router=express.Router()
 let Supplier=require('../modals/supplierModal')
 let authMidd=require('../middleware/authmiddleware')
+let Inward=require('../modals/store/inwardModal')
+let DebitNote=require('../modals/debitNodeModal')
 router.post('/addSupplier',async(req,res)=>{
     try{
-
         let data=await Supplier.findOne({supplier:req.body.supplier})
         if(!data){
         let body=req.body;    
@@ -13,8 +14,6 @@ router.post('/addSupplier',async(req,res)=>{
         res.send({
            message:"data is successfully added",
            success:true,
-          
-       
         })
        }
        else{
@@ -62,26 +61,23 @@ router.get('/suplier/:id',async(req,res)=>{
     
 })
    
-/*
 router.delete('/deleteSupplier/:id',async(req,res)=>{
     let {id}=req.params
-    
     try{
-
-        let rs=await Supplier.findByIdAndDelete(id);
-        if(rs){
+        let i=await Inward.findOne({"supplier.id":id})
+        let d=await DebitNote.findOne({"cliientDetail.id":id})
+        if(i||d){
             res.send({
-                message:"client deleted is successfully",
-                data:rs,
-                success:true
+                message:"client can not update it are using either inward or debitnote",
+                success:false
             })
 
         }
         else{
+           await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
             res.send({
-                message:"please fill correct id",
-                data:null,
-                success:false
+                message:"client is successfully updated",
+                success:true
             })
         }
        
@@ -90,14 +86,14 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
     catch(err){
         res.send({
             message:err.message,
-            data:null,
             success:false
         })
 
     }
 
+
 })
-*/
+
 router.get('/allSupplier',async(req,res)=>{
     try{
 
