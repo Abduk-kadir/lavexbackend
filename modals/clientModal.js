@@ -20,7 +20,7 @@ const clientSchema=mongoose.Schema({
     },
     gstNumber:{
         type:String,
-        validate:{
+       /* validate:{
             validator:function(v){
                if(v.length==15){
                
@@ -31,7 +31,7 @@ const clientSchema=mongoose.Schema({
                }
             },
             message:props=>'it should be 15 digit'
-        },
+        },*/
         required:[true,'gst number is required']
 
     },
@@ -79,7 +79,7 @@ const clientSchema=mongoose.Schema({
     },
     panNumber:{
         type:String,
-        validate:{
+      /*  validate:{
             validator: function(v){
                 if(v.length==10){
                   return ! valid.isNumeric(v)
@@ -90,7 +90,7 @@ const clientSchema=mongoose.Schema({
 
             },
             message:props=>`${props.value}is not correct shoud be alphanumeric and 10 digit `
-        },
+        },*/
         required:[true,'pan number is required']
     },
     
