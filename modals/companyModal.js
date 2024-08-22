@@ -4,7 +4,7 @@ const valid=require('validator')
 const companySchema=mongoose.Schema({
     company:{
         type:String,
-        unique: true ,
+        unique:true ,
         required:[true,'client name is required']
     },
     Branch:{

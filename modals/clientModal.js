@@ -159,7 +159,7 @@ const clientSchema=mongoose.Schema({
     },
     createdAt: {
         type:String,
-        default: Date.now() // Automatically sets the date when a document is created
+        default: Date() // Automatically sets the date when a document is created
     }
       
 })

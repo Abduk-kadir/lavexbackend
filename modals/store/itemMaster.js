@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 ItemMasterSchema=mongoose.Schema({
     name:{
         type:String,
+        unique:true ,
         required:[true,'name is required']
 
     },
@@ -56,10 +57,6 @@ ItemMasterSchema=mongoose.Schema({
     stockStatus:{
         type:String,
         default:" "
-    },
-    usedInBom:{
-        type:Array,
-        default:[]
     }
 })
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)
