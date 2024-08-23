@@ -102,7 +102,7 @@ router.delete('/deleteClient/:id',async(req,res)=>{
     let {id}=req.params
     
     try{
-        let p=await Porfarma.findOne({"clientDeltail.id":id})
+        let p=await Porfarma.findOne({"clientDetail.id":id})
         let d=await deliveryChalan.findOne({"clientDetail.id":id})
         let c=await CreditNote.findOne({"clientDeltail.id":id})
         let i=await Invoice.findOne({"clientDetail.id":id})
@@ -130,6 +130,7 @@ router.delete('/deleteClient/:id',async(req,res)=>{
         })
 
     }
+
 
 })
 
