@@ -1,7 +1,7 @@
 let express=require('express')
 let router=express.Router()
 let Supplier=require('../modals/supplierModal')
-let authMidd=require('../middleware/authmiddleware')
+
 let Inward=require('../modals/store/inwardModal')
 let DebitNote=require('../modals/debitNodeModal')
 router.post('/addSupplier',async(req,res)=>{
@@ -59,37 +59,70 @@ router.get('/suplier/:id',async(req,res)=>{
     }
     
 })
+router.put('/updateSupplier/:id',async(req,res)=>{
+    let {id}=req.params
+        
+        try{
+            let d=await DebitNote.findOne({"clientDetail.id":id})
+            let i=await Inward.findOne({"sid":id})
+            if(d||i){
+                res.send({
+                    message:"client can not update it is used in inwards or debitnote",
+                    success:false
+                })
+    
+            }
+            else{
+                await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
+                res.send({
+                    message:"supplier is successfully deleted",
+                    success:true
+                })
+            }
+           
+    
+        }
+        catch(err){
+            res.send({
+                message:err.message,
+                success:false
+            })
+    
+        }
+
+})
+
    
 router.delete('/deleteSupplier/:id',async(req,res)=>{
     let {id}=req.params
-    try{
-        let i=await Inward.findOne({"supplier.id":id})
-        let d=await DebitNote.findOne({"cliientDetail.id":id})
-        if(i||d){
+        
+        try{
+            let d=await DebitNote.findOne({"clientDetail.id":id})
+            let i=await Inward.findOne({"sid":id})
+            if(d||i){
+                res.send({
+                    message:"supplier can not delete it is used invoices",
+                    success:false
+                })
+    
+            }
+            else{
+               await Supplier.findByIdAndDelete(id);
+                res.send({
+                    message:"supplier is successfully deleted",
+                    success:true
+                })
+            }
+           
+    
+        }
+        catch(err){
             res.send({
-                message:"client can not update it are using either inward or debitnote",
+                message:err.message,
                 success:false
             })
-
+    
         }
-        else{
-           await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
-            res.send({
-                message:"client is successfully updated",
-                success:true
-            })
-        }
-       
-
-    }
-    catch(err){
-        res.send({
-            message:err.message,
-            success:false
-        })
-
-    }
-
 
 })
 
