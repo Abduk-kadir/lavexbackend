@@ -13,11 +13,10 @@ router.post('/addSupplier',async(req,res)=>{
         await supplier.save();
         res.send({
            message:"data is successfully added",
-           success:true,
+           success:true
         })
        }
        else{
-
         res.send({
             message:"this supplier is already exist",
             success:false,
