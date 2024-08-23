@@ -101,7 +101,7 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
             let i=await Inward.findOne({"sid":id})
             if(d||i){
                 res.send({
-                    message:"supplier can not delete it is used invoices",
+                    message:"supplier can not delete it is used inwards or debitnote",
                     success:false
                 })
     
