@@ -20,41 +20,21 @@ const debitnoteS=mongoose.Schema({
         type:String,
         required:[true,'client is required'],
        },
-       grade:{
-       type:String,
-       default:" "
-       }, 
+      
        address:{
         type:String,
         required:['true','address is required']
        },
       gstNumber:{
          type:String,
-         default:null
+        
       },
-      fcAmount:{
-         type:Number,
-         required:[true,'first credit limit is required']
-     },
-     
-     fcDays:{
-         type:Number,
-         required:[true,'first credit days is required']
-     },
-     
-     scAmount:{
-         type:Number,
-         required:[true,'second credit limit is required']
-     },
-     scDays:{
-         type:Number,
-         required:[true,'second credit days is required']
-     },
-      
-     shipTo:{
+      panNumber:{
+        type:String
+      },
+      mobile:{
          type:String,
-         required:[true,'shipto is required']
-     },
+      }
       
    },
    invoiceDetail:{
@@ -108,6 +88,8 @@ const debitnoteS=mongoose.Schema({
         
      },
      qtyType:{
+      type:String,
+      required:[true,'quantity type is required']
 
      },
      gst:{

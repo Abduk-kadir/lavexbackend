@@ -1,8 +1,10 @@
 const express=require('express')
 const Invoice=require('../modals/invoiceModal')
 const DeliveryChalan=require('../modals/deliveryChalan')
+const Company=require('../modals/companyModal')
 router=express.Router();
 const {ProductionStore,ProductionStore2}=require('./../modals/store/productionStore')
+const SisterStore=require('../modals/sisterStore');
 router.get('/invoicesbyClient/:clientname',async(req,res)=>{
     try{
         let result=await Invoice.aggregate([{$match:{"clientDetail.client":req.params.clientname}},
@@ -59,7 +61,7 @@ router.get('/invoicesbyClient/:clientname',async(req,res)=>{
 
 
 router.post('/invoiceCreate',async(req,res)=>{
-    let {type}=req.query;
+    let {type,role}=req.query;
     let {item}=req.body
     let js={...req.body,companyname:type}
     let parr=[]
@@ -68,54 +70,60 @@ router.post('/invoiceCreate',async(req,res)=>{
      let invoice=new Invoice(js);
      await invoice.save();   
      req.body.selectDc.map(async(elem)=>{
-      console.log('delivery Id:',elem)
+     
        await DeliveryChalan.findByIdAndDelete(elem)
      })
      if(req.body.selectDc.length==0){
-       //updating production store
-      for (let i = 0; i < item.length; i++) {
-        let { id, quantity } = item[i];
-        console.log(quantity, id);
-        const f = await ProductionStore.updateOne(
-          { readyStock: { $elemMatch: { id: id } } },
-          { $inc: { "readyStock.$[elem].quantity":-quantity } },
-          { arrayFilters: [{ "elem.id": id }] }
-        );
-       console.log('find data is:',f) 
+     
+      if(role=='master'){
+        for (let i = 0; i < item.length; i++) {
+          let { id, quantity } = item[i];
+        
+          const f = await ProductionStore.updateOne(
+            { readyStock: { $elemMatch: { id: id } } },
+            { $inc: { "readyStock.$[elem].quantity":-quantity } },
+            { arrayFilters: [{ "elem.id": id }] }
+          );
+        
+         
+        }
+        let cgst=req.body.clientDetail.gstNumber
+        let isSister=await Company.findOne({gstNumber:cgst})
+        console.log('is isister',isSister)
+        if(isSister){
+          let js={companyname:isSister._id,readyStock:item}
+          let sisterstore=new SisterStore(js)
+          await sisterstore.save()
+        }
        
       }
-      //ending
-      
-      //here i adding  data in sister company
-     /* for (let i = 0; i < item.length; i++) {
-        let { id, quantity } = item[i];
-        const f = await ProductionStore2.updateOne(
-          { readyStock: { $elemMatch: { id: id } } },
-          { $inc: { "readyStock.$[elem].quantity": quantity } },
-          { arrayFilters: [{ "elem.id": id }] }
-        );
-        if (f.matchedCount == 0) {
-          let elem = item[i];
-          elem.company="arman"
-          console.log(elem)
-          parr.push(elem);
+      else{
+        
+        console.log('hi i am sister compmany')
+       /* 
+        for (let i = 0; i < item.length; i++) {
+          let { id, quantity } = item[i];
+         
+          const f = await SisterStore.updateOne(
+            { readyStock: { $elemMatch: { id: id } } },
+            { $inc: { "readyStock.$[elem].quantity":-quantity } },
+            { arrayFilters: [{ "elem.id": id }] }
+          );
+        console.log('modified array is:',f)
+         
         }
+        */
+        }
+      
+       
+       
       }
-      if (parr.length > 0) {
-        console.log("hit");
-        console.log(parr);
-        let product = new ProductionStore({ readyStock: parr });
-        await product.save();
-      }*/
-     //ending here 
-    
-     }
-    
      res.send({
         message:"data is successfully added",
         success:true,
       
      })
+
     }
     catch(err){
         res.send({
@@ -129,9 +137,9 @@ router.post('/invoiceCreate',async(req,res)=>{
     }
 })
 
-router.get('/allinvoices/:company',async(req,res)=>{
+router.get('/allinvoices/:id',async(req,res)=>{
     try{
-        let result=await Invoice.find({companyname:req.params.company})
+        let result=await Invoice.find({companyname:req.params.id})
         console.log(result)
         if(result.length==0){
           res.send({

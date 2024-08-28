@@ -104,6 +104,8 @@ const deliverySchema=mongoose.Schema({
         
      },
      qtyType:{
+      type:String,
+      required:[true,'quantity type is required']
 
      },
      gst:{

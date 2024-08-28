@@ -104,6 +104,8 @@ const performaSchema=mongoose.Schema({
         
      },
      qtyType:{
+       type:String,
+       required:[true,'quantity type is required']
 
      },
      gst:{

@@ -9,7 +9,6 @@ const deliveryChalan = require('../modals/deliveryChalan')
 
 router.post('/addClient',async(req,res)=>{
     let company=req.query.company
-   
     try{
         let body=req.body;
         body.company=company
