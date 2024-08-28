@@ -5,6 +5,7 @@ const Company=require('../modals/companyModal')
 router=express.Router();
 const {ProductionStore,ProductionStore2}=require('./../modals/store/productionStore')
 const SisterStore=require('../modals/sisterStore');
+const SisterStock=require('../modals/sisterStock')
 router.get('/invoicesbyClient/:clientname',async(req,res)=>{
     try{
         let result=await Invoice.aggregate([{$match:{"clientDetail.client":req.params.clientname}},
@@ -100,19 +101,15 @@ router.post('/invoiceCreate',async(req,res)=>{
       else{
         
         console.log('hi i am sister compmany')
-       /* 
-        for (let i = 0; i < item.length; i++) {
+        for (let i = 0; i <item.length; i++) {
           let { id, quantity } = item[i];
-         
-          const f = await SisterStore.updateOne(
-            { readyStock: { $elemMatch: { id: id } } },
+          const f = await SisterStock.updateOne(
+            { companyname:type,'readyStock.id':id },
             { $inc: { "readyStock.$[elem].quantity":-quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
-        console.log('modified array is:',f)
          
         }
-        */
         }
       
        

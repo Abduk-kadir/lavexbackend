@@ -1,15 +1,19 @@
 const express=require('express')
 const DeliveryChalan=require('../modals/deliveryChalan')
 const {ProductionStore}=require('../modals/store/productionStore')
+const SisterStock=require('../modals/sisterStock')
+const SisterStore=require('../modals/sisterStore')
+const Company=require('../modals/companyModal')
 router=express.Router()
 router.post('/deliveryChalanCreate',async(req,res)=>{
-    let {type}=req.query
+    let {type,role}=req.query
     let {item}=req.body
     try{
      let js={...req.body,companyname:type}
      let delivery=new DeliveryChalan(js);
      await delivery.save();
      
+     if(role=='master'){
      //updating production store
       for (let i = 0; i < item.length; i++) {
         let { id, quantity } = item[i];
@@ -22,6 +26,33 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
     
       }
       //ending
+        let cgst=req.body.clientDetail.gstNumber
+        let isSister=await Company.findOne({gstNumber:cgst})
+        console.log('is isister',isSister)
+        if(isSister){
+          let js={companyname:isSister._id,readyStock:item}
+          let sisterstore=new SisterStore(js)
+          await sisterstore.save()
+        }
+
+
+
+     }
+     else{
+     //in sister company
+
+      for (let i = 0; i <item.length; i++) {
+        let { id, quantity } = item[i];
+        const f = await SisterStock.updateOne(
+          { companyname:type,'readyStock.id':id },
+          { $inc: { "readyStock.$[elem].quantity":-quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+       
+      }
+
+
+     }
 
      res.send({
         message:"data is successfully added",
