@@ -8,11 +8,14 @@ const authMidd=require('../../middleware/authmiddleware')
 
 router.get('/allMomvement',async(req,res)=>{
  try{
-   let result= await production.find({status:'confirmed'},{raw:1})
+ let data= await Production.aggregate([
+    {$unwind:{path:"$readyStock"}},
+    {$match:{status:'confirmed'}},
+    {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" }, total:{$sum:{$add:[{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] },{"$divide":["$readyStock.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}])
    res.send({
     message: "data is successfully attached",
     success: true,
-    data:result
+    data:data
   });
  }
  catch(err){

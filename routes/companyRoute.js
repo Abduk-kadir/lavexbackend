@@ -4,6 +4,7 @@ router = express.Router();
 router.post("/addCompany", async (req, res) => {
   try {
     let body = req.body;
+    body.role.toLowerCase();
     let company = new Company(body);
     await company.save();
     res.send({
