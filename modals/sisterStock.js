@@ -6,6 +6,10 @@ const sisterStockSchema=mongoose.Schema({
         type:String,
         required:[true,'company name is required']
     },
+    dateCreated:{
+      type:String,
+      default:Date()
+    },
     readyStock:[
       {
          id:{
