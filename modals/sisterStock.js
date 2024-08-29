@@ -1,7 +1,6 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const sisterStockSchema=mongoose.Schema({
-   
     companyname:{
         type:String,
         required:[true,'company name is required']

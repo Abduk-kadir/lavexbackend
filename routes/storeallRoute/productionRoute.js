@@ -5,6 +5,26 @@ const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
+
+router.get('/allMomvement',async(req,res)=>{
+ try{
+   let result= await production.find({status:'confirmed'},{raw:1})
+   res.send({
+    message: "data is successfully attached",
+    success: true,
+    data:result
+  });
+ }
+ catch(err){
+  res.send({
+    message: err.message,
+    success: false,
+    data:null
+  });
+   
+ }
+})
+
 router.put("/changestatus/:id/", async (req, res) => {
   let parr = [];
   try {

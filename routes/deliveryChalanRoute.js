@@ -30,12 +30,10 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
         let isSister=await Company.findOne({gstNumber:cgst})
         console.log('is isister',isSister)
         if(isSister){
-          let js={companyname:isSister._id,readyStock:item}
+          let js={dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
         }
-
-
 
      }
      else{
