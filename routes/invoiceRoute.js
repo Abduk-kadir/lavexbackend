@@ -137,22 +137,13 @@ router.post('/invoiceCreate',async(req,res)=>{
 router.get('/allinvoices/:id',async(req,res)=>{
     try{
         let result=await Invoice.find({companyname:req.params.id})
-        console.log(result)
-        if(result.length==0){
-          res.send({
-              message:"please fill correct company name ",
-              success:false,
-              data:null
-          })
-  
-        }
-        else{
          res.send({
           message:"invoice is fetched successfully fetched",
           success:true,
-          data:result
-         })
-       }
+          data:result}
+        )
+        
+        
        
        }
        catch(err){
