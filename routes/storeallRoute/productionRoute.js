@@ -5,13 +5,13 @@ const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
-
 router.get('/allMomvement',async(req,res)=>{
  try{
+  total: {$multiply: ["$$item.price","$$item.quantity",{ $add: [1, { $divide: ["$$item.gst", 100] }] }]}
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed'}},
-    {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" }, total:{$sum:{$add:[{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] },{"$divide":["$readyStock.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}])
+    {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}])
    res.send({
     message: "data is successfully attached",
     success: true,
