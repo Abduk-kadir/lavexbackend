@@ -7,7 +7,7 @@ const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
 router.get('/allMomvement',async(req,res)=>{
  try{
-  total: {$multiply: ["$$item.price","$$item.quantity",{ $add: [1, { $divide: ["$$item.gst", 100] }] }]}
+ 
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed'}},
@@ -190,8 +190,10 @@ router.get('/allProdcution',async(req,res)=>{
 })
 
 router.get("/prod/statuswithprev/:id", async (req, res) => {
+
   let arr = [];
   try {
+  
     let prod = await Production.findOne({ _id: req.params.id });
     let { readyStock } = prod;
     let allProduction = await ProductionStore.find();
@@ -205,12 +207,23 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
         (elem2) => elem2.id == elem.id
       )
     );
+    
+    let finalarr=readyStock.map(elem=>{
+      console.log(elem)
+      let f=prevarr.find(elem2=>elem2.id==elem.id)
+      let js2=f?{id:elem._id,name:elem.name,quantity:elem.quantity,prev:f.quantity}:{id:elem._id,name:elem.name,quantity:elem.quantity,prev:0}
+     
+      return js2
+    })
+
+   
     let js3={prev:prevarr,now:readyStock}
     res.send({
       message: "data is successfully fetched",
       success: true,
-      data:js3,
+      data:finalarr,
     });
+    
   } catch (err) {
     res.send({
       message: err.message,
@@ -221,7 +234,8 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
 
 router.get("/prod/status/:id", async (req, res) => {
   try {
-    let prod = await Production.aggregate([
+    console.log(req.params.id)
+    let prod = await Production.aggregate([{$match:{_id:req.params.id}},
       {
         $project: {
           readyStock: {
