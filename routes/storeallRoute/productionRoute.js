@@ -119,14 +119,15 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         if (f.matchedCount == 0) {
           let elem =raw[i];
           elem.quantity=-elem.quantity
+          elem.price=0
           purArr.push(elem);
         }
       }
       if (purArr.length > 0) {
         console.log("hit");
-        console.log(parr);
-        let product = new PurchaseStore({companyname:req.params.companyId,readyStock: parr });
-        await product.save();
+        console.log(purArr);
+        let purchasestore = new PurchaseStore({companyname:req.params.companyId,item: purArr });
+        await purchasestore.save();
       }
 
       //ending

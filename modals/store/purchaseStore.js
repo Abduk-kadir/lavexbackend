@@ -28,12 +28,12 @@ const PurchaseSchema=mongoose.Schema({
            required:[true,'gst  is required'],
            
         },
-        price:{
+       price:{
            type:Number,
-           required:[true,'quantity  is required'],
+           required:[true,'  is price is required'],
            
         }
-   
+      
      }]
 
    
