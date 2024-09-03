@@ -264,9 +264,9 @@ router.get("/allStock", async (req, res) => {
     });
   }
 });
-router.get("/purchaseStore", async (req, res) => {
+router.get("/purchaseStore/companyname", async (req, res) => {
   try {
-    let allpurchasesore = await PurchaseStore.find();
+    let allpurchasesore = await PurchaseStore.find({companyname:req.params.companyname});
     res.send({
       message: "data is successfully",
       success: true,
