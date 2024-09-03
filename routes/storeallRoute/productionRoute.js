@@ -236,7 +236,7 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
 
   
 
-router.get("/allStock/companyname", async (req, res) => {
+router.get("/allStock/:companyname", async (req, res) => {
   try {
     let porArr = await ProductionStore.find({companyname:req.params.companyname}, { _id: 0 });
     let purArr = await PurchaseStore.find({companyname:req.params.companyname}, { _id: 0 });
