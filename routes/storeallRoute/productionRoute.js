@@ -282,7 +282,7 @@ router.get("/purchaseStore/:companyname", async (req, res) => {
   }
 });
 
-router.get("/productionStore/companyname", async (req, res) => {
+router.get("/productionStore/:companyname", async (req, res) => {
   try {
     let allprodcutionStore = await ProductionStore.find({companyname:req.params.companyname});
     res.send({
