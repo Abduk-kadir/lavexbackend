@@ -3,19 +3,19 @@ let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
 const authMidd=require('..//../middleware/authmiddleware')
-router.put('/changestatus/:id',async(req,res)=>{
+router.put('/changestatus/:id/:companyId',async(req,res)=>{
     let parr=[]
     try{
       let status=req.body.status
-      let prod=await   Inward.findOne({_id:req.params.id})
-      let result=await Inward.updateOne({_id:req.params.id},{$set:{status:req.body.status}})
+      let prod=await   Inward.findOne({_id:req.params.id,companyname:req.params.companyId})
+      let result=await Inward.updateOne({_id:req.params.id,companyname:req.params.companyId},{$set:{status:req.body.status}})
       let preStatus=prod.status
       console.log('previsous status:',preStatus)
       console.log('current status',status)
       
       if(status=='canceled'){
         if(preStatus=='pending'){
-            await Inward.deleteOne({_id:req.params.id})
+            await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id})
             console.log('in pending')
         }
         else if(preStatus=='confirmed'){
@@ -27,14 +27,14 @@ router.put('/changestatus/:id',async(req,res)=>{
                 console.log(id)
                 console.log(quantity)
                 const f = await PurchaseStore.updateOne(
-                    {item:{$elemMatch:{id:id}}},
+                    {companyname:req.params.companyId,'item.id':id},
                     { $inc: { "item.$[elem].quantity":-quantity } },
                     { arrayFilters: [{ "elem.id": id }] }
                   );
               
                
                 }
-           await Inward.deleteOne({_id:req.params.id}) 
+           await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id}) 
            
 
         }
@@ -51,7 +51,7 @@ router.put('/changestatus/:id',async(req,res)=>{
             console.log(id)
             console.log(quantity)
             const f = await PurchaseStore.updateOne(
-                {item:{$elemMatch:{id:id}}},
+                {companyname:req.params.companyId,'item.id':id},
                 { $inc: { "item.$[elem].quantity":-quantity } },
                 { arrayFilters: [{ "elem.id": id }] }
               );
@@ -74,11 +74,9 @@ router.put('/changestatus/:id',async(req,res)=>{
       //here updating purchase store
       for(let i=0;i<item.length;i++){
         let {id,quantity}=item[i]  
-        console.log(id)
-        console.log(quantity)
-        console.log(quantity)
+       
         const f = await PurchaseStore.updateOne(
-            {item:{$elemMatch:{id:id}}},
+            {companyname:req.params.companyId,'item.id':id},
             { $inc: { "item.$[elem].quantity": quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
@@ -90,7 +88,7 @@ router.put('/changestatus/:id',async(req,res)=>{
         }
         if(parr.length>0){
           
-            let purchaseStore=new PurchaseStore({item:parr})
+            let purchaseStore=new PurchaseStore({companyname:req.params.companyId,item:parr})
             await purchaseStore.save()
            
         }
