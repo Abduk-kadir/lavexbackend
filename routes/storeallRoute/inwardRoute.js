@@ -71,6 +71,8 @@ router.put('/changestatus/:companyId/:id',async(req,res)=>{
 
       if(status=='confirmed'&&preStatus!='confirmed'){
        let {item}=prod;
+       console.log(req.params.companyId)
+       console.log(req.params.id)
       //here updating purchase store
       for(let i=0;i<item.length;i++){
         let {id,quantity}=item[i]  
