@@ -119,7 +119,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         if (f.matchedCount == 0) {
           let elem =raw[i];
           elem.quantity=-elem.quantity
-          elem.price=0
+         
           purArr.push(elem);
         }
       }
