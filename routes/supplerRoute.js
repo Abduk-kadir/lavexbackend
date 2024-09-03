@@ -25,9 +25,9 @@ router.post('/addSupplier/:companyname',async(req,res)=>{
 
 })
 
-router.get('/suplier/:id',async(req,res)=>{
+router.get('/suplier/:companyname/:id',async(req,res)=>{
     try{
-        let data=await Supplier.findById(req.params.id)
+        let data=await Supplier.findOne({companyname:req.params.companyname,_id:req.params.id})
         res.send({
             message:"data is successfully fectced",
             success:true,
