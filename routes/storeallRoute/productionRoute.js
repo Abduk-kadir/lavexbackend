@@ -106,6 +106,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
     }
 
     if (status == "confirmed" && preStatus != "confirmed") {
+      console.log('hi in confirmed block')
       let { raw, readyStock } = prod;
       //here updating purchase store
       for (let i = 0; i < raw.length; i++) {
@@ -116,7 +117,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
           { arrayFilters: [{ "elem.id": id }] }
         );
         if (f.matchedCount == 0) {
-          let elem =item[i];
+          let elem =raw[i];
           elem.quantity=-elem.quantity
           purArr.push(elem);
         }
