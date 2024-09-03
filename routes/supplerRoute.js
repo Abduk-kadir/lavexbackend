@@ -25,7 +25,7 @@ router.post('/addSupplier/:companyname',async(req,res)=>{
 
 })
 
-router.get('/suplier/:companyname/:id',async(req,res)=>{
+/*router.get('/suplier/:companyname/:id',async(req,res)=>{
     try{
         let data=await Supplier.findOne({companyname:req.params.companyname,_id:req.params.id})
         res.send({
@@ -43,7 +43,7 @@ router.get('/suplier/:companyname/:id',async(req,res)=>{
 
     }
     
-})
+})*/
 router.put('/updateSupplier/:id',async(req,res)=>{
     let {id}=req.params
         

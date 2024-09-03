@@ -3,7 +3,7 @@ let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
 const authMidd=require('..//../middleware/authmiddleware')
-router.put('/changestatus/:id/:companyId',async(req,res)=>{
+router.put('/changestatus/:companyId/:id',async(req,res)=>{
     let parr=[]
     try{
       let status=req.body.status
