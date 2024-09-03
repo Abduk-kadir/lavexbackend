@@ -28,13 +28,13 @@ router.get('/allMomvement',async(req,res)=>{
  }
 })
 
-router.put("/changestatus/:id/", async (req, res) => {
+router.put("/changestatus/:companyId/:id", async (req, res) => {
   let parr = [];
   try {
     let status = req.body.status;
-    let prod = await Production.findOne({ _id: req.params.id });
+    let prod = await Production.findOne({companyname:req.params.companyId, _id: req.params.id });
     let result = await Production.updateOne(
-      { _id: req.params.id },
+      {companyname:req.params.companyId,_id: req.params.id },
       { $set: { status: req.body.status } }
     );
     let preStatus = prod.status;
@@ -42,14 +42,14 @@ router.put("/changestatus/:id/", async (req, res) => {
     console.log("current status", status);
     if (status == "canceled") {
       if (preStatus == "pending") {
-        await Production.deleteOne({ _id: req.params.id });
+        await Production.deleteOne({companyname:req.params.companyId,_id: req.params.id });
       } else if (preStatus == "confirmed") {
         let { raw, readyStock } = prod;
         //here updating purchase store
         for (let i = 0; i < raw.length; i++) {
           let { id, quantity } = raw[i];
           const f = await PurchaseStore.updateOne(
-            { item: { $elemMatch: { id: id } } },
+            {companyname:req.params.companyId,'item.id':id },
             { $inc: { "item.$[elem].quantity":quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
@@ -62,14 +62,14 @@ router.put("/changestatus/:id/", async (req, res) => {
           console.log("updating production store");
           console.log(quantity, id);
           const f = await ProductionStore.updateOne(
-            { readyStock: { $elemMatch: { id: id } } },
+            {companyname:req.params.companyId,'readyStock.id':id },
             { $inc: { "readyStock.$[elem].quantity":-quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
          
         }
   
-        await Production.deleteOne({ _id: req.params.id });
+        await Production.deleteOne({companyname:req.params.companyId, _id: req.params.id });
        
       }
     }
@@ -80,7 +80,7 @@ router.put("/changestatus/:id/", async (req, res) => {
       for (let i = 0; i < raw.length; i++) {
         let { id, quantity } = raw[i];
         const f = await PurchaseStore.updateOne(
-          { item: { $elemMatch: { id: id } } },
+          {companyname:req.params.companyId,'item.id':id},
           { $inc: { "item.$[elem].quantity":quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
@@ -93,7 +93,7 @@ router.put("/changestatus/:id/", async (req, res) => {
         console.log("updating production store");
         console.log(quantity, id);
         const f = await ProductionStore.updateOne(
-          { readyStock: { $elemMatch: { id: id } } },
+          {companyname:req.params.companyId,'readyStock.id':id},
           { $inc: { "readyStock.$[elem].quantity":-quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
@@ -110,7 +110,7 @@ router.put("/changestatus/:id/", async (req, res) => {
       for (let i = 0; i < raw.length; i++) {
         let { id, quantity } = raw[i];
         const f = await PurchaseStore.updateOne(
-          { item: { $elemMatch: { id: id } } },
+          {companyname:req.params.companyId,'item.id':id },
           { $inc: { "item.$[elem].quantity": -quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
@@ -123,7 +123,7 @@ router.put("/changestatus/:id/", async (req, res) => {
         console.log("updating production store");
         console.log(quantity, id);
         const f = await ProductionStore.updateOne(
-          { readyStock: { $elemMatch: { id: id } } },
+          { companyname:req.params.companyId,'readyStock.id':id},
           { $inc: { "readyStock.$[elem].quantity": quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
@@ -135,7 +135,7 @@ router.put("/changestatus/:id/", async (req, res) => {
       if (parr.length > 0) {
         console.log("hit");
         console.log(parr);
-        let product = new ProductionStore({ readyStock: parr });
+        let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
         await product.save();
       }
       //ending
@@ -152,8 +152,9 @@ router.put("/changestatus/:id/", async (req, res) => {
   }
 });
 
-router.post("/production3", async (req, res) => {
+router.post("/production3/:companyname", async (req, res) => {
   let body = req.body;
+  body.companyname=req.params.companyname
   try {
     let production = Production(body);
     await production.save();
@@ -169,10 +170,10 @@ router.post("/production3", async (req, res) => {
   }
 });
 
-router.get('/allProdcution',async(req,res)=>{
+router.get('/allProdcution/:companyname',async(req,res)=>{
     
      try{
-         let data=await Production.find()
+         let data=await Production.find({companyname:req.params.companyname})
          res.send({
           message: 'data is succfully fetched',
           success: true,

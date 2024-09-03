@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const valid = require("validator");
 const ProductionSchema = mongoose.Schema({
+  companyname:{
+    type:String,
+    required:[true,'company id is required']
+  },
   readyStock: [
     {
       id: {
