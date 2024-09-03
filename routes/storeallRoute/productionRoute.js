@@ -205,14 +205,14 @@ router.get('/allProdcution/:companyname',async(req,res)=>{
      }
 })
 
-router.get("/prod/statuswithprev/:id", async (req, res) => {
+router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
 
   let arr = [];
   try {
   
-    let prod = await Production.findOne({ _id: req.params.id });
+    let prod = await Production.findOne({ _id: req.params.id,companyname:req.params.companyname});
     let { readyStock } = prod;
-    let allProduction = await ProductionStore.find();
+    let allProduction = await ProductionStore.find({companyname:req.params.companyname});
     allProduction.map((elem) => {
       elem.readyStock.map((elem) => {
         arr.push(elem);
