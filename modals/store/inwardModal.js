@@ -1,7 +1,6 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
-
 const invardSchema=mongoose.Schema({
    sid:{
       type:String,
@@ -85,6 +84,12 @@ const invardSchema=mongoose.Schema({
      status:{
       type:String,
       default:"pending"
+     },
+     total:{
+      type:Number,
+     },
+     pendingamount:{
+      type:Number
      }
      
 

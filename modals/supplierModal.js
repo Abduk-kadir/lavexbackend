@@ -1,9 +1,14 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
 const supplierSchema=mongoose.Schema({
+    companyname:{
+        type:String,
+        required:[true,'companyname is required']
+    },
     supplier:{
         type:String,
-        ////required:[true,'Suppler name is required']
+        unique: true,
+        required:[true,'Suppler name is required']
     },
     address:{
         type:String,

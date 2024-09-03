@@ -4,10 +4,11 @@ const clientSchema=mongoose.Schema({
     company:{
         type:String,
         unique:true,
-        required:[true,'client name is required']
+        required:[true,'company name is required']
     },
     client:{
         type:String,
+        unique:true,
         required:[true,'client name is required']
     },
     grade:{

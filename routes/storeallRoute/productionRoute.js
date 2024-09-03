@@ -232,48 +232,8 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
   }
 });
 
-router.get("/prod/status/:id", async (req, res) => {
-  try {
-    console.log(req.params.id)
-    let prod = await Production.aggregate([{$match:{_id:req.params.id}},
-      {
-        $project: {
-          readyStock: {
-            $map: {
-              input: "$readyStock",
-              as: "item",
-              in: {
-                name: "$$item.name",
-                brand: "$$item.brand",
-                quantity: "$$item.quantity",
-                gst: "$$item.gst",
-                price: "$$item.price",
-                total: {
-                  $multiply: [
-                    "$$item.price",
-                    "$$item.quantity",
-                    { $add: [1, { $divide: ["$$item.gst", 100] }] },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    ]);
-    res.send({
-      message: "data is successfully",
-      success: true,
-      data: prod,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-      success: false,
-      data: null,
-    });
-  }
-});
+
+  
 
 router.get("/allStock", async (req, res) => {
   try {

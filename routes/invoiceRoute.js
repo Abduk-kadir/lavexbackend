@@ -188,5 +188,38 @@ router.get('/invoice/:number/:name',async(req,res)=>{
 
 })
 
+router.get('/getinvoice/:clientid/:name',async(req,res)=>{
+  console.log(req.params.number)
+   try{
+    let result=await Invoice.find({$and:[{ "clientDetail.id":req.params.clientid},{companyname:req.params.name}]})
+    if(result.length==0){
+      res.send({
+          message:"no invoice is generated from this client",
+          success:false
+      })
+    }
+    else{
+     res.send({
+      message:"invoice is fetched successfully attached",
+      success:true,
+      data:result
+     })
+   }
+   
+   }
+   catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+         
+
+      })
+   }
+
+})
+
+
+
+
 
 module.exports=router

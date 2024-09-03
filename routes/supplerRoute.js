@@ -4,36 +4,21 @@ let Supplier=require('../modals/supplierModal')
 
 let Inward=require('../modals/store/inwardModal')
 let DebitNote=require('../modals/debitNodeModal')
-router.post('/addSupplier',async(req,res)=>{
+router.post('/addSupplier/:companyname',async(req,res)=>{
     try{
-        let data=await Supplier.findOne({supplier:req.body.supplier})
-        if(!data){
-        let body=req.body;    
+        let body=req.body; 
+        body.companyname=req.params.companyname   
         let supplier=new Supplier(body);
         await supplier.save();
         res.send({
            message:"data is successfully added",
            success:true
         })
-       }
-       else{
-        res.send({
-            message:"this supplier is already exist",
-            success:false,
-         
-        
-         })
-
        }    
-   
-       }
        catch(err){
            res.send({
                message:err.message,
                success:false,
-             
-   
-   
            })
    
        }
@@ -126,10 +111,10 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
 
 })
 
-router.get('/allSupplier',async(req,res)=>{
+router.get('/allSupplier/:companyname',async(req,res)=>{
     try{
 
-        let arr= await Supplier.find()
+        let arr= await Supplier.find({companyname:req.params.companyname})
         res.send({
             message:"data is fetched successfully",
             data:arr,
