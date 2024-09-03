@@ -116,20 +116,10 @@ router.put('/changestatus/:id',async(req,res)=>{
  
  })
 
-
-
-
-
-
-
-
-
-
-
-router.get('/allInward',async(req,res)=>{
+router.get('/allInward/:companyname',async(req,res)=>{
  
     try{
-        let result=await Inward.find()
+        let result=await Inward.find({companyname:req.params.companyname})
         res.send({
           message:"data is fetched successfully",
           success:true,
@@ -151,11 +141,12 @@ router.get('/allInward',async(req,res)=>{
 })
 
 
-router.post('/addinward3',async(req,res)=>{
+router.post('/addinward3/:companyname',async(req,res)=>{
 
     try{
-        console.log('ihfdh')
+       
         let body=req.body;
+        body.companyname=req.params.companyname
         let inward=new Inward(body);
         await inward.save();
         console.log('hi')
@@ -175,7 +166,7 @@ router.post('/addinward3',async(req,res)=>{
 
 })
 
-router.get('/getinward/:id',async(req,res)=>{
+/*router.get('/getinward/:id',async(req,res)=>{
       
       try{
       let data=await Inward.find({status:'confirmed',sid:req.params.id})
@@ -204,10 +195,8 @@ router.get('/getinward/:id',async(req,res)=>{
 
       }
 })
-
-
-
-
+*/
+/*
 router.get('/getInwardbySup/:name',async(req,res)=>{
     try{
          let data=await Inward.aggregate([{$match:{suplierName:req.params.name}},
@@ -257,7 +246,7 @@ router.get('/getInwardbySup/:name',async(req,res)=>{
      }
        
 })
-
+*/
 
 
 

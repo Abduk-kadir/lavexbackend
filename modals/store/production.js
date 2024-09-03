@@ -1,6 +1,10 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const productionSchema=mongoose.Schema({
+  companyname:{
+    type:String,
+    required:[true,'company name is required']
+},
     status:{
       type:String,
       default:"pending"
