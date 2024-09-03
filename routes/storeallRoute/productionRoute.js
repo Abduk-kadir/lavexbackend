@@ -30,6 +30,7 @@ router.get('/allMomvement',async(req,res)=>{
 
 router.put("/changestatus/:companyId/:id", async (req, res) => {
   let parr = [];
+  let purArr=[];
   try {
     let status = req.body.status;
     let prod = await Production.findOne({companyname:req.params.companyId, _id: req.params.id });
@@ -114,7 +115,19 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
           { $inc: { "item.$[elem].quantity": -quantity } },
           { arrayFilters: [{ "elem.id": id }] }
         );
+        if (f.matchedCount == 0) {
+          let elem =item[i];
+          elem.quantity=-elem.quantity
+          purArr.push(elem);
+        }
       }
+      if (purArr.length > 0) {
+        console.log("hit");
+        console.log(parr);
+        let product = new PurchaseStore({companyname:req.params.companyId,readyStock: parr });
+        await product.save();
+      }
+
       //ending
 
       //updating production store
