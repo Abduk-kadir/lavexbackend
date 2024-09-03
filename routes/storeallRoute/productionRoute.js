@@ -5,12 +5,12 @@ const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
-router.get('/allMomvement',async(req,res)=>{
+router.get('/allMomvement/:companyname',async(req,res)=>{
  try{
  
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
-    {$match:{status:'confirmed'}},
+    {$match:{status:'confirmed',companyname:req.params.companyname}},
     {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}])
    res.send({
     message: "data is successfully attached",
