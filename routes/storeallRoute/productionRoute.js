@@ -236,10 +236,10 @@ router.get("/prod/statuswithprev/:id", async (req, res) => {
 
   
 
-router.get("/allStock", async (req, res) => {
+router.get("/allStock/companyname", async (req, res) => {
   try {
-    let porArr = await ProductionStore.find({}, { _id: 0 });
-    let purArr = await PurchaseStore.find({}, { _id: 0 });
+    let porArr = await ProductionStore.find({companyname:req.params.companyname}, { _id: 0 });
+    let purArr = await PurchaseStore.find({companyname:req.params.companyname}, { _id: 0 });
     console.log("prodcution arr:", porArr);
     let finalarr = [];
     for (let i = 0; i < purArr.length; i++) {
@@ -282,9 +282,9 @@ router.get("/purchaseStore/:companyname", async (req, res) => {
   }
 });
 
-router.get("/productionStore", async (req, res) => {
+router.get("/productionStore/companyname", async (req, res) => {
   try {
-    let allprodcutionStore = await ProductionStore.find();
+    let allprodcutionStore = await ProductionStore.find({companyname:req.params.companyname});
     res.send({
       message: "data is successfully",
       success: true,
