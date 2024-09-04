@@ -187,7 +187,6 @@ router.get('/invoice/:number/:name',async(req,res)=>{
      }
 
 })
-
 router.get('/getinvoice/:clientid/:name',async(req,res)=>{
   console.log(req.params.number)
    try{

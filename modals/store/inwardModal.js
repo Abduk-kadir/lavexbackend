@@ -46,6 +46,16 @@ const invardSchema=mongoose.Schema({
       type:String,
       required:[true,'payment  type is required']
      },
+     total:{
+      type:String,
+      required:[true,'total price is required']
+
+     },
+     pendingAmount:{
+       type:String,
+       required:[true,'pending amount is required']
+
+     },
      item:[{
         "id":{
          type:String,
