@@ -3,6 +3,11 @@ let router=express.Router()
 const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
 const authMidd=require('..//../middleware/authmiddleware')
+
+router.put('/payment/:companyId/:supplierId/:inwardId',(req,res)=>{
+
+})
+
 router.put('/changestatus/:companyId/:id',async(req,res)=>{
     let parr=[]
     try{
@@ -151,7 +156,7 @@ router.post('/addinward3/:companyname',async(req,res)=>{
        
          let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
          console.log(total)
-        body.pendingAmount=total
+        body.pegndingAmount=total
         body.total=total
         let inward=new Inward(body);
         await inward.save();
@@ -172,87 +177,8 @@ router.post('/addinward3/:companyname',async(req,res)=>{
 
 })
 
-/*router.get('/getinward/:id',async(req,res)=>{
-      
-      try{
-      let data=await Inward.find({status:'confirmed',sid:req.params.id})
-      if(data.length>0){
-        res.send({
-        message:"data is successfully fetched",
-        success:true,
-        data:data
-      })
-      }
-      else{
-        res.send({
-            message:"no invoice found for this supplier",
-            success:false,
-            
-          })
 
-      }
-      }
-      catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-           
-          })
 
-      }
-})
-*/
-/*
-router.get('/getInwardbySup/:name',async(req,res)=>{
-    try{
-         let data=await Inward.aggregate([{$match:{suplierName:req.params.name}},
-            {$project:{suplierInvoiceNo:1,dateCreated:1,
-                calculatedAmount:{
-                $reduce:{
-                    input:"$item",
-                    initialValue:0,
-                    in:{$add:["$$value",{$multiply:["$$this.price","$$this.quantity",{$add:[1,{$divide:["$$this.gst",100]}]}]}]}
-                }
-              },
-             
-            }
-           },
-           {
-            $project: {
-                suplierInvoiceNo: 1,
-                dateCreated: 1,
-                invoiceAmount: "$calculatedAmount",
-                balanceAmount: "$calculatedAmount"
-            }
-          }
-        ])
-        console.log(data)
-        if(data.length==0){
-            res.send({
-                message:"No invoice found by this supler",
-                success:true, 
-             })
-
-        }
-        else{
-        res.send({
-            message:"data is successfully added",
-            success:true, 
-            data:data
-         })
-        }
-        
-     }
-     catch(err){
-        res.send({
-            message:err.message,
-            success:false, 
-         })
-
-     }
-       
-})
-*/
 
 
 
