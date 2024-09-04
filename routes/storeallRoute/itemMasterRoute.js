@@ -104,9 +104,10 @@ router.delete('/deletingItemMater/:id',async(req,res)=>{
 
 
 
-router.post("/addItemMaster", async (req, res) => {
+router.post("/addItemMaster/:companyId", async (req, res) => {
   try {
     let body = req.body;
+    body.companyname=req.params.companyId
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();
     res.send({
@@ -120,9 +121,9 @@ router.post("/addItemMaster", async (req, res) => {
     });
   }
 });
-router.get("/allItemMaster", async (req, res) => {
+router.get("/allItemMaster/:companyId", async (req, res) => {
   try {
-    let result = await ItemMaster.find();
+    let result = await ItemMaster.find({companyname:req.params.companyId});
 
     res.send({
       message: "data is fetched successfully",

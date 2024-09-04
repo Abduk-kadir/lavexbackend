@@ -34,6 +34,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
   try {
     let status = req.body.status;
     let prod = await Production.findOne({companyname:req.params.companyId, _id: req.params.id });
+    console.log(prod)
     let result = await Production.updateOne(
       {companyname:req.params.companyId,_id: req.params.id },
       { $set: { status: req.body.status } }
@@ -60,8 +61,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         //updating production store
         for (let i = 0; i < readyStock.length; i++) {
           let { id, quantity } = readyStock[i];
-          console.log("updating production store");
-          console.log(quantity, id);
+          
           const f = await ProductionStore.updateOne(
             {companyname:req.params.companyId,'readyStock.id':id },
             { $inc: { "readyStock.$[elem].quantity":-quantity } },
@@ -91,8 +91,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
       //updating production store
       for (let i = 0; i < readyStock.length; i++) {
         let { id, quantity } = readyStock[i];
-        console.log("updating production store");
-        console.log(quantity, id);
+       
         const f = await ProductionStore.updateOne(
           {companyname:req.params.companyId,'readyStock.id':id},
           { $inc: { "readyStock.$[elem].quantity":-quantity } },
@@ -124,8 +123,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         }
       }
       if (purArr.length > 0) {
-        console.log("hit");
-        console.log(purArr);
+       
         let purchasestore = new PurchaseStore({companyname:req.params.companyId,item: purArr });
         await purchasestore.save();
       }
@@ -135,8 +133,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
       //updating production store
       for (let i = 0; i < readyStock.length; i++) {
         let { id, quantity } = readyStock[i];
-        console.log("updating production store");
-        console.log(quantity, id);
+        
         const f = await ProductionStore.updateOne(
           { companyname:req.params.companyId,'readyStock.id':id},
           { $inc: { "readyStock.$[elem].quantity": quantity } },
