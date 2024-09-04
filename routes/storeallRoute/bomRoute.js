@@ -43,9 +43,10 @@ router.delete('/delBom/:id',async(req,res)=>{
     }
 })
 
-router.post('/addBom',async(req,res)=>{
+router.post('/addBom/:companyId',async(req,res)=>{
     try{
         let body=req.body;
+        body.companyname=req.params.companyId
         let billOfMaterial=new BillOfMaterial(body);
         await billOfMaterial.save();
         res.send({
@@ -86,10 +87,10 @@ router.get('/getBom/:id',async(req,res)=>{
 
 })
 
-router.get('/allbom',async(req,res)=>{
+router.get('/allbom/:companyId',async(req,res)=>{
 
     try{
-      let allbom=await BillOfMaterial.find()
+      let allbom=await BillOfMaterial.find({companyname:req.params.companyId})
       res.send({
         message:'bill of material successfully fetched',
         success:true,

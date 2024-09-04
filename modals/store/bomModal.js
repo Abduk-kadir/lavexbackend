@@ -2,6 +2,10 @@ const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 const ItemSchema = mongoose.Schema({
+  companyname:{
+    type:String,
+    required:[true,'companyid  is required']
+ },
   id: {
     type: String,
     required: [true, 'id is required for the item'],
