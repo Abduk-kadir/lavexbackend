@@ -2,14 +2,11 @@ const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
 const ItemSchema = mongoose.Schema({
-  companyname:{
-    type:String,
-    required:[true,'companyid  is required']
- },
+  
   id: {
     type: String,
     required: [true, 'id is required for the item'],
-    default: uuidv4
+  
   },
   name: {
     type: String,
@@ -55,6 +52,10 @@ const ItemSchema = mongoose.Schema({
 }, { _id: false });  // This disables the _id field for the raw materials
 
 BomSchema=mongoose.Schema({
+  companyname:{
+    type:String,
+    required:[true,'companyid  is required']
+ },
   readyStock:{
     type:ItemSchema,
     required:true

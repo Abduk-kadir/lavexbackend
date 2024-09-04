@@ -15,7 +15,7 @@ let invardRouter=require('./routes/storeallRoute/inwardRoute')
 let ProductionRouter=require('./routes/storeallRoute/productionRoute')
 let ItemMasterRouter=require('./routes/storeallRoute/itemMasterRoute')
 let BomRouter=require('./routes/storeallRoute/bomRoute')
-let PaymentNameRouter=require('./routes/paymentNameRoute')
+
 let CompanyRouter=require('./routes/companyRoute')
 let SupplerPayRouter=require('./routes/suppallPayRoute/supplerPayment')
 let CleintPayRouter=require('./routes/clientAllPayRoute/clientpayment')
@@ -63,7 +63,7 @@ app.use('/api/itemMaster',ItemMasterRouter)
 app.use('/api/bom',BomRouter)
 app.use('/api/production',ProductionRouter)
 
-app.use('/api/nameofPayment',PaymentNameRouter)
+
 app.use('/api/suppPayment',SupplerPayRouter)
 app.use('/api/clientPayment',CleintPayRouter)
 app.use('/api',DropdownRouter)

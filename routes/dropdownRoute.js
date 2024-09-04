@@ -8,8 +8,8 @@ const Gst=require('../modals/drop/gstDropdown')
 const Lowquantity=require('../modals/drop/lowQuantity');
 const gstDropdown = require('../modals/drop/gstDropdown');
 const StatusDropdown = require('../modals/drop/stockStatus');
-
-
+const Bank=require('../modals/drop/bankName')
+const PaymentMethod=require('../modals/drop/payMethod')
 router.get('/allDropdown',async(req,res)=>{
     try{
        let brandDrop=await Brand.find({},{_id:0})
@@ -19,7 +19,9 @@ router.get('/allDropdown',async(req,res)=>{
        let gstDrop=await Gst.find({},{_id:0})
        let lowDrop=await Lowquantity.find({},{_id:0})
        let statusDropdown=await StatusDropdown.find({},{_id:0})
-       let js={statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop}
+       let bank=await Bank.find({},{_id:0})
+       let paymentmethod=await PaymentMethod.find({},{_id:0})
+       let js={bank:bank,paymentmethod:paymentmethod,statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop}
        res.send({
         message:"data is successfully added",
         success:true, 
@@ -36,6 +38,49 @@ router.get('/allDropdown',async(req,res)=>{
     }
 
 })
+router.post('/createPayMethod',async(req,res)=>{
+    try{
+     
+        let status=new PaymentMethod(req.body);
+        await status.save();
+        res.send({
+           message:"data is successfully added",
+           success:true, 
+        })
+      
+      
+      }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
+})
+router.post('/createBank',async(req,res)=>{
+    try{
+     
+        let status=new Bank(req.body);
+        await status.save();
+        res.send({
+           message:"data is successfully added",
+           success:true, 
+        })
+      
+      
+      }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
+})
+
 router.post('/createStockStatus',async(req,res)=>{
     try{
         let body=req.body;

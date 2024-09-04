@@ -65,27 +65,6 @@ router.post('/addBom/:companyId',async(req,res)=>{
 
 })
 
-router.get('/getBom/:id',async(req,res)=>{
-    try{
-       let result=await BillOfMaterial.findById(req.params.id)
-       res.send({
-        message:'bill of material successfully fetched',
-        success:false,
-        data:result
-
-
-       })
-     }
-     catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-           })
-
-     }
-
-})
 
 router.get('/allbom/:companyId',async(req,res)=>{
 
