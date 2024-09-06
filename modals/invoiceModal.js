@@ -122,6 +122,16 @@ const invoiceSchema=mongoose.Schema({
         required:[true,'quantity  is required'],
         
      }
-  }]
+  }],
+  total:{
+   type:Number,
+   default:0
+
+  },
+  pendingAmount:{
+   type:Number,
+   default:0
+
+  }
 })
 module.exports=mongoose.model('InVoice',invoiceSchema)

@@ -48,13 +48,13 @@ const invardSchema=mongoose.Schema({
      },
      total:{
       type:Number,
-      required:[true,'total price is required']
+      default:0
 
      },
      pendingAmount:{
        type:Number,
-       required:[true,'pending amount is required']
-
+       default:0
+      
      },
      item:[{
         "id":{

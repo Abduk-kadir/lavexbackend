@@ -1,11 +1,22 @@
 let express=require('express')
 let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
-router.post('/addclientPayment',async(req,res)=>{
+const Invoice=require('../../modals/invoiceModal')
+router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
     try{
         let body=req.body;
+        body.companyname=req.params.companyname;
+        body.cid=req.params.cid
         let clientPayment=new ClientPayment(body);
+        let {invoiceList}=body
         await clientPayment.save();
+        for(let i=0;i<invoiceList.length;i++){
+            await Invoice.updateOne(
+                {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
+                {$set:{pendingAmount:invoiceList[i].pendingAmount}}
+            
+            )
+        }
         res.send({
            message:"data is successfully added",
            success:true, 
@@ -21,37 +32,27 @@ router.post('/addclientPayment',async(req,res)=>{
        }
 
 })
-router.put('/updateClientPay/:id',async(req,res)=>{
+router.get('/allpayment/:companyname',async(req,res)=>{
+
     try{
-     let result= await ClientPayment.findByIdAndUpdate({_id:req.params.id},req.body)
-     res.send({
-        message:"data is successfully updated",
-        success:true, 
-     })
-    }
-    catch(err){
+
+        let data=await ClientPayment.find({companyname:req.params.companyname})
         res.send({
-            message:err.message,
-            success:false, 
+            message:"data is successfully updated",
+            success:true, 
+            data:data
          })
 
     }
-})
-router.delete('/deleteClientPay/:id',async(req,res)=>{
-    try{
-     let result= await ClientPayment.findByIdAndDelete(req.params.id)
-     res.send({
-        message:"data is successfully deleted",
-        success:true, 
-     })
-    }
     catch(err){
-        res.send({
-            message:err.message,
-            success:false, 
-         })
-
+       
+            res.send({
+                message:err.message,
+                success:false, 
+             })
+    
     }
+
 })
 
 module.exports=router

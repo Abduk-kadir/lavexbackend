@@ -45,6 +45,10 @@ const SuplierPaymentSchema=mongoose.Schema({
         type:Number,
         required:[true,'payment number is required']
     },
+    note:{
+        type:String,
+        
+    },
     inwardList:[
      {
         invoiceDate:{
