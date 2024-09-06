@@ -9,11 +9,12 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
         body.cid=req.params.cid
         let clientPayment=new ClientPayment(body);
         let {invoiceList}=body
+        console.log(invoiceList)
         await clientPayment.save();
         for(let i=0;i<invoiceList.length;i++){
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                {$set:{pendingAmount:invoiceList[i].pendingAmount}}
+                {$set:{pendingAmount:invoiceList[i].pendingAmount,total:invoiceList[i].total}}
             
             )
         }
