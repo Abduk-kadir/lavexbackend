@@ -64,6 +64,10 @@ router.get('/invoicesbyClient/:clientname',async(req,res)=>{
 router.post('/invoiceCreate',async(req,res)=>{
     let {type,role}=req.query;
     let {item}=req.body
+    let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+    console.log(total)
+   body.pendingAmount=total
+   body.total=total
     let js={...req.body,companyname:type}
     let parr=[]
     try{
