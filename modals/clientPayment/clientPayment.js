@@ -49,7 +49,7 @@ const ClientPaymentSchema=mongoose.Schema({
        type:String,
        
    },
-   inwardList:[
+   invoiceList:[
     {
        invoiceDate:{
            type:String,
