@@ -4,11 +4,11 @@ let Supplier=require('../modals/supplierModal')
 
 let Inward=require('../modals/store/inwardModal')
 let DebitNote=require('../modals/debitNodeModal')
-router.post('/addSupplier/:companyname/:sid',async(req,res)=>{
+router.post('/addSupplier/:companyname',async(req,res)=>{
     try{
         let body=req.body; 
         body.companyname=req.params.companyname 
-        body.sid=req.params.sid 
+       // body.sid=req.params.sid 
         let supplier=new Supplier(body);
         await supplier.save();
         res.send({

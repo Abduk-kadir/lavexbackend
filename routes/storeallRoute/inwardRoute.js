@@ -4,10 +4,6 @@ const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
 const authMidd=require('..//../middleware/authmiddleware')
 
-router.put('/payment/:companyId/:supplierId/:inwardId',(req,res)=>{
-
-})
-
 router.put('/changestatus/:companyId/:id',async(req,res)=>{
     let parr=[]
     try{
@@ -17,7 +13,6 @@ router.put('/changestatus/:companyId/:id',async(req,res)=>{
       let preStatus=prod.status
       console.log('previsous status:',preStatus)
       console.log('current status',status)
-      
       if(status=='canceled'){
         if(preStatus=='pending'){
             await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id})
