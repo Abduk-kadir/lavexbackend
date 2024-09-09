@@ -151,7 +151,7 @@ router.post('/addinward3/:companyname',async(req,res)=>{
        
          let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
          console.log(total)
-        body.pegndingAmount=total
+        body.pendingAmount=total
         body.total=total
         let inward=new Inward(body);
         await inward.save();
