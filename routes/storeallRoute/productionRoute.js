@@ -216,7 +216,7 @@ router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
       });
     });
     */
-    let allProduction = await Production.find({companyname:req.params.companyname});
+    let allProduction = await Production.findLast({companyname:req.params.companyname});
     allProduction.map((elem) => {
       elem.readyStock.map((elem) => {
         arr.push(elem);
