@@ -209,16 +209,12 @@ router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
   
     let prod = await Production.findOne({ _id: req.params.id,companyname:req.params.companyname});
     let { readyStock } = prod;
-    for(let i=0;i<readyStock.length;i++){
-      let p= await Production.find({companyname:req.params.companyname,"readyStock.id":readyStock[i].id}).sort({ _id: -1 }).skip(1).limit(1);
-      console.log(p)
-      if(p.length>0){
-       p[0].readyStock.map(elem=>{
-        arr.push(elem)
-       })
-      }
-    
-    } 
+    let allProduction = await ProductionStore.find({companyname:req.params.companyname});
+    allProduction.map((elem) => {
+      elem.readyStock.map((elem) => {
+        arr.push(elem);
+      });
+    });
     let prevarr = arr.filter((elem) =>
       readyStock.find(
         (elem2) => elem2.id == elem.id
@@ -226,13 +222,12 @@ router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
     );
     
     let finalarr=readyStock.map(elem=>{
-      
+      console.log(elem)
       let f=prevarr.find(elem2=>elem2.id==elem.id)
       let js2=f?{id:elem._id,name:elem.name,quantity:elem.quantity,prev:f.quantity}:{id:elem._id,name:elem.name,quantity:elem.quantity,prev:0}
+     
       return js2
     })
-
-   
     let js3={prev:prevarr,now:readyStock}
     res.send({
       message: "data is successfully fetched",
