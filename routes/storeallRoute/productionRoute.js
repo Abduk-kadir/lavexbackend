@@ -209,14 +209,22 @@ router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
   
     let prod = await Production.findOne({ _id: req.params.id,companyname:req.params.companyname});
     let { readyStock } = prod;
-    let allProduction = await ProductionStore.find({companyname:req.params.companyname});
+   /* let allProduction = await ProductionStore.find({companyname:req.params.companyname});
     allProduction.map((elem) => {
       elem.readyStock.map((elem) => {
         arr.push(elem);
       });
     });
+    */
+    let allProduction = await Production.find({companyname:req.params.companyname});
+    allProduction.map((elem) => {
+      elem.readyStock.map((elem) => {
+        arr.push(elem);
+      });
+    })
+
     let prevarr = arr.filter((elem) =>
-      readyStock.find(
+      readyStock.findLast(
         (elem2) => elem2.id == elem.id
       )
     );
