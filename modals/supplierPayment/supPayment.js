@@ -9,6 +9,9 @@ const SuplierPaymentSchema=mongoose.Schema({
         type:String,
         required:[true,'companyid is required']
     },
+    sname:{
+        type:String
+    },
     paymentNumber:{
         type:Number,
        required:[true,'payment number is required']

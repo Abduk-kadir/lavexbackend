@@ -9,6 +9,9 @@ const ClientPaymentSchema=mongoose.Schema({
        type:String,
        required:[true,'companyid is required']
    },
+   cname:{
+     type:String
+   },
    paymentNumber:{
        type:Number,
       required:[true,'payment number is required']
