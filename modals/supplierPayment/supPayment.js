@@ -12,9 +12,11 @@ const SuplierPaymentSchema=mongoose.Schema({
     sname:{
         type:String
     },
+    
     paymentNumber:{
         type:Number,
-       required:[true,'payment number is required']
+        unique:true,
+        required:[true,'payment number is required']
     },
     paymentDate:{
         type:String,

@@ -41,10 +41,19 @@ router.get('/myInvoices',async(req,res)=>{
     console.log(`page=${page} and limit=${limit} and type=${type}`)
      switch(type){
         case "proforma":
-           arr= await Porfarma.aggregate([{$unwind:{path:"$item"}},{$match:{companyname:req.query.companyname}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+           arr= await Porfarma.aggregate([
+            {$unwind:{path:"$item"}},
+            {$match:{companyname:req.query.companyname}},
+            {$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
             break;
             case "invoice":
-              arr= await Invoice.aggregate([{$unwind:{path:"$item"}},{$match:{companyname:req.query.companyname}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
+              arr= await Invoice.aggregate([
+                {$unwind:{path:"$item"}},
+                {$match:{companyname:req.query.companyname}},
+                {$group:{_id:"$_id",client: { $first: "$$clientDetail.client" }, total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}},
+                //{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
+              
+              ])
             break;
             case "creditnote":
              arr= await creditNote.aggregate([{$unwind:{path:"$item"}},{$match:{companyname:req.query.companyname}},{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}])
