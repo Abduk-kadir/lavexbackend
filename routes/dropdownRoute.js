@@ -12,15 +12,15 @@ const Bank=require('../modals/drop/bankName')
 const PaymentMethod=require('../modals/drop/payMethod')
 router.get('/allDropdown',async(req,res)=>{
     try{
-       let brandDrop=await Brand.find({},{_id:0})
-       let categDrop=await Category.find({},{_id:0})
-       let qtyDrop=await QuantityType.find({},{_id:0})
-       let hsnDrop=await Hsncode.find({},{_id:0})
-       let gstDrop=await Gst.find({},{_id:0})
-       let lowDrop=await Lowquantity.find({},{_id:0})
-       let statusDropdown=await StatusDropdown.find({},{_id:0})
-       let bank=await Bank.find({},{_id:0})
-       let paymentmethod=await PaymentMethod.find({},{_id:0})
+       let brandDrop=await Brand.find()
+       let categDrop=await Category.find()
+       let qtyDrop=await QuantityType.find()
+       let hsnDrop=await Hsncode.find()
+       let gstDrop=await Gst.find()
+       let lowDrop=await Lowquantity.find()
+       let statusDropdown=await StatusDropdown.find()
+       let bank=await Bank.find()
+       let paymentmethod=await PaymentMethod.find()
        let js={bank:bank,paymentmethod:paymentmethod,statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop}
        res.send({
         message:"data is successfully added",
@@ -59,6 +59,25 @@ router.post('/createPayMethod',async(req,res)=>{
    
        }
 })
+router.put('/updatePayMethod/:id',async(req,res)=>{
+    try{
+      await PaymentMethod.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"payment method updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+
+})
+
 router.post('/createBank',async(req,res)=>{
     try{
      
@@ -79,6 +98,24 @@ router.post('/createBank',async(req,res)=>{
            })
    
        }
+})
+router.put('/updateBank/:id',async(req,res)=>{
+    try{
+      await Bank.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"Bank updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+
 })
 
 router.post('/createStockStatus',async(req,res)=>{
@@ -111,6 +148,24 @@ router.post('/createStockStatus',async(req,res)=>{
            })
    
        }
+})
+router.put('/updateStockStatus/:id',async(req,res)=>{
+    try{
+      await StatusDropdown.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"stock status updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+
 })
 
 
@@ -150,6 +205,26 @@ router.post('/createBrand',async(req,res)=>{
    
        }
 })
+
+router.put('/updateBrand/:id',async(req,res)=>{
+    try{
+      await Brand.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"Brand updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+
+})
+
 router.post('/createCategory',async(req,res)=>{
     try{
         
@@ -179,6 +254,24 @@ router.post('/createCategory',async(req,res)=>{
            })
    
        }
+
+})
+router.put('/updateCategory/:id',async(req,res)=>{
+    try{
+      await Category.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"category updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
 
 })
 router.post('/createQuantityType',async(req,res)=>{
@@ -212,6 +305,23 @@ router.post('/createQuantityType',async(req,res)=>{
    
        }
 })
+router.put('/updateQuantityType/:id',async(req,res)=>{
+    try{
+      await QuantityType.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"quantity type is updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+})
 router.post('/createHsnCode',async(req,res)=>{
     try{
         
@@ -244,6 +354,23 @@ router.post('/createHsnCode',async(req,res)=>{
        }
 
 })
+router.put('/updateHsnCode/:id',async(req,res)=>{
+    try{
+      await Hsncode.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"hsn code updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+})
 router.post('/createGst',async(req,res)=>{
     try{
         
@@ -275,6 +402,24 @@ router.post('/createGst',async(req,res)=>{
        }
 
 })
+router.put('/updateGst/:id',async(req,res)=>{
+    try{
+      await Gst.findByIdAndUpdate(req.params.id,req.body)
+      res.send({
+        message:"gst updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
+})
+
 router.post('/createLowQuantity',async(req,res)=>{
     try{
         
@@ -306,5 +451,25 @@ router.post('/createLowQuantity',async(req,res)=>{
        }
 
 
+})
+router.put('/updatelowQuantity/:id',async(req,res)=>{
+    try{
+        console.log(req.params.id)
+        console.log(req.body)
+     f= await Lowquantity.findByIdAndUpdate(req.params.id,req.body)
+     console.log(f)
+      res.send({
+        message:"low quanttity updated successfully",
+        success:true,
+      })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          })
+
+    }
+  
 })
 module.exports=router
