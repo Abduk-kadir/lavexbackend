@@ -10,6 +10,11 @@ const creditNoteS=mongoose.Schema({
       required:['compayname is required']
 
    },
+   status:{
+      type:String,
+      default:"issue"
+
+   },
    onAccount:{
       type:Boolean,
       required:[true,'onaccount is required']

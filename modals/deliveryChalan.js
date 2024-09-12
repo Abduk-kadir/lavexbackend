@@ -10,6 +10,11 @@ const deliverySchema=mongoose.Schema({
       required:['compayname is required']
 
    },
+   status:{
+      type:String,
+      default:"issue"
+
+   },
    clientDetail:{
       id:{
           type:String,
