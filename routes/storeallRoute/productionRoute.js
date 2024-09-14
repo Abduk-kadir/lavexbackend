@@ -11,7 +11,8 @@ router.get('/allMomvement/:companyname',async(req,res)=>{
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed',companyname:req.params.companyname}},
-    {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}])
+    {$group:{_id:"$_id",status: { $first: "$status" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}
+  ])
    res.send({
     message: "data is successfully attached",
     success: true,
@@ -202,19 +203,26 @@ router.get('/allProdcution/:companyname',async(req,res)=>{
      }
 })
 
-router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
-
+router.get("/prod/statuswithprev/:companyname/:id/:position", async (req, res) => {
+  let position=req.params.position
+  console.log(position)
   let arr = [];
   try {
   
-    let prod = await Production.findOne({ _id: req.params.id,companyname:req.params.companyname});
-    let { readyStock } = prod;
-    let allProduction = await ProductionStore.find({companyname:req.params.companyname});
-    allProduction.map((elem) => {
-      elem.readyStock.map((elem) => {
-        arr.push(elem);
-      });
-    });
+    let current = await Production.findOne({ _id: req.params.id,companyname:req.params.companyname});
+    let { readyStock } = current;
+    let allProduction = await Production.find({companyname:req.params.companyname});
+    allProduction = allProduction.slice(0, position-1).reverse();
+    //allProduction=allProduction.slice(0,-1)
+    console.log(allProduction)
+   
+      allProduction.map(elem=>{
+       elem.readyStock.map(elem2=>{
+         arr.push(elem2)
+       })
+      
+      })
+
     let prevarr = arr.filter((elem) =>
       readyStock.find(
         (elem2) => elem2.id == elem.id
@@ -228,7 +236,7 @@ router.get("/prod/statuswithprev/:companyname/:id", async (req, res) => {
      
       return js2
     })
-    let js3={prev:prevarr,now:readyStock}
+  
     res.send({
       message: "data is successfully fetched",
       success: true,
