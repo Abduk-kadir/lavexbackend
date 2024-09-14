@@ -162,6 +162,11 @@ const clientSchema=mongoose.Schema({
     createdAt: {
         type:String,
         default: Date() // Automatically sets the date when a document is created
+    },
+    Branch:{
+        type:String,
+        default:null
+
     }
       
 })

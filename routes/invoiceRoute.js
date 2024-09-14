@@ -92,8 +92,11 @@ router.post('/invoiceCreate',async(req,res)=>{
         
          
         }
-        let cgst=req.body.clientDetail.gstNumber
-        let isSister=await Company.findOne({gstNumber:cgst})
+       // let cgst=req.body.clientDetail.gstNumber
+        //let isSister=await Company.findOne({gstNumber:cgst})
+        branch=req.body.clientDetail.Branch
+        const branch = req.body.clientDetail.Branch.trim().toUpperCase();
+        let isSister=await Company.findOne({Branch:branch})
         console.log('is isister',isSister)
         if(isSister){
           let js={dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}

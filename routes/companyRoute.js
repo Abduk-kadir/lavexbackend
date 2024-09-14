@@ -6,6 +6,7 @@ router.post("/addCompany", async (req, res) => {
     let body = req.body;
     
     body.role = body.role.toLowerCase();
+    body.Branch=body.Branch.toUpperCase();
    
     let company = new Company(body);
     await company.save();
