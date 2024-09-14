@@ -165,7 +165,7 @@ const clientSchema=mongoose.Schema({
     },
     Branch:{
         type:String,
-        default:null
+        default:''
 
     }
       
