@@ -17,6 +17,10 @@ const sisterStoreSchema=mongoose.Schema({
       type:String,
     
    },
+   name:{
+    type:String,
+
+   },
    paymentType:{
     type:String,
     
