@@ -127,6 +127,35 @@ router.get('/allSisterStorePending/:id',async(req,res)=>{
   }
   
 })  
+router.post('/addSisterInward/:companyname',async(req,res)=>{
+  try{   
+    let body=req.body;
+    body.companyname=req.params.companyname
+    let {item}=body
+   
+    let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+    console.log(total)
+    body.pendingAmount=total
+    body.total=total
+    let inward=new SisterStore(body);
+    await inward.save();
+   
+    res.send({
+        message:"data is successfully added",
+        success:true, 
+     })
+}
+catch(err){
+    res.send({
+        message:err.message,
+        success:false, 
+     })
+
+
+}
+
+
+})
 
 module.exports=router  
   
