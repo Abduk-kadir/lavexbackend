@@ -123,8 +123,8 @@ router.post("/addItemMaster/:companyId", async (req, res) => {
 });
 router.get("/allItemMaster/:companyId/:role", async (req, res) => {
   try {
-    
-    let result = role=='master'?await ItemMaster.find({companyname:req.params.companyId}):await ItemMaster.find({stockStatus:"ReadyStock"});
+    let role=req.params.role
+    let result =role=='master'?await ItemMaster.find({companyname:req.params.companyId}):await ItemMaster.find({stockStatus:"ReadyStock"});
     res.send({
       message: "data is fetched successfully",
       success: true,
