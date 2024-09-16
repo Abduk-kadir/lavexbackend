@@ -121,10 +121,10 @@ router.post("/addItemMaster/:companyId", async (req, res) => {
     });
   }
 });
-router.get("/allItemMaster/:companyId", async (req, res) => {
+router.get("/allItemMaster/:companyId/:role", async (req, res) => {
   try {
-    let result = await ItemMaster.find({companyname:req.params.companyId});
-
+    
+    let result = role=='master'?await ItemMaster.find({companyname:req.params.companyId}):await ItemMaster.find({stockStatus:"ReadyStock"});
     res.send({
       message: "data is fetched successfully",
       success: true,
@@ -138,6 +138,8 @@ router.get("/allItemMaster/:companyId", async (req, res) => {
     });
   }
 });
+
+
 
 
 
