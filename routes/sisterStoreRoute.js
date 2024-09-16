@@ -131,9 +131,9 @@ router.post('/addSisterInward/:companyname',async(req,res)=>{
   try{   
     let body=req.body;
     body.companyname=req.params.companyname
-    let {item}=body
+    let {readyStock}=body
    
-    let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+    let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
     console.log(total)
     body.pendingAmount=total
     body.total=total
