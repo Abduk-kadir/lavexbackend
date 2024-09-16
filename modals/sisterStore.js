@@ -13,6 +13,24 @@ const sisterStoreSchema=mongoose.Schema({
       type:String,
       required:[true,'supplier id is required']
     },
+    suplierInvoiceNo:{
+      type:String,
+    
+   },
+   paymentType:{
+    type:String,
+    
+   },
+   total:{
+    type:Number,
+    default:0
+
+   },
+   pendingAmount:{
+     type:Number,
+     default:0
+    
+   },
     dateCreated:{
       type:String,
       default:Date()
