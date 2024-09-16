@@ -9,6 +9,10 @@ const sisterStoreSchema=mongoose.Schema({
         type:String,
         required:[true,'company name is required']
     },
+    sid:{
+      type:String,
+      required:[true,'supplier id is required']
+    },
     dateCreated:{
       type:String,
       default:Date()
