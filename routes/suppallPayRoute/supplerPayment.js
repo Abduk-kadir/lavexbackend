@@ -19,7 +19,8 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
           })
         }
        else{
-        await SupplierPayment.save();
+        let supplierPayment=new SupplierPayment(body)
+        await supplierPayment.save();
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
                 await SisterStore.updateOne(
