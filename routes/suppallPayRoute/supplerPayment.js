@@ -1,8 +1,10 @@
 let express=require('express')
 let router=express.Router()
 const SupplierPayment= require('../../modals/supplierPayment/supPayment');
-Inward=require('../../modals/store/inwardModal')
-router.post('/addsupplerPayment/:companyname/:sid',async(req,res)=>{
+let Inward=require('../../modals/store/inwardModal')
+let SisterStore=require('../../modals/sisterStore')
+
+router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
     try{
         let body=req.body;
         body.companyname=req.params.companyname;
@@ -11,11 +13,21 @@ router.post('/addsupplerPayment/:companyname/:sid',async(req,res)=>{
         let {inwardList}=body
         await supplerPayment.save();
         for(let i=0;i<inwardList.length;i++){
+            if(req.params.role=='sister'){
+                await SisterStore.updateOne(
+                    {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
+                    {$set:{pendingAmount:inwardList[i].pendingAmount}}
+                
+                )
+
+            }
+            else{
             await Inward.updateOne(
                 {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
                 {$set:{pendingAmount:inwardList[i].pendingAmount}}
             
             )
+        }
         }
         res.send({
            message:"data is successfully added",
