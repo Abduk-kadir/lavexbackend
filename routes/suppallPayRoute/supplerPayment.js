@@ -9,10 +9,10 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyname;
         body.sid=req.params.sid
-        let supplerPayment=new SupplierPayment(body);
+       
         let {inwardList}=body
        
-        let availpay=supplerPayment.findOne({companyname:req.params.companyname,paymentNumber:body.paymentNumber})
+        let availpay=await SupplierPayment.findOne({companyname:req.params.companyname,paymentNumber:body.paymentNumber})
 
        if(availpay){
           res.send({
@@ -21,7 +21,7 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
           })
        }
        else{
-        await supplerPayment.save();
+        await SupplierPayment.save();
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
                 await SisterStore.updateOne(
