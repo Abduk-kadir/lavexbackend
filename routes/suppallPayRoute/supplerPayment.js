@@ -1,6 +1,7 @@
 let express=require('express')
 let router=express.Router()
-const SupplierPayment= require('../../modals/supplierPayment/supPayment');
+//const SupplierPayment= require('../../modals/supplierPayment/supPayment');
+const SupplierPayment=require('../../modals/supplierPayment')
 let Inward=require('../../modals/store/inwardModal')
 let SisterStore=require('../../modals/sisterStore')
 
@@ -9,17 +10,14 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyname;
         body.sid=req.params.sid
-       
         let {inwardList}=body
-       
         let availpay=await SupplierPayment.findOne({companyname:req.params.companyname,paymentNumber:body.paymentNumber})
-
-       if(availpay){
+        if(availpay){
           res.send({
             message:'payment number is already exist',
             success:false
           })
-       }
+        }
        else{
         await SupplierPayment.save();
         for(let i=0;i<inwardList.length;i++){
