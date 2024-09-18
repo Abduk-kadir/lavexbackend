@@ -1,7 +1,7 @@
 let express=require('express')
 let router=express.Router()
 
-const SupplierPayment=require('../../modals/supplierPayment')
+const SupplierPayment=require('../../modals/supplierPayment/supPayment')
 let Inward=require('../../modals/store/inwardModal')
 let SisterStore=require('../../modals/sisterStore')
 
