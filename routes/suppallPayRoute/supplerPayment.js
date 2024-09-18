@@ -4,6 +4,49 @@ let router=express.Router()
 const SupplierPayment=require('../../modals/supplierPayment/supPayment')
 let Inward=require('../../modals/store/inwardModal')
 let SisterStore=require('../../modals/sisterStore')
+router.put('/updatesupplerPayment/:companyname/:sid/:role/:id',async(req,res)=>{
+    try{
+        let body=req.body;
+        let {inwardList}=body
+        await SupplierPayment.findByIdAndUpdate(req.params.id,body)
+        for(let i=0;i<inwardList.length;i++){
+            if(req.params.role=='sister'){
+                await SisterStore.updateOne(
+                    {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
+                    {$set:{pendingAmount:inwardList[i].pendingAmount}}
+                
+                )
+
+            }
+            else{
+            await Inward.updateOne(
+                {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
+                {$set:{pendingAmount:inwardList[i].pendingAmount}}
+            
+            )
+        }
+        
+        res.send({
+           message:"data is successfully update",
+           success:true, 
+        })
+       }
+    }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
+
+})
+
+
+
+
+
 
 router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
     try{
