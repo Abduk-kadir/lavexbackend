@@ -15,7 +15,7 @@ const SuplierPaymentSchema=mongoose.Schema({
     
     paymentNumber:{
         type:Number,
-        unique:true,
+        
         required:[true,'payment number is required']
     },
     paymentDate:{

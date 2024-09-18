@@ -11,6 +11,16 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         body.sid=req.params.sid
         let supplerPayment=new SupplierPayment(body);
         let {inwardList}=body
+       
+        let availpay=supplerPayment.findOne({companyname:req.params.companyname,paymentNumber:body.paymentNumber})
+
+       if(availpay){
+          res.send({
+            message:'payment number is already exist',
+            success:false
+          })
+       }
+       else{
         await supplerPayment.save();
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
@@ -34,6 +44,7 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
            success:true, 
         })
        }
+    }
        catch(err){
            res.send({
                message:err.message,
