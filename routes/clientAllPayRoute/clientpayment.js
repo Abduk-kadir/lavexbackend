@@ -2,7 +2,7 @@ let express=require('express')
 let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
-router.post('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
+router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
         
