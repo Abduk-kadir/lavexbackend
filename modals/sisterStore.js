@@ -23,12 +23,12 @@ const sisterStoreSchema=mongoose.Schema({
    },
    gstNumber:{
     type:String,
-   // required:[true,'gst number is required'],
+    required:[true,'gst number is required'],
    
  },
  address:{
     type:String,
-    required:['true', 'address is required']
+    required:[true, 'address is required']
  },
  contactPersonName:{
   type:String,
