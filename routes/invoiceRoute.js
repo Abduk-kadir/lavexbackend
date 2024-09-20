@@ -98,7 +98,7 @@ router.post('/invoiceCreate',async(req,res)=>{
         let isSister=await Company.findOne({Branch:branch})
         console.log('is isister',isSister)
         if(isSister){
-          let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
+          let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister.id,readyStock:item}
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
         }
