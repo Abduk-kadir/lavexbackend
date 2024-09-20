@@ -32,7 +32,7 @@ router.get('/totalinvoice/:name',async(req,res)=>{
 
 
 router.get('/myInvoices',async(req,res)=>{
-   
+   console.log('fkjdhfjdhfjhfhfgh')
     let {type,page=1,limit=2}=req.query
     page=+page;
     limit=+limit;
@@ -76,6 +76,7 @@ router.get('/myInvoices',async(req,res)=>{
             break;
 
             case "debitnote":
+              console.log('hi debit')
              arr= await DebitNote.aggregate([
               {$unwind:{path:"$item"}},
               {$match:{companyname:req.query.companyname}},
@@ -84,7 +85,8 @@ router.get('/myInvoices',async(req,res)=>{
               total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
               //{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
             ])
-
+            console.log(arr)
+             break;
             case "deliverynote":
              arr= await Deliverynote.aggregate([
               {$unwind:{path:"$item"}},
