@@ -23,7 +23,7 @@ const sisterStoreSchema=mongoose.Schema({
    },
    gstNumber:{
     type:String,
-    default:[true,'gst number is required'],
+   // required:[true,'gst number is required'],
    
  },
  address:{
