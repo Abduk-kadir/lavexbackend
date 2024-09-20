@@ -4,7 +4,13 @@ let router=express.Router()
 const SupplierPayment=require('../../modals/supplierPayment/supPayment')
 let Inward=require('../../modals/store/inwardModal')
 let SisterStore=require('../../modals/sisterStore')
-router.put('/updatesupplerPayment/:companyname/:sid/:role/:id',async(req,res)=>{
+
+/*router.get('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
+
+    res.send('heloo arbaj')
+})
+*/
+router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
     try{
         let body=req.body;
         let {inwardList}=body
