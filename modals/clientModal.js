@@ -8,7 +8,6 @@ const clientSchema=mongoose.Schema({
     },
     client:{
         type:String,
-        unique:true,
         required:[true,'client name is required']
     },
     grade:{

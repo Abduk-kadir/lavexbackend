@@ -7,7 +7,6 @@ const supplierSchema=mongoose.Schema({
     },
     supplier:{
         type:String,
-        unique: true,
         required:[true,'Suppler name is required']
     },
     address:{
