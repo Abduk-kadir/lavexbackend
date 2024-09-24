@@ -6,6 +6,7 @@ router=express.Router();
 const {ProductionStore,ProductionStore2}=require('./../modals/store/productionStore')
 const SisterStore=require('../modals/sisterStore');
 const SisterStock=require('../modals/sisterStock')
+
 router.get('/invoicesbyClient/:clientname',async(req,res)=>{
     try{
         let result=await Invoice.aggregate([{$match:{"clientDetail.client":req.params.clientname}},
@@ -140,29 +141,7 @@ router.post('/invoiceCreate',async(req,res)=>{
     }
 })
 
-router.get('/allinvoices/:id',async(req,res)=>{
-    try{
-        let result=await Invoice.find({companyname:req.params.id})
-         res.send({
-          message:"invoice is fetched successfully fetched",
-          success:true,
-          data:result}
-        )
-        
 
-       
-       }
-       catch(err){
-          res.send({
-              message:err.message,
-              success:false,
-              data:null
-  
-          })
-       }
-  
-
-})
 
 router.get('/invoice/:number/:name',async(req,res)=>{
     console.log(req.params.number)

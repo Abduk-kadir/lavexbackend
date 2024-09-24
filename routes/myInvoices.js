@@ -366,6 +366,53 @@ router.put('/update/:type/:id',async(req,res)=>{
   
 
 })
+
+
+router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
+  try{
+      let result;
+       if(type=='invoice'){
+         result=await Invoice.findOne({companyname:req.params.companyname,_id:req.params.id})
+       }
+       else if(type='proforma'){
+         result=await Porfarma.findOne({companyname:req.params.companyname,_id:req.params.id})
+       }
+       else if(type='creditnote'){
+         result=await creditNote.findOne({companyname:req.params.companyname,_id:req.params.id})
+       }
+       else if(type='debitnote'){
+         result=await DebitNote.findOne({companyname:req.params.companyname,_id:req.params.id})
+       }
+       else if(type='deliverynote'){
+        result=await DebitNote.findOne({companyname:req.params.companyname,_id:req.params.id})
+       }
+     
+     
+     
+     
+
+
+
+       res.send({
+        message:"invoice is fetched successfully fetched",
+        success:true,
+        data:result}
+      )
+      
+
+     
+     }
+     catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+
+        })
+     }
+
+
+})
   
 
 module.exports=router;
