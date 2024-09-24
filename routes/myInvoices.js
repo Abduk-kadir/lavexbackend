@@ -371,6 +371,7 @@ router.put('/update/:type/:id',async(req,res)=>{
 router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
   try{
       let result;
+      let type=req.params.type
        if(type=='invoice'){
          result=await Invoice.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
