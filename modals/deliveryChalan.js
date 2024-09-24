@@ -123,7 +123,11 @@ const deliverySchema=mongoose.Schema({
         required:[true,'quantity  is required'],
         
      }
-  }]
+  }],
+  createdAt: {
+   type: Date,
+   default: Date.now
+}
 
 })
 module.exports=mongoose.model('DeliveryChalan',deliverySchema)

@@ -129,6 +129,10 @@ const creditNoteS=mongoose.Schema({
         
      }
   }],
+  createdAt: {
+   type: Date,
+   default: Date.now
+}
    
 })
 module.exports=mongoose.model('CreditNote',creditNoteS)

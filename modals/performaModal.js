@@ -123,7 +123,11 @@ const performaSchema=mongoose.Schema({
         required:[true,'quantity  is required'],
         
      }
-  }]
+  }],
+  createdAt: {
+   type: Date,
+   default: Date.now
+}
    
 
 })
