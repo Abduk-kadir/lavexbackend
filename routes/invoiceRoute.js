@@ -201,6 +201,30 @@ router.get('/getinvoice/:clientid/:name',async(req,res)=>{
    }
 
 })
+router.get('/allinvoices/:id',async(req,res)=>{
+  try{
+      let result=await Invoice.find({companyname:req.params.id})
+       res.send({
+        message:"invoice is fetched successfully fetched",
+        success:true,
+        data:result}
+      )
+
+
+
+     }
+     catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+
+        })
+     }
+
+
+})
+
 
 
 
