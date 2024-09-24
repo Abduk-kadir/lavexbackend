@@ -369,23 +369,26 @@ router.put('/update/:type/:id',async(req,res)=>{
 
 
 router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
+  console.log('fhfjdnjjkhjhjkh')
   try{
       let result;
       let type=req.params.type
+      console.log(type)
        if(type=='invoice'){
          result=await Invoice.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
-       else if(type='proforma'){
+       else if(type=='proforma'){
          result=await Porfarma.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
-       else if(type='creditnote'){
+       else if(type=='creditnote'){
          result=await creditNote.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
-       else if(type='debitnote'){
+       else if(type=='debitnote'){
          result=await DebitNote.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
-       else if(type='deliverynote'){
-        result=await DebitNote.findOne({companyname:req.params.companyname,_id:req.params.id})
+       else if(type=='deliverynote'){
+        console.log('indelivery note')
+        result=await Deliverynote.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
      
      
@@ -414,7 +417,11 @@ router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
 
 
 })
-  
+
+router.put('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
+   
+     res.send('fhfjdjfh')
+})
 
 module.exports=router;
 
