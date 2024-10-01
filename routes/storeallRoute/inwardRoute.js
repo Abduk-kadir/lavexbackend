@@ -149,7 +149,7 @@ router.post('/addinward3/:companyname',async(req,res)=>{
         body.companyname=req.params.companyname
         let {item}=body
         let data=await Inward.find({companyname:req.params.companyname})
-        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.move:acc,0)
+        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
         max=max+1;
         body.mov=max;
        
