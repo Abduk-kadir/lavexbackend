@@ -1,6 +1,10 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
 const invoiceSchema=mongoose.Schema({
+   mov:{
+      type:Number,
+      required:[true,'movement number is required']
+     },
    type:{
       type:String,
       default:'Invoice'

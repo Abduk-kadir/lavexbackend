@@ -7,6 +7,12 @@ router.post('/debitNoteCreate',async(req,res)=>{
         let {type}=req.query;
         let {item,onAccount}=req.body
         let js={...req.body,companyname:type}
+        let data=await DebitNote.find({companyname:req.params.companyname})
+        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
+        max=max+1;
+        js.mov=max;
+
+
         let debitnote=new DebitNote(js);
         await debitnote.save();
      //this code for updating purchaseStore

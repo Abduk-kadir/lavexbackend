@@ -1,6 +1,10 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const deliverySchema=mongoose.Schema({
+   mov:{
+      type:Number,
+      required:[true,'movement number is required']
+     },
    type:{
       type:String,
       default:'DeliveryChalan'

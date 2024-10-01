@@ -8,6 +8,14 @@ router.post('/creditNoteCreate',async(req,res)=>{
     try{
     let {type,role}=req.query;
     let js={...req.body,companyname:type}
+    let data=CreditNote.find({companyname:req.params.companyname})
+        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
+        max=max+1;
+        js.mov=max;
+
+
+
+
     let {item,onAccount}=req.body
     let creditnote=new CreditNote(js);
     await creditnote.save();
