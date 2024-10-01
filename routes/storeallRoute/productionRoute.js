@@ -168,6 +168,13 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
 router.post("/production3/:companyname", async (req, res) => {
   let body = req.body;
   body.companyname=req.params.companyname
+  let data=await Production.find({companyname:req.params.companyname})
+        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.move:acc,0)
+        max=max+1;
+        body.mov=max;
+
+
+
   try {
     let production = Production(body);
     await production.save();

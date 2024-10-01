@@ -1,6 +1,10 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const productionSchema=mongoose.Schema({
+  mov:{
+    type:Number,
+    required:[true,'movement number is required']
+   },
   companyname:{
     type:String,
     required:[true,'company name is required']
