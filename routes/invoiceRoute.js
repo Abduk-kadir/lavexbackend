@@ -70,7 +70,7 @@ router.post('/invoiceCreate',async(req,res)=>{
     let parr=[]
     try{
      let body=req.body;
-     let data=await Invoice.find({companyname:req.params.companyname})
+     let data=await Invoice.find({companyname:type})
         let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
         max=max+1;
         js.mov=max;

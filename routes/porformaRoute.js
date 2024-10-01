@@ -10,7 +10,13 @@ router.post('/porpharmaCreate',async(req,res)=>{
     let {type,role}=req.query;
     let {item}=req.body
     let js={...req.body,companyname:type}
+
     try{
+        let data=await Porfarma.find({companyname:type})
+        let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
+        max=max+1;
+        js.mov=max;
+    
      let porfarma=new Porfarma(js);
      await porfarma.save();
      res.send({
