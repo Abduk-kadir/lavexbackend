@@ -8,7 +8,7 @@ router.post('/creditNoteCreate',async(req,res)=>{
     try{
     let {type,role}=req.query;
     let js={...req.body,companyname:type}
-    let data=CreditNote.find({companyname:type})
+    let data=await CreditNote.find({companyname:type})
         let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
         max=max+1;
         js.mov=max;

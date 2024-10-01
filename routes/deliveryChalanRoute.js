@@ -10,7 +10,7 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
     let {item}=req.body
     try{
      let js={...req.body,companyname:type}
-     let data=DeliveryChalan.find({companyname:type})
+     let data=await DeliveryChalan.find({companyname:type})
      let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
      max=max+1;
      js.mov=max;
