@@ -210,9 +210,11 @@ router.put('/updateInward/:id',async(req,res)=>{
       let baseAmount=item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
       body.total=total
       body.baseAmount=baseAmount
+      console.log(body.baseAmount)
       const updatedDocument = await Inward.findByIdAndUpdate(req.params.id,body , {
         runValidators: true // Ensure validation rules are applied
       })
+      console.log('updated document:',updatedDocument)
       res.send({
         message:'inward is successfully updated',
         success:true, 

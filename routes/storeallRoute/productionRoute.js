@@ -366,7 +366,12 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
 
 router.put('/updateProduction/:id',async(req,res)=>{
   let body=req.body
+  let {readyStock}=body
    try{
+      let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+      let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+      body.total=total
+      body.baseAmount=baseAmount
     const updatedDocument = await Production.findByIdAndUpdate(req.params.id,body , {
       runValidators: true // Ensure validation rules are applied
     })
