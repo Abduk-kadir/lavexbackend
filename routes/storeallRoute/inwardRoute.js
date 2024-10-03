@@ -196,6 +196,7 @@ router.post('/addinward3/:companyname',async(req,res)=>{
 
 router.put('/updateInward/:id',async(req,res)=>{
     let body=req.body
+    let {item}=body
     try{
     let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
     if(p){
@@ -205,6 +206,10 @@ router.put('/updateInward/:id',async(req,res)=>{
      })  
     }
     else{
+      let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+      let baseAmount=item.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+      body.total=total
+      body.baseAmount=baseAmount
       const updatedDocument = await Inward.findByIdAndUpdate(req.params.id,body , {
         runValidators: true // Ensure validation rules are applied
       })
