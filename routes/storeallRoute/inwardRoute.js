@@ -192,9 +192,39 @@ router.post('/addinward3/:companyname',async(req,res)=>{
 
 })
 
-router.put('/updateInward/:id',async(req,res)=>{
 
-    //let p=SupplierPayment.find
+
+router.put('/updateInward/:id',async(req,res)=>{
+    let body=req.body
+    try{
+    let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
+    if(p){
+      res.send({
+        message:'this inward is using other places you you can not updae',
+        success:false, 
+     })  
+    }
+    else{
+      const updatedDocument = await Inward.findByIdAndUpdate(req.params.id,body , {
+        runValidators: true // Ensure validation rules are applied
+      })
+      res.send({
+        message:'inward is successfully updated',
+        success:true, 
+     })  
+
+
+    }
+    }
+    catch(err){
+      res.send(
+        {
+          message:err.message,
+          success:false
+        }
+      )
+    }
+    
 
 })
 
