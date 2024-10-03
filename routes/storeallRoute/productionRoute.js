@@ -45,7 +45,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
     console.log("current status", status);
     if (status == "canceled") {
       if (preStatus == "pending") {
-        await Production.deleteOne({companyname:req.params.companyId,_id: req.params.id });
+        //await Production.deleteOne({companyname:req.params.companyId,_id: req.params.id });
       } else if (preStatus == "confirmed") {
         let { raw, readyStock } = prod;
         //here updating purchase store
@@ -71,7 +71,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
          
         }
   
-        await Production.deleteOne({companyname:req.params.companyId, _id: req.params.id });
+       // await Production.deleteOne({companyname:req.params.companyId, _id: req.params.id });
        
       }
     }
@@ -331,5 +331,40 @@ router.get("/productionStore/:companyname", async (req, res) => {
     });
   }
 });
+
+
+router.get("/allcancelStock/:companyname", async (req, res) => {
+  try {
+    let porArr = await ProductionStore.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
+    let purArr = await PurchaseStore.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
+    console.log("prodcution arr:", porArr);
+    let finalarr = [];
+    for (let i = 0; i < purArr.length; i++) {
+      for (j = 0; j < purArr[i].item.length; j++) {
+        finalarr.push(purArr[i].item[j]);
+      }
+    }
+    for (let i = 0; i < porArr.length; i++) {
+      for (j = 0; j < porArr[i].readyStock.length; j++) {
+        finalarr.push(porArr[i].readyStock[j]);
+      }
+    }
+    res.send({
+      message: "all stock is successfully fetched",
+      success: true,
+      data: finalarr,
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+      data: null,
+    });
+  }
+});
+
+
+
+
 
 module.exports = router;
