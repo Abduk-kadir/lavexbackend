@@ -229,6 +229,39 @@ router.put('/updateInward/:id',async(req,res)=>{
 })
 
 
+router.delete('/deleteInward/:id',async(req,res)=>{
+
+  try{
+  let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
+  if(p){
+    res.send({
+      message:'this inward is using other places you you can not update',
+      success:false, 
+   })  
+  }
+  else{
+    const updatedDocument = await Inward.findByIdAndDelete(req.params.id)
+    res.send({
+      message:'inward is successfully deleted',
+      success:true, 
+   })  
+
+
+  }
+  }
+  catch(err){
+    res.send(
+      {
+        message:err.message,
+        success:false
+      }
+    )
+  }
+  
+
+})
+
+
 
 
 
