@@ -42,6 +42,14 @@ const invardSchema=mongoose.Schema({
         required:[true ,'date is important'] 
        
      },
+     inwardCreated: {
+      type: String,
+      default: () => {
+        const date = new Date();
+        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}${date.getFullYear()}`;
+      }
+    },
+     
      suplierInvoiceNo:{
         type:String,
         required:[true,'invoce number of suplier is important']
@@ -104,6 +112,9 @@ const invardSchema=mongoose.Schema({
       default:"pending"
      },
      total:{
+      type:Number,
+     },
+     baseAmount:{
       type:Number,
      },
      pendingamount:{
