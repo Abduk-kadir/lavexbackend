@@ -395,7 +395,7 @@ router.put('/updateProduction/:id',async(req,res)=>{
 
 })
 
-
+/*
 router.delete('/deleteProduction/:id',async(req,res)=>{
 
 try{
@@ -419,7 +419,7 @@ catch(err){
 
 
 })
-
+*/
 
 
 

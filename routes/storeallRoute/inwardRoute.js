@@ -236,7 +236,7 @@ router.put('/updateInward/:id',async(req,res)=>{
 })
 
 
-router.delete('/deleteInward/:id',async(req,res)=>{
+/*router.delete('/deleteInward/:id',async(req,res)=>{
 
   try{
   let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
@@ -268,7 +268,7 @@ router.delete('/deleteInward/:id',async(req,res)=>{
 
 })
 
-
+*/
 
 
 
