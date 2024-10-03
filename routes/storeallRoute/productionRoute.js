@@ -364,6 +364,58 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
   }
 });
 
+router.put('/updateProduction/:id',async(req,res)=>{
+  let body=req.body
+   try{
+    const updatedDocument = await Production.findByIdAndUpdate(req.params.id,body , {
+      runValidators: true // Ensure validation rules are applied
+    })
+    res.send({
+      message:'producton is successfully updated',
+      success:true, 
+   })  
+
+
+ 
+  }
+  catch(err){
+    res.send(
+      {
+        message:err.message,
+        success:false
+      }
+    )
+  }
+  
+
+})
+
+
+router.delete('/deleteProduction/:id',async(req,res)=>{
+
+try{
+  const updatedDocument = await Production.findByIdAndDelete(req.params.id)
+  res.send({
+    message:'Production is successfully deleted',
+    success:true, 
+ })  
+
+
+}
+
+catch(err){
+  res.send(
+    {
+      message:err.message,
+      success:false
+    }
+  )
+}
+
+
+})
+
+
 
 
 
