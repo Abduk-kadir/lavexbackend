@@ -167,10 +167,8 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
 
 router.post("/production3/:companyname", async (req, res) => {
   let body = req.body;
+  let {readyStock}=body
   body.companyname=req.params.companyname
- 
-
-
 
   try {
 
@@ -178,6 +176,12 @@ router.post("/production3/:companyname", async (req, res) => {
     let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
     max=max+1;
     body.mov=max;
+
+    let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+    let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+    
+    body.total=total
+    body.baseAmount=baseAmount
 
 
     let production = Production(body);

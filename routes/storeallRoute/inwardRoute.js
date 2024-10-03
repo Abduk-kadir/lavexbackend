@@ -192,7 +192,9 @@ router.post('/addinward3/:companyname',async(req,res)=>{
 
 })
 
-router.put('/updateInward',async(req,res)=>{
+router.put('/updateInward/:id',async(req,res)=>{
+
+    //let p=SupplierPayment.find
 
 })
 

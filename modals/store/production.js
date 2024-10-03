@@ -131,7 +131,13 @@ const productionSchema=mongoose.Schema({
         }
            
      }
-   ]
+   ],
+   total:{
+    type:Number
+   },
+   baseAmount:{
+    type:Number
+   }
   
 })
 module.exports=mongoose.model('Production',productionSchema)
