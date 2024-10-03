@@ -16,7 +16,7 @@ router.put('/changestatus/:companyId/:id',async(req,res)=>{
       console.log('current status',status)
       if(status=='canceled'){
         if(preStatus=='pending'){
-            await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id})
+            //await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id})
             console.log('in pending')
         }
         else if(preStatus=='confirmed'){
@@ -35,7 +35,7 @@ router.put('/changestatus/:companyId/:id',async(req,res)=>{
               
                
                 }
-           await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id}) 
+          // await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id}) 
            
 
         }
@@ -235,7 +235,7 @@ router.delete('/deleteInward/:id',async(req,res)=>{
   let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
   if(p){
     res.send({
-      message:'this inward is using other places you you can not update',
+      message:'this inward is using other places you you can not delete',
       success:false, 
    })  
   }
