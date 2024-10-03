@@ -1,6 +1,7 @@
 let express = require("express");
 let router = express.Router();
 const Production = require("../../modals/store/production");
+const Inward=require('../../modals/store/inwardModal')
 const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
@@ -335,8 +336,8 @@ router.get("/productionStore/:companyname", async (req, res) => {
 
 router.get("/allcancelStock/:companyname", async (req, res) => {
   try {
-    let porArr = await ProductionStore.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
-    let purArr = await PurchaseStore.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
+    let porArr = await Production.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
+    let purArr = await Inward.find({companyname:req.params.companyname,status:'canceled'}, { _id: 0 });
     console.log("prodcution arr:", porArr);
     let finalarr = [];
     for (let i = 0; i < purArr.length; i++) {
