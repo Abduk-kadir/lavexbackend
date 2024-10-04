@@ -366,6 +366,7 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
 
 router.put('/updateProduction/:companyname/:id',async(req,res)=>{
   let body=req.body
+  let parr=[]
   let {readyStock}=body
    try{
       let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
@@ -408,7 +409,17 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
       { $inc: { "readyStock.$[elem].quantity":quantity } },
       { arrayFilters: [{ "elem.id": id }] }
     );
+    if (f.matchedCount == 0) {
+      let elem = newReadyStock[i];
+      parr.push(elem);
+    }
   
+  }
+  if (parr.length > 0) {
+    console.log("hit");
+    console.log(parr);
+    let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
+    await product.save();
   }
 }
 
