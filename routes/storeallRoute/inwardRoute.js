@@ -194,7 +194,7 @@ router.post('/addinward3/:companyname', async (req, res) => {
 
 
 
-router.put('/updateInward/:id', async (req, res) => {
+router.put('/updateInward/:id/:status', async (req, res) => {
   let body = req.body
   let { item } = body
   try {
@@ -212,7 +212,7 @@ router.put('/updateInward/:id', async (req, res) => {
       body.baseAmount = baseAmount
       body.pendingAmount = total
       console.log(body.baseAmount)
-      let { status } = body
+      let status = req.params.status
 
       if (status == 'confirmed') {
         res.send({
