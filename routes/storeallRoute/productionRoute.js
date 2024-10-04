@@ -418,7 +418,7 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
   if (parr.length > 0) {
     console.log("hit");
     console.log(parr);
-    let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
+    let product = new ProductionStore({companyname:req.params.companyname,readyStock: parr });
     await product.save();
   }
 }
