@@ -372,21 +372,45 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
       let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
       body.total=total
       body.baseAmount=baseAmount
-      const updatedDocument = await Production.findOneAndUpdate({_id:req.params.id,companyname:req.params.companyname},body , {
-      runValidators: true // Ensure validation rules are applied
-    })
+      let previosProduction=await Production.findOne({_id:req.params.id,companyname:req.params.companyname})
+      let {status}=previosProduction
+      let prevReadyStock=previosProduction.readyStock
+      let newReadyStock=readyStock.map(elem1=>{
+          let f=prevReadyStock.find(elem2=>elem2.id==elem1.id)
+          if(f){
+            let js={...elem1}
+            js.quantity=elem1.quantity-f.quantity
+            return js
+          }
+          else{
+            return elem1
+          }
+      })
+   
+      const query = { _id: req.params.id, companyname: req.params.companyname };
+      const updatedDocument = await Production.findOneAndUpdate(
+        query,
+        body,
+        {
+          new: true, // This should return the updated document
+          runValidators: true, // Ensure validation rules are applied
+          rawResult: false // This is optional; it should be false by default
+        }
+      );
+   
   //here we have to update Store
-    for (let i = 0; i < readyStock.length; i++) {
-    let { id, quantity } = readyStock[i];
-    
+  console.log('status:',status)
+  if(status=='confirmed'){
+    for (let i = 0; i < newReadyStock.length; i++) {
+    let { id, quantity } = newReadyStock[i];
     const f = await ProductionStore.updateOne(
       {companyname:req.params.companyname,'readyStock.id':id },
-      { $set: { "readyStock.$[elem].quantity":quantity } },
+      { $inc: { "readyStock.$[elem].quantity":quantity } },
       { arrayFilters: [{ "elem.id": id }] }
     );
-   
+  
   }
-
+}
 
 
 
