@@ -107,7 +107,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
     }
 
     if (status == "confirmed" && preStatus != "confirmed") {
-      console.log('hi in confirmed block')
+      console.log('hi in confirmed block and updatiing purchchase store')
       let { raw, readyStock } = prod;
       //here updating purchase store
       for (let i = 0; i < raw.length; i++) {
@@ -120,12 +120,10 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         if (f.matchedCount == 0) {
           let elem =raw[i];
           elem.quantity=-elem.quantity
-         
           purArr.push(elem);
         }
       }
       if (purArr.length > 0) {
-       
         let purchasestore = new PurchaseStore({companyname:req.params.companyId,item: purArr });
         await purchasestore.save();
       }
@@ -147,8 +145,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         }
       }
       if (parr.length > 0) {
-        console.log("hit");
-        console.log(parr);
+       
         let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
         await product.save();
       }
@@ -395,7 +392,7 @@ router.put('/updateProduction/:companyname/:id/:status',async(req,res)=>{
       res.send({
         message:'updated successfully',
 
-        success:false
+        success:true
       })
 
   }
