@@ -365,7 +365,7 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
 });
 
 router.put('/updateProduction/:companyname/:id',async(req,res)=>{
- 
+ try{
   let body=req.body
   let {status}=body;
   if(status=='confirmed'){
@@ -375,6 +375,7 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
     })
   }
   else{
+    
     const query = { _id: req.params.id, companyname: req.params.companyname };
       const updatedDocument = await Production.findOneAndUpdate(
         query,
@@ -385,9 +386,19 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
           rawResult: false // This is optional; it should be false by default
         }
       );
-
+      res.send({
+        message:'updated successfully',
+        success:false
+      })
 
   }
+}
+catch(err){
+  res.send({
+    message:err.message,
+    success:false
+  })
+}
  
 })
 /*
