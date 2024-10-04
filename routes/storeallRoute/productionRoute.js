@@ -365,30 +365,17 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
 });
 
 router.put('/updateProduction/:companyname/:id',async(req,res)=>{
+ 
   let body=req.body
-  let parr=[]
-  let {readyStock}=body
-   try{
-      let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
-      let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
-      body.total=total
-      body.baseAmount=baseAmount
-      let previosProduction=await Production.findOne({_id:req.params.id,companyname:req.params.companyname})
-      let {status}=previosProduction
-      let prevReadyStock=previosProduction.readyStock
-      let newReadyStock=readyStock.map(elem1=>{
-          let f=prevReadyStock.find(elem2=>elem2.id==elem1.id)
-          if(f){
-            let js={...elem1}
-            js.quantity=elem1.quantity-f.quantity
-            return js
-          }
-          else{
-            return elem1
-          }
-      })
-   
-      const query = { _id: req.params.id, companyname: req.params.companyname };
+  let {status}=body;
+  if(status=='confirmed'){
+    res.send({
+      message:"you can not update confirmed stock please make pending first",
+      success:false,
+    })
+  }
+  else{
+    const query = { _id: req.params.id, companyname: req.params.companyname };
       const updatedDocument = await Production.findOneAndUpdate(
         query,
         body,
@@ -398,54 +385,11 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
           rawResult: false // This is optional; it should be false by default
         }
       );
-   
-  //here we have to update Store
-  console.log('status:',status)
-  if(status=='confirmed'){
-    for (let i = 0; i < newReadyStock.length; i++) {
-    let { id, quantity } = newReadyStock[i];
-    const f = await ProductionStore.updateOne(
-      {companyname:req.params.companyname,'readyStock.id':id },
-      { $inc: { "readyStock.$[elem].quantity":quantity } },
-      { arrayFilters: [{ "elem.id": id }] }
-    );
-    if (f.matchedCount == 0) {
-      let elem = newReadyStock[i];
-      parr.push(elem);
-    }
-  
+
+
   }
-  if (parr.length > 0) {
-    console.log("hit");
-    console.log(parr);
-    let product = new ProductionStore({companyname:req.params.companyname,readyStock: parr });
-    await product.save();
-  }
-}
-
-
-
-
-    res.send({
-      message:'producton is successfully updated',
-      success:true, 
-   })  
-
-
  
-  }
-  catch(err){
-    res.send(
-      {
-        message:err.message,
-        success:false
-      }
-    )
-  }
-  
-
 })
-
 /*
 router.delete('/deleteProduction/:id',async(req,res)=>{
 
