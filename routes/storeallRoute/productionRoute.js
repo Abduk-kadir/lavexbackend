@@ -364,7 +364,7 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
   }
 });
 
-router.put('/updateProduction/:id',async(req,res)=>{
+router.put('/updateProduction/:companyname/:id',async(req,res)=>{
   let body=req.body
   let {readyStock}=body
    try{
@@ -372,9 +372,25 @@ router.put('/updateProduction/:id',async(req,res)=>{
       let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
       body.total=total
       body.baseAmount=baseAmount
-    const updatedDocument = await Production.findByIdAndUpdate(req.params.id,body , {
+      const updatedDocument = await Production.findOneAndUpdate({_id:req.params.id,companyname:req.params.companyname},body , {
       runValidators: true // Ensure validation rules are applied
     })
+  //here we have to update Store
+    for (let i = 0; i < readyStock.length; i++) {
+    let { id, quantity } = readyStock[i];
+    
+    const f = await ProductionStore.updateOne(
+      {companyname:req.params.companyname,'readyStock.id':id },
+      { $set: { "readyStock.$[elem].quantity":quantity } },
+      { arrayFilters: [{ "elem.id": id }] }
+    );
+   
+  }
+
+
+
+
+
     res.send({
       message:'producton is successfully updated',
       success:true, 
