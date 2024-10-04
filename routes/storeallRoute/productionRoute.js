@@ -367,6 +367,7 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
 router.put('/updateProduction/:companyname/:id/:status',async(req,res)=>{
  try{
   let body=req.body
+  let {readyStock}=body
   let status=req.params.status;
   console.log('status is:',status)
   if(status=='confirmed'){
@@ -376,6 +377,10 @@ router.put('/updateProduction/:companyname/:id/:status',async(req,res)=>{
     })
   }
   else{
+    let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
+    let baseAmount=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity,0)
+    body.total=total
+    body.baseAmount=baseAmount
     
     const query = { _id: req.params.id, companyname: req.params.companyname };
       const updatedDocument = await Production.findOneAndUpdate(
