@@ -364,10 +364,11 @@ router.get("/allcancelStock/:companyname", async (req, res) => {
   }
 });
 
-router.put('/updateProduction/:companyname/:id',async(req,res)=>{
+router.put('/updateProduction/:companyname/:id/:status',async(req,res)=>{
  try{
   let body=req.body
-  let {status}=body;
+  let status=req.params.status;
+  console.log('status is:',status)
   if(status=='confirmed'){
     res.send({
       message:"you can not update confirmed stock please make pending first",
@@ -388,6 +389,7 @@ router.put('/updateProduction/:companyname/:id',async(req,res)=>{
       );
       res.send({
         message:'updated successfully',
+
         success:false
       })
 
