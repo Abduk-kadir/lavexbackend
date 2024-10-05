@@ -63,6 +63,10 @@ const creditNoteS=mongoose.Schema({
          type:Number,
          required:[true,'second credit days is required']
      },
+     stateCode:{
+      type:String,
+     
+     },
       
      shipTo:{
          type:String,

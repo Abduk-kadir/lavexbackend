@@ -44,6 +44,10 @@ const performaSchema=mongoose.Schema({
          type:Number,
          required:[true,'first credit limit is required']
      },
+     stateCode:{
+      type:String,
+     
+     },
      
      fcDays:{
          type:Number,

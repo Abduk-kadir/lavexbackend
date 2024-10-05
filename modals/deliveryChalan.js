@@ -49,6 +49,10 @@ const deliverySchema=mongoose.Schema({
          type:Number,
          required:[true,'first credit days is required']
      },
+     stateCode:{
+      type:String,
+     
+     },
      
      scAmount:{
          type:Number,
