@@ -60,6 +60,10 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyname;
         body.cid=req.params.cid
+        let data=await ClientPayment.find({companyname:req.params.companyname})
+        let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
+        max=max+1;
+        body.paymentNumber=max;
         let clientPayment=new ClientPayment(body);
         let {invoiceList}=body
         console.log(invoiceList)
