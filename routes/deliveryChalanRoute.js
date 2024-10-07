@@ -15,14 +15,8 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
      let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
      max=max+1;
      js.mov=max;
-     let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
-     js.total=total;
-     js.pendingAmount=total;
-
-
      let delivery=new DeliveryChalan(js);
      await delivery.save();
-     
      if(role=='master'){
      //updating production store
       for (let i = 0; i < item.length; i++) {
@@ -38,10 +32,13 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
       //ending
       const branch = req.body.clientDetail.Branch.trim().toUpperCase();
       let isSister=await Company.findOne({Branch:branch})
-        console.log('is isister',isSister)
+       
         if(isSister){
           //let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
+          let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
           let js={sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
+          js.total=total;
+          js.pendingAmount=total;
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
           let mascompany =await Company.findById(type)
