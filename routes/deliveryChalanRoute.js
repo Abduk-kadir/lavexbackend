@@ -42,7 +42,7 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
           let mascompany =await Company.findById(type)
-          let s=await Supplier.findOne({companyname:isSister._id,supplier:company+' '+Branch})
+          let s=await Supplier.findOne({companyname:isSister._id,supplier:mascompany.company+' '+mascompany.Branch})
           if(!s){
         
           let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
