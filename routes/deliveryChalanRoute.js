@@ -9,6 +9,7 @@ router=express.Router()
 router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type,role}=req.query
     let {item}=req.body
+    let {body}=req
     try{
      let js={...req.body,companyname:type}
      let data=await DeliveryChalan.find({companyname:type})
@@ -34,22 +35,20 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
       let isSister=await Company.findOne({Branch:branch})
        
         if(isSister){
-          //let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
           let total=item.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
-          let js={sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
-          js.total=total;
-          js.pendingAmount=total;
-          let sisterstore=new SisterStore(js)
-          await sisterstore.save()
           let mascompany =await Company.findById(type)
-          let s=await Supplier.findOne({companyname:isSister._id,supplier:mascompany.company+' '+mascompany.Branch})
+          let s=await Supplier.findOne({companyname:isSister._id,supplier:mascompany.company+' '+mascompany.Branch}) 
           if(!s){
-        
-          let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
-          let js2={companyname:isSister._id,supplier:company+' '+Branch,address:address,email:email,area:area,state:state,gstNumber:gstNumber,pincode:pincode,panNumber:panNumber,contactPerson:company,mobile1:mobile1,mobile2:mobile2,city:city,stateCode:stateCode}
-          let sup=new Supplier(js2);
-          await  sup.save()
-          }
+            let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
+            let js2={companyname:isSister._id,supplier:company+' '+Branch,address:address,email:email,area:area,state:state,gstNumber:gstNumber,pincode:pincode,panNumber:panNumber,contactPerson:company,mobile1:mobile1,mobile2:mobile2,city:city,stateCode:stateCode}
+            let sup=new Supplier(js2);
+            s= await  sup.save()
+            }
+            let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:s._id,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
+            js.total=total;
+            js.pendingAmount=total;
+            let sisterstore=new SisterStore(js)
+            await sisterstore.save()
 
 
 

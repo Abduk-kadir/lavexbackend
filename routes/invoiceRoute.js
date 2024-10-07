@@ -107,11 +107,14 @@ router.post('/invoiceCreate',async(req,res)=>{
         if(isSister){
           let mascompany =await Company.findById(type)
           let s=await Supplier.findOne({companyname:isSister._id,supplier:mascompany.company+' '+mascompany.Branch})
+          
           if(!s){
           let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
           let js2={companyname:isSister._id,supplier:company+' '+Branch,address:address,email:email,area:area,state:state,gstNumber:gstNumber,pincode:pincode,panNumber:panNumber,contactPerson:company,mobile1:mobile1,mobile2:mobile2,city:city,stateCode:stateCode}
           let sup=new Supplier(js2);
-          await  sup.save()
+          s= await  sup.save()
+          console.log('fjdkjfhd:',s);
+         
           }
          let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:s._id,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
          let sisterstore=new SisterStore(js)
