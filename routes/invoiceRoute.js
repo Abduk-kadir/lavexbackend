@@ -109,7 +109,7 @@ router.post('/invoiceCreate',async(req,res)=>{
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
           let mascompany =await Company.findById(type)
-          let s=await Supplier.findById(mascompany._id)
+          let s=await Supplier.findOne({_id:mascompany._id,companyname:isSister._id})
           if(!s){
         
           let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
@@ -155,8 +155,6 @@ router.post('/invoiceCreate',async(req,res)=>{
 
     }
 })
-
-
 
 router.get('/invoice/:number/:name',async(req,res)=>{
     console.log(req.params.number)
