@@ -4,6 +4,7 @@ const {ProductionStore}=require('../modals/store/productionStore')
 const SisterStock=require('../modals/sisterStock')
 const SisterStore=require('../modals/sisterStore')
 const Company=require('../modals/companyModal')
+const Suppler=require('../modals/supplierModal')
 router=express.Router()
 router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type,role}=req.query
@@ -41,6 +42,19 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
           let js={sid:type,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
           let sisterstore=new SisterStore(js)
           await sisterstore.save()
+          let mascompany =await Company.findById(type)
+          let s=await Supplier.findById(mascompany._id)
+          if(!s){
+        
+          let {Branch,company,address,area,email,state,gstNumber,pincode,panNumber,contactPerson,mobile1,mobile2,city,stateCode}=mascompany
+          let js2={_id:mascompany._id,companyname:isSister._id,supplier:company+' '+Branch,address:address,email:email,area:area,state:state,gstNumber:gstNumber,pincode:pincode,panNumber:panNumber,contactPerson:company,mobile1:mobile1,mobile2:mobile2,city:city,stateCode:stateCode}
+          let sup=new Supplier(js2);
+          await  sup.save()
+          }
+
+
+
+
         }
 
      }
