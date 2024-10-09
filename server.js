@@ -62,9 +62,8 @@ app.use('/api/inward',invardRouter)
 app.use('/api/itemMaster',ItemMasterRouter)
 app.use('/api/bom',BomRouter)
 app.use('/api/production',ProductionRouter)
-
-
 app.use('/api/supPayment',SupplerPayRouter)
+
 app.use('/api/clientPayment',CleintPayRouter)
 app.use('/api',DropdownRouter)
 app.use('/api/manufecturer',ManufecturerRouter)

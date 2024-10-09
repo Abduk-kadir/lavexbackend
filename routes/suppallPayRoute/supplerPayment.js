@@ -1,9 +1,11 @@
 let express=require('express')
 let router=express.Router()
-
 const SupplierPayment=require('../../modals/supplierPayment/supPayment')
 let Inward=require('../../modals/store/inwardModal')
 let SisterStore=require('../../modals/sisterStore')
+const supPayment = require('../../modals/supplierPayment/supPayment')
+const Invoice=require('../../modals/invoiceModal')
+const DeliveryChalan=require('../../modals/deliveryChalan')
 
 /*router.get('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
 
@@ -129,21 +131,99 @@ router.get('/allpayment/:companyname',async(req,res)=>{
     }
 
 })
-/*router.put('/updateSuppPay/:id',async(req,res)=>{
+
+router.get('/payentReport/:companyname',async(req,res)=>{
     try{
-     let result= await SupplierPayment.findByIdAndUpdate({_id:req.params.id},req.body)
-     res.send({
-        message:"data is successfully updated",
-        success:true, 
-     })
+    let {fromDate,toDate,sid}=req.body;
+    
+     let result =await SupplierPayment.find({
+        paymentDate:{
+            $gte: fromDate,
+            $lte: toDate
+        },
+        sid:sid,
+        companyname:req.params.companyname
+    })
+    res.send({
+        message:'data is successfully fetched',
+        success:true,
+        data:result
+    })
     }
     catch(err){
         res.send({
             message:err.message,
-            success:false, 
-         })
+            success:false,
+            data:null
+        })
 
-    }
+    } 
+    
 })
+
+/*
+
+router.get('/invoiceByArea/:companyname',async(req,res)=>{
+    try{
+        let {fromDate,toDate,type,area,id}=req.body;
+        let model=type=='invoice'?Invoice:DeliveryChalan
+         let result=await model.find({
+            "invoiceDetail.invoiceDate":{
+                $gte: fromDate,
+                $lte: toDate
+            },
+            area:area,
+           "clientDetail.id":id,
+            companyname:req.params.companyname,
+        })
+        res.send({
+            message:'data is successfully fetched',
+            success:true,
+            data:result
+        })
+        }
+        catch(err){
+            res.send({
+                message:err.message,
+                success:false,
+                data:null
+            })
+    
+        } 
+   
+
+})
+
+router.get('/invoiceByProduct/:companyname',async(req,res)=>{
+    try{
+        let {fromDate,toDate,type,clientId,prodId}=req.body;
+        let model=type=='invoice'?Invoice:DeliveryChalan
+         let result=await model.find({
+            "invoiceDetail.invoiceDate":{
+                $gte: fromDate,
+                $lte: toDate
+            },
+            "clientDetail.id":clientId,
+            "item.id":prodId,
+            companyname:req.params.companyname,
+        })
+        res.send({
+            message:'data is successfully fetched',
+            success:true,
+            data:result
+        })
+        }
+        catch(err){
+            res.send({
+                message:err.message,
+                success:false,
+                data:null
+            })
+    
+        }
+
+})
+
 */
+
 module.exports=router

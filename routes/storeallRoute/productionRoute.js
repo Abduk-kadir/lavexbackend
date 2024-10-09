@@ -412,31 +412,41 @@ catch(err){
 }
  
 })
-/*
-router.delete('/deleteProduction/:id',async(req,res)=>{
-
-try{
-  const updatedDocument = await Production.findByIdAndDelete(req.params.id)
-  res.send({
-    message:'Production is successfully deleted',
-    success:true, 
- })  
 
 
-}
 
-catch(err){
-  res.send(
-    {
-      message:err.message,
-      success:false
+router.get('/momentReport',async(req,res)=>{
+  try{
+    let {fromDate,toDate,companyname}=req.body;
+     let result=await Production.find({
+        "dateCreated":{
+            $gte: fromDate,
+            $lte: toDate
+        },
+        status:"confirmed",
+        companyname:companyname,
+    },{raw:1})
+  
+    console.log('raw is:',result)
+    res.send({
+        message:'data is successfully fetched',
+        success:true,
+        data:result
+    })
     }
-  )
-}
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+        })
+
+    }
+
+
 
 
 })
-*/
 
 
 

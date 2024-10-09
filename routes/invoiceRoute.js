@@ -114,7 +114,6 @@ router.post('/invoiceCreate',async(req,res)=>{
           let sup=new Supplier(js2);
           s= await  sup.save()
           console.log('fjdkjfhd:',s);
-         
           }
          let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:s._id,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
          let sisterstore=new SisterStore(js)
