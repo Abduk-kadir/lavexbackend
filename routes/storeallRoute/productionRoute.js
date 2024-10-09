@@ -417,33 +417,34 @@ catch(err){
 
 router.get('/momentReport',async(req,res)=>{
   try{
-    let {fromDate,toDate,companyname}=req.body;
-     let result=await Production.find({
+    let {fromDate,toDate,companyname}=req.body
+    let data= await Production.aggregate([
+       {$unwind:{path:"$readyStock"}},
+       {$match:{
         "dateCreated":{
-            $gte: fromDate,
-            $lte: toDate
-        },
-        status:"confirmed",
-        companyname:companyname,
-    },{raw:1})
-  
-    console.log('raw is:',result)
-    res.send({
-        message:'data is successfully fetched',
-        success:true,
-        data:result
-    })
+          $gte: fromDate,
+          $lte: toDate
+      },
+        status:'confirmed',
+        companyname:companyname
+      }
+      },
+       {$group:{_id:"$_id",status: { $first: "$status" },mov: { $first: "$mov" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}
+     ])
+      res.send({
+       message: "data is successfully attached",
+       success: true,
+       data:data
+     });
     }
     catch(err){
-        res.send({
-            message:err.message,
-            success:false,
-            data:null
-        })
-
+     res.send({
+       message: err.message,
+       success: false,
+       data:null
+     });
+      
     }
-
-
 
 
 })
