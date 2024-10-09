@@ -132,9 +132,9 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 
 })
 
-router.get('/payentReport/:companyname',async(req,res)=>{
+router.get('/payentReport',async(req,res)=>{
     try{
-    let {fromDate,toDate,sid}=req.body;
+    let {fromDate,toDate,sid,companyname}=req.query;
     
      let result =await SupplierPayment.find({
         paymentDate:{
@@ -142,7 +142,7 @@ router.get('/payentReport/:companyname',async(req,res)=>{
             $lte: toDate
         },
         sid:sid,
-        companyname:req.params.companyname
+        companyname:companyname
     })
     res.send({
         message:'data is successfully fetched',
