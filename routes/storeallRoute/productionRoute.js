@@ -417,7 +417,7 @@ catch(err){
 
 router.get('/momentReport',async(req,res)=>{
   try{
-    let {fromDate,toDate,companyname}=req.body
+    let {fromDate,toDate,companyname}=req.query
     let data= await Production.aggregate([
        {$unwind:{path:"$readyStock"}},
        {$match:{
