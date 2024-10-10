@@ -243,12 +243,11 @@ router.get('/allinvoices/:id',async(req,res)=>{
 router.get('/invoiceByArea',async(req,res)=>{
   try{
       let {fromDate,toDate,type,companyname,area,id}=req.query;
-      console.log(companyname)
       let model=type=='invoice'?Invoice:DeliveryChalan
       let query = {
         "invoiceDetail.invoiceDate": {
-            $gte: new Date(fromDate),
-            $lte: new Date(toDate)
+            $gte:fromDate,
+            $lte:toDate
         },
         companyname:companyname,
     };
@@ -258,14 +257,54 @@ router.get('/invoiceByArea',async(req,res)=>{
     if(id){
       query["clientDetail.id"]=id
     }
-    
+    console.log(query)
      let result=await model.find(query)
       
 
       res.send({
           message:'data is successfully fetched',
           success:true,
-          data:query
+          data:result
+      })
+      }
+      catch(err){
+          res.send({
+              message:err.message,
+              success:false,
+              data:null
+          })
+  
+      } 
+ 
+
+})
+
+router.get('/invoiceByProd',async(req,res)=>{
+  try{
+      let {fromDate,toDate,type,companyname,prodId,id}=req.query;
+      let model=type=='invoice'?Invoice:DeliveryChalan
+      let query = {
+        "invoiceDetail.invoiceDate": {
+            $gte:fromDate,
+            $lte:toDate
+        },
+        companyname:companyname,
+    };
+    if(id){
+      query["clientDetail.id"]=id
+    }
+    if(prodId){
+      query["item.id"]=prodId
+    }
+    console.log(query)
+
+    let result=await model.find(query)
+      
+
+      res.send({
+          message:'data is successfully fetched',
+          success:true,
+          data:result
       })
       }
       catch(err){
