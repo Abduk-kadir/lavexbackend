@@ -37,6 +37,10 @@ const invoiceSchema=mongoose.Schema({
         type:String,
         required:['true','address is required']
        },
+       area:{
+         type:String,
+         required:[true,'area is required']
+       },
       gstNumber:{
          type:String,
          default:null
