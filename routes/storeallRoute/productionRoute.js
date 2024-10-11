@@ -418,24 +418,24 @@ catch(err){
 router.get('/momentReport',async(req,res)=>{
   try{
     let {fromDate,toDate,companyname}=req.query
-    let data= await Production.aggregate([
-       {$unwind:{path:"$readyStock"}},
-       {$match:{
-        "dateCreated":{
-          $gte: fromDate,
-          $lte: toDate
-      },
-        status:'confirmed',
-        companyname:companyname
-      }
-      },
-       {$group:{_id:"$_id",status: { $first: "$status" },mov: { $first: "$mov" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}
-     ])
-      res.send({
-       message: "data is successfully attached",
-       success: true,
-       data:data
-     });
+    let query = {companyname:companyname,staus:"confirmed"}
+    console.log(fromDate)
+    console.log(toDate)
+    if(fromDate&&toDate){
+      query["dateCreated"]= {
+       $gte:fromDate, 
+       $lte:toDate
+    }
+
+    }
+
+
+    res.send(query)
+   
+
+     
+     
+   
     }
     catch(err){
      res.send({
