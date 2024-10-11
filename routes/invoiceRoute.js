@@ -244,13 +244,13 @@ router.get('/invoiceByArea',async(req,res)=>{
   try{
       let {fromDate,toDate,type,companyname,area,id}=req.query;
       let model=type=='invoice'?Invoice:DeliveryChalan
-      let query = {
-        "invoiceDetail.invoiceDate": {
-            $gte:fromDate,
-            $lte:toDate
-        },
-        companyname:companyname,
-    };
+      let query={companyname:companyname}
+      if(fromDate&&toDate){
+          query["invoiceDetail.invoiceDate"]={
+           $gte:fromDate, 
+           $lte:toDate
+        }
+      }
     if(area){
       query["clientDetail.area"]=area
     }
@@ -283,19 +283,21 @@ router.get('/invoiceByProd',async(req,res)=>{
   try{
       let {fromDate,toDate,type,companyname,prodId,id}=req.query;
       let model=type=='invoice'?Invoice:DeliveryChalan
-      let query = {
-        "invoiceDetail.invoiceDate": {
-            $gte:fromDate,
-            $lte:toDate
-        },
-        companyname:companyname,
-    };
+      let query={companyname:companyname}
+    
+      if(fromDate&&toDate){
+          query["invoiceDetail.invoiceDate"]= {
+           $gte:fromDate, 
+           $lte:toDate
+        }
+      }
     if(id){
       query["clientDetail.id"]=id
     }
     if(prodId){
       query["item.id"]=prodId
     }
+
     console.log(query)
 
     let result=await model.find(query)
