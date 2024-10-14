@@ -419,19 +419,23 @@ router.get('/momentReport',async(req,res)=>{
   try{
     let {fromDate,toDate,companyname}=req.query
     let query = {companyname:companyname,status:"confirmed"}
+    let data=await Production.find(query);
     if(fromDate&&toDate){
-      query["dateCreated"]= {
-       $gte:fromDate, 
-       $lte:toDate
+      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+      const [dayTo, monthTo, yearTo] = toDate.split('-');
+    
+      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+      data=data.filter(item => {
+        const [day, month, year] = item.dateCreated.split('-');
+        let itemDate= new Date(`${year}-${month}-${day}`);
+        return itemDate >= from && itemDate <= to;
+    });
     }
-
-    }
-    console.log(query)
-    let result=await Production.find(query,{raw:1,_id:0});
     res.send({
       message:'data is successfully fetched',
       success:true,
-      data:result
+      data:data
     })
     }
     catch(err){
@@ -447,9 +451,5 @@ router.get('/momentReport',async(req,res)=>{
 })
 
 
-
-
-
-
-
 module.exports = router;
+  
