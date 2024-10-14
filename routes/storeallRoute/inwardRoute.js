@@ -246,40 +246,45 @@ router.put('/updateInward/:id/:status', async (req, res) => {
 
 })
 
-
-/*router.delete('/deleteInward/:id',async(req,res)=>{
-
+router.get('/purchaseReport',async(req,res)=>{
   try{
-  let p=await SupplierPayment.findOne({inwardList: { $elemMatch: {inwardId:req.params.id} }})
-  if(p){
-    res.send({
-      message:'this inward is using other places you you can not delete',
-      success:false, 
-   })  
-  }
-  else{
-    const updatedDocument = await Inward.findByIdAndDelete(req.params.id)
-    res.send({
-      message:'inward is successfully deleted',
-      success:true, 
-   })  
+    let {fromDate,toDate,companyname,sid}=req.query
+    let query = {companyname:companyname}
+    if(fromDate&&toDate){
+      query["dateCreated"]= {
+       $gte:fromDate, 
+       $lte:toDate
+    }
 
+    }
+    
+    if(sid){
+      query.sid=sid
+    }
+    console.log('query is:',query)
+    let result=await Inward.find(query);
+    res.send({
+      message:'data is successfully fetched',
+      success:false,
+      data:result
+    })
+    }
+    catch(err){
+     res.send({
+       message: err.message,
+       success: false,
+       data:null
+     });
+      
+    }
 
-  }
-  }
-  catch(err){
-    res.send(
-      {
-        message:err.message,
-        success:false
-      }
-    )
-  }
-  
 
 })
 
-*/
+
+
+
+
 
 
 

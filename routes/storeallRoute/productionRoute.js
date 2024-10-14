@@ -418,9 +418,7 @@ catch(err){
 router.get('/momentReport',async(req,res)=>{
   try{
     let {fromDate,toDate,companyname}=req.query
-    let query = {companyname:companyname,staus:"confirmed"}
-    console.log(fromDate)
-    console.log(toDate)
+    let query = {companyname:companyname,status:"confirmed"}
     if(fromDate&&toDate){
       query["dateCreated"]= {
        $gte:fromDate, 
@@ -428,14 +426,13 @@ router.get('/momentReport',async(req,res)=>{
     }
 
     }
-
-
-    res.send(query)
-   
-
-     
-     
-   
+    console.log(query)
+    let result=await Production.find(query,{raw:1});
+    res.send({
+      message:'data is successfully fetched',
+      success:false,
+      data:result
+    })
     }
     catch(err){
      res.send({
@@ -448,6 +445,8 @@ router.get('/momentReport',async(req,res)=>{
 
 
 })
+
+
 
 
 
