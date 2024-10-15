@@ -245,49 +245,10 @@ router.get('/allinvoices/:id', async (req, res) => {
 
 })
 
-router.get('/invoiceByArea', async (req, res) => {
-  try {
-    let { fromDate, toDate, type, companyname, area, id } = req.query;
-    let model = type == 'invoice' ? Invoice : DeliveryChalan
-    let query = { companyname: companyname }
-    if (fromDate && toDate) {
-      query["invoiceDetail.invoiceDate"] = {
-        $gte: fromDate,
-        $lte: toDate
-      }
-    }
-    if (area) {
-      query["clientDetail.area"] = area
-    }
-    if (id) {
-      query["clientDetail.id"] = id
-    }
-    console.log(query)
-    let result = await model.find(query)
-
-
-    res.send({
-      message: 'data is successfully fetched',
-      success: true,
-      data: result
-    })
-  }
-  catch (err) {
-    res.send({
-      message: err.message,
-      success: false,
-      data: null
-    })
-
-  }
-
-
-})
 
 router.get('/invoiceByProd', async (req, res) => {
   try {
     let { fromDate, toDate, type, companyname, prodId, id } = req.query;
-   
     let model = type == 'invoice' ? Invoice : DeliveryChalan
     let query = { companyname: companyname }
     let data = await model.find(query)
@@ -296,8 +257,6 @@ router.get('/invoiceByProd', async (req, res) => {
       const [dayTo, monthTo, yearTo] = toDate.split('-');
       const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
       const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
-      console.log(from)
-      console.log(to)
       data = data.filter(item => {
         const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
         let itemDate = new Date(`${year}-${month}-${day}`);
@@ -334,6 +293,52 @@ router.get('/invoiceByProd', async (req, res) => {
     })
   }
   catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+      data: null
+    })
+
+  }
+
+
+})
+
+router.get('/salesReport',async(req,res)=>{
+  try{
+
+    let { fromDate, toDate, type, companyname } = req.query;
+    let model = type == 'invoice' ? Invoice : DeliveryChalan
+    let query = { companyname: companyname }
+    let data = await model.find(query)
+    if (fromDate && toDate) {
+      
+      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+      const [dayTo, monthTo, yearTo] = toDate.split('-');
+     
+      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+      console.log(from)
+      console.log(to)
+      data = data.filter(item => {
+        const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+        let itemDate = new Date(`${year}-${month}-${day}`);
+        console.log(itemDate)
+        return itemDate >= from && itemDate <= to;
+      });
+
+    }
+
+    res.send({
+      message: 'data is successfully fetched',
+      success: true,
+      data: data
+    })
+
+  
+
+  }
+  catch(err){
     res.send({
       message: err.message,
       success: false,
