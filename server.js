@@ -2,7 +2,6 @@ const express=require('express')
 const jsonwebToken=require('jsonwebtoken')
 require('dotenv').config()
 require('./config/dbConfig')
-const cors=require('cors')
 let userRoute=require('./routes/userRoute')
 let invoiceRouter=require('./routes/invoiceRoute')
 let porfarmaRouter=require('./routes/porformaRoute')
@@ -25,9 +24,8 @@ let DropdownRouter=require('./routes/dropdownRoute')
 let SisterRouter=require('./routes/sisterStoreRoute')
 
 const app=express()
-app.use(cors())
 app.use(express.json())
-/*app.use(function(req,res,next){
+app.use(function(req,res,next){
     res.header("Access-Control-Allow-Origin","*")
     res.header(
         "Access-Control-Allow-Methods",
@@ -44,7 +42,7 @@ app.use(express.json())
 
    
 });
-*/
+
 const port =process.env.port||5000
 app.listen(port,()=>console.log(`app is listining is port ${port}`))
 
