@@ -134,24 +134,15 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 
 router.get('/payentReport',async(req,res)=>{
     try{
-    let {fromDate,toDate,sid,companyname}=req.query;
-    let query={companyname:companyname}
-    
-    if(fromDate&&toDate){
-        query["paymentDate"]= {
-         $gte:fromDate, 
-         $lte:toDate
-      }
-    }
-    if(sid){
-        query['sid']=sid
-    }
+    let {companyname}=req.query
+    let query={$expr:{$ne:['$total','$pendingAmount']}}
+    if(companyname){query.companyname=companyname}
     console.log('query is:',query)
-    let result =await SupplierPayment.find(query)
+    let data=await Inward.find(query);
     res.send({
         message:'data is successfully fetched',
         success:true,
-        data:result
+        data:data
     })
     }
     catch(err){
@@ -165,40 +156,9 @@ router.get('/payentReport',async(req,res)=>{
     
 })
 
-/*
 
 
 
-router.get('/invoiceByProduct/:companyname',async(req,res)=>{
-    try{
-        let {fromDate,toDate,type,clientId,prodId}=req.body;
-        let model=type=='invoice'?Invoice:DeliveryChalan
-         let result=await model.find({
-            "invoiceDetail.invoiceDate":{
-                $gte: fromDate,
-                $lte: toDate
-            },
-            "clientDetail.id":clientId,
-            "item.id":prodId,
-            companyname:req.params.companyname,
-        })
-        res.send({
-            message:'data is successfully fetched',
-            success:true,
-            data:result
-        })
-        }
-        catch(err){
-            res.send({
-                message:err.message,
-                success:false,
-                data:null
-            })
-    
-        }
 
-})
-
-*/
 
 module.exports=router
