@@ -138,7 +138,7 @@ router.get('/payentReport',async(req,res)=>{
     let query={$expr:{$ne:['$total','$pendingAmount']}}
     if(companyname){query.companyname=companyname}
     let data=await Inward.find(query);
-    
+
     if (fromDate && toDate) {
         const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
         const [dayTo, monthTo, yearTo] = toDate.split('-');
@@ -147,7 +147,6 @@ router.get('/payentReport',async(req,res)=>{
         data = data.filter(item => {
           const [day, month, year] = item.dateCreated.split('-');
           let itemDate = new Date(`${year}-${month}-${day}`);
-          
           return itemDate >= from && itemDate <= to;
         });
   
