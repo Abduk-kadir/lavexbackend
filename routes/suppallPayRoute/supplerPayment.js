@@ -134,11 +134,28 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 
 router.get('/payentReport',async(req,res)=>{
     try{
-    let {companyname}=req.query
+    let {companyname,fromDate,toDate}=req.query
     let query={$expr:{$ne:['$total','$pendingAmount']}}
     if(companyname){query.companyname=companyname}
-    console.log('query is:',query)
     let data=await Inward.find(query);
+    
+    if (fromDate && toDate) {
+        const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+        const [dayTo, monthTo, yearTo] = toDate.split('-');
+        const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+        const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+        data = data.filter(item => {
+          const [day, month, year] = item.dateCreated.split('-');
+          let itemDate = new Date(`${year}-${month}-${day}`);
+          
+          return itemDate >= from && itemDate <= to;
+        });
+  
+      }
+  
+
+
+
     res.send({
         message:'data is successfully fetched',
         success:true,
