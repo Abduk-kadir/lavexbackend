@@ -138,11 +138,8 @@ const invoiceSchema=mongoose.Schema({
         type:Number,
         required:[true,'quantity  is required'],
         
-     },
-     loosePack:{
-      type:Boolean,
-      
      }
+    
   }],
   total:{
    type:Number,
