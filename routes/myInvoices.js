@@ -424,7 +424,7 @@ router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
 
 })
 
-s
+
 module.exports=router;
 
 
