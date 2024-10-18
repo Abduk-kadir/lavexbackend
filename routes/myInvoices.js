@@ -424,11 +424,7 @@ router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
 
 })
 
-router.put('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
-   
-     res.send('fhfjdjfh')
-})
-
+s
 module.exports=router;
 
 
