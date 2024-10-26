@@ -7,18 +7,15 @@ router=express.Router()
 router.post('/creditNoteCreate',async(req,res)=>{
     try{
     let {type,role}=req.query;
+   
     let js={...req.body,companyname:type}
     let data=await CreditNote.find({companyname:type})
         let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
         max=max+1;
         js.mov=max;
-        let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
-        js.total=total
-
-
-
-
     let {item,onAccount}=req.body
+    let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+    js.total=total
     let creditnote=new CreditNote(js);
     await creditnote.save();
      if(onAccount){
