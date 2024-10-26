@@ -20,6 +20,7 @@ router.get('/totalinvoice',async(req,res)=>{
       let deliveryData=await Deliverynote.find({companyname:companyname})
       let creditdata=await creditNote.find({companyname:companyname})
       let debitData=await DebitNote.find({companyname:companyname})
+      let porData=await Porfarma.find({companyname:companyname})
 
       const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
       const [dayTo, monthTo, yearTo] = toDate.split('-');
@@ -39,14 +40,25 @@ router.get('/totalinvoice',async(req,res)=>{
       return itemDate >= from && itemDate <= to;
     });
     //debit filter 
-     //delivery filter
+   
      debitData=debitData.filter(item => {
       const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
       let itemDate = new Date(`${year}-${month}-${day}`);
       return itemDate >= from && itemDate <= to;
     });
+     //credit filter
+    creditdata=creditdata.filter(item => {
+      const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+      let itemDate = new Date(`${year}-${month}-${day}`);
+      return itemDate >= from && itemDate <= to;
+    });
 
-
+     //porfarma filter
+     porData=porData.filter(item => {
+      const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+      let itemDate = new Date(`${year}-${month}-${day}`);
+      return itemDate >= from && itemDate <= to;
+    });
     //invoice chart
      let pm='',py=''
      let count=0
@@ -92,7 +104,7 @@ router.get('/totalinvoice',async(req,res)=>{
       } 
    
      },[]) 
-
+     //debitchart
      pm='',py=''
      debitData=debitData.reduce((acc,curr)=>{
       const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
@@ -113,10 +125,56 @@ router.get('/totalinvoice',async(req,res)=>{
       } 
    
      },[]) 
+     //creditchart
+     pm='',py=''
+     creditdata=creditdata.reduce((acc,curr)=>{
+      const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
+      if(pm==cmonth&&py==cyear){
+        console.log('invoice date:',curr.invoiceDetail.invoiceDate)
+        let f=acc.find(elem2=>elem2.date[3]==curr.invoiceDetail.invoiceDate[3])
+        if(f){f.count+=1,f.total+=curr.total}
+        return acc
+      } 
+      else{
+        pm=cmonth
+        py=cyear  
+        let js={date:curr.invoiceDetail.invoiceDate,count:1,total:curr.total}
+        acc.push(js)
+        console.log('acc is:',acc)
+        return acc
+
+      } 
+   
+     },[]) 
+      //porfarmachart
+      pm='',py=''
+      porData=porData.reduce((acc,curr)=>{
+       const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
+       if(pm==cmonth&&py==cyear){
+         console.log('invoice date:',curr.invoiceDetail.invoiceDate)
+         let f=acc.find(elem2=>elem2.date[3]==curr.invoiceDetail.invoiceDate[3])
+         if(f){f.count+=1,f.total+=curr.total}
+         return acc
+       } 
+       else{
+         pm=cmonth
+         py=cyear  
+         let js={date:curr.invoiceDetail.invoiceDate,count:1,total:curr.total}
+         acc.push(js)
+         console.log('acc is:',acc)
+         return acc
+ 
+       } 
+    
+      },[]) 
+
+     
 
      jsdata.invoice=invoicedata
      jsdata.delivery=deliveryData
      jsdata.debitData=debitData
+     jsdata.creditdata=creditdata
+     jsdata.porData=porData
       res.send({
         message:'data is fetched successfully',
         success:true,
@@ -128,7 +186,7 @@ router.get('/totalinvoice',async(req,res)=>{
     else{
       res.send({
         message:'please select date',
-        success:fasle,
+        success:false,
         data:null
       })
 

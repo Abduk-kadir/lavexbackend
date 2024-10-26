@@ -16,6 +16,8 @@ router.post('/porpharmaCreate',async(req,res)=>{
         let max=data.reduce((acc,curr)=>curr.mov>acc?curr.mov:acc,0)
         max=max+1;
         js.mov=max;
+        let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+        js.total=total
     
      let porfarma=new Porfarma(js);
      await porfarma.save();
