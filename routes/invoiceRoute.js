@@ -257,6 +257,8 @@ router.get('/invoiceByProd', async (req, res) => {
       const [dayTo, monthTo, yearTo] = toDate.split('-');
       const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
       const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+      console.log(from)
+      console.log(to)
       data = data.filter(item => {
         const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
         let itemDate = new Date(`${year}-${month}-${day}`);
@@ -277,11 +279,26 @@ router.get('/invoiceByProd', async (req, res) => {
     if (prodId) {
      
       data=data.filter(elem => {
-        let f=elem.item.find(elem2=>{
+        /*let f=elem.item.find(elem2=>{
            return elem2.id==prodId
         })
-        console.log(f)
-        return f
+      
+        return f*/
+        let index=elem.item.findIndex(elem2=>{
+          return elem2.id==prodId
+        })
+        if(index>-1){
+         const element = elem.item[index]; 
+         elem.item.splice(0, elem.item.length); 
+         elem.item.push(element);
+         return true
+         
+        }
+        else{
+          elem.item.splice(index,1)
+          return false
+
+        }
       
       })
 
