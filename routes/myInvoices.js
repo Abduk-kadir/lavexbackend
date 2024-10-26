@@ -10,14 +10,130 @@ let arr=null
 let pagearr=[]
 let f;
 
-router.get('/totalinvoice/:name',async(req,res)=>{
+router.get('/totalinvoice',async(req,res)=>{
   try{
-     let result1=await Invoice.aggregate([{$match:{companyname:req.params.name}},{$group:{_id:"$companyname",invoices:{$sum:1}}}])
-     let result2=await Porfarma.aggregate([{$match:{companyname:req.params.name}},{$group:{_id:"$companyname",proforma:{$sum:1}}}])
-     let result3=await creditNote.aggregate([{$match:{companyname:req.params.name}},{$group:{_id:"$companyname",creditnote:{$sum:1}}}])
-     let result4=await DebitNote.aggregate([{$match:{companyname:req.params.name}},{$group:{_id:"$companyname",debitnote:{$sum:1}}}])
-     let newarr=[...result1,...result2,...result3,...result4]
-     res.send(newarr)
+    let {fromDate,toDate,companyname } = req.query;
+    console.log(fromDate,toDate,companyname)
+    let jsdata={}
+    if (fromDate && toDate) {
+      let invoicedata = await Invoice.find({companyname:companyname})
+      let deliveryData=await Deliverynote.find({companyname:companyname})
+      let creditdata=await creditNote.find({companyname:companyname})
+      let debitData=await DebitNote.find({companyname:companyname})
+
+      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+      const [dayTo, monthTo, yearTo] = toDate.split('-');
+      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+
+      //invoice filter
+      invoicedata = invoicedata.filter(item => {
+        const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+        let itemDate = new Date(`${year}-${month}-${day}`);
+        return itemDate >= from && itemDate <= to;
+      });
+     //delivery filter
+     deliveryData = deliveryData.filter(item => {
+      const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+      let itemDate = new Date(`${year}-${month}-${day}`);
+      return itemDate >= from && itemDate <= to;
+    });
+    //debit filter 
+     //delivery filter
+     debitData=debitData.filter(item => {
+      const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+      let itemDate = new Date(`${year}-${month}-${day}`);
+      return itemDate >= from && itemDate <= to;
+    });
+
+
+    //invoice chart
+     let pm='',py=''
+     let count=0
+     invoicedata=invoicedata.reduce((acc,curr)=>{
+      const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
+      if(pm==cmonth&&py==cyear){
+        console.log('invoice date:',curr.invoiceDetail.invoiceDate)
+        let f=acc.find(elem2=>elem2.date[3]==curr.invoiceDetail.invoiceDate[3])
+        if(f){f.count+=1,f.total+=curr.total}
+        return acc
+      } 
+      else{
+        pm=cmonth
+        py=cyear  
+        let js={date:curr.invoiceDetail.invoiceDate,count:1,total:curr.total}
+        acc.push(js)
+        console.log('acc is:',acc)
+        return acc
+
+      } 
+   
+     },[]) 
+
+     //delivery chart
+      pm='',py=''
+   
+     deliveryData=deliveryData.reduce((acc,curr)=>{
+      const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
+      if(pm==cmonth&&py==cyear){
+        console.log('invoice date:',curr.invoiceDetail.invoiceDate)
+        let f=acc.find(elem2=>elem2.date[3]==curr.invoiceDetail.invoiceDate[3])
+        if(f){f.count+=1,f.total+=curr.total}
+        return acc
+      } 
+      else{
+        pm=cmonth
+        py=cyear  
+        let js={date:curr.invoiceDetail.invoiceDate,count:1,total:curr.total}
+        acc.push(js)
+        console.log('acc is:',acc)
+        return acc
+
+      } 
+   
+     },[]) 
+
+     pm='',py=''
+     debitData=debitData.reduce((acc,curr)=>{
+      const [cday,cmonth, cyear] = curr.invoiceDetail.invoiceDate.split('-');
+      if(pm==cmonth&&py==cyear){
+        console.log('invoice date:',curr.invoiceDetail.invoiceDate)
+        let f=acc.find(elem2=>elem2.date[3]==curr.invoiceDetail.invoiceDate[3])
+        if(f){f.count+=1,f.total+=curr.total}
+        return acc
+      } 
+      else{
+        pm=cmonth
+        py=cyear  
+        let js={date:curr.invoiceDetail.invoiceDate,count:1,total:curr.total}
+        acc.push(js)
+        console.log('acc is:',acc)
+        return acc
+
+      } 
+   
+     },[]) 
+
+     jsdata.invoice=invoicedata
+     jsdata.delivery=deliveryData
+     jsdata.debitData=debitData
+      res.send({
+        message:'data is fetched successfully',
+        success:true,
+        data:jsdata
+
+      })
+
+    }
+    else{
+      res.send({
+        message:'please select date',
+        success:fasle,
+        data:null
+      })
+
+    }
+     
     
 
   }
