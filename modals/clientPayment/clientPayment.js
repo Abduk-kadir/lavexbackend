@@ -62,6 +62,10 @@ const ClientPaymentSchema=mongoose.Schema({
            type:String,
            required:[true,'inward number is required']
        },
+       invoiceMov:{
+        type:Number,
+       
+       },
        total:{
            type:Number,
            required:[true,'amount is required']
