@@ -38,14 +38,17 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
    let arr= paymentData.reduce((acc,curr)=>{
          if(curr.paymentDate==prd){
             let f=acc.find(elem=>elem.date==curr.paymentDate)
-            f.parr.push(curr)
+            let js={invoiceList:curr.invoiceList}
+            f.parr.push(js)
             return acc
 
         
          }
          else{
             prd=curr.paymentDate
-            acc.push({date:curr.paymentDate,parr:[curr]})
+            let js={invoiceList:curr.invoiceList}
+          
+            acc.push({date:curr.paymentDate,parr:[js]})
             return acc
 
          }
