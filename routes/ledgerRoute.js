@@ -1,7 +1,7 @@
 const express = require('express')
 const Invoice = require('../modals/invoiceModal')
 const DebitNote = require('../modals/debitNodeModal')
-const CebitNote=require('../modals/creditNoteModal')
+const CreditNote=require('../modals/creditNoteModal')
 const ClientPayment=require('../modals/clientPayment/clientPayment')
 const Inward=require('../modals/store/inwardModal')
 const SuppPayment=require('../modals/supplierPayment/supPayment')
@@ -14,6 +14,7 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
   
     let prd=''
     let invoiceData=await Invoice.find({companyname:companyname,'clientDetail.id':cid})
+    let creditData=await CreditNote.find({companyname:companyname,'clientDetail.id':cid})
     let narr=invoiceData.reduce((acc,curr)=>{
           if(curr.invoiceDetail.invoiceDate==prd){
              let f=acc.find(elem=>elem.date==curr.invoiceDetail.invoiceDate)
@@ -31,10 +32,10 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
  
           }
         },[])
-
-
+      
        prd='';
-        let carr=invoiceData.reduce((acc,curr)=>{
+       console.log('arman')
+        let carr=creditData.reduce((acc,curr)=>{
          if(curr.invoiceDetail.invoiceDate==prd){
             let f=acc.find(elem=>elem.date==curr.invoiceDetail.invoiceDate)
             f.invarr.push({mov:curr.mov,total:curr.total})
@@ -52,11 +53,11 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
          }
        },[])
    
+    console.log('kadir')
+  
+ 
 
-
-
-
-    pr=''
+    prd=''
    let paymentData=await ClientPayment.find({companyname:companyname,cid:cid})
    let arr= paymentData.reduce((acc,curr)=>{
          if(curr.paymentDate==prd){
@@ -78,7 +79,7 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
        },[])
     
      
-    res.send({invoice:narr,payment:arr,credit:carr})
+    res.send({invoice:narr,payment:arr,creditarr:carr})
     }
     catch(err){
      res.send(err.message)
@@ -88,6 +89,7 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
    
 
 })
+
 router.get('/allTransactionSupp/:companyname/:sid',async(req,res)=>{
    
      try{
@@ -127,25 +129,6 @@ router.get('/allTransactionSupp/:companyname/:sid',async(req,res)=>{
  
           }
         },[])
-      /*  narr.forEach((elem, index) => {
-         let f=arr.find(elem2=>{
-             if(elem2.date==elem.date){
-             
-                 return true
-             }
-             else{
-                let js={date:elem2.date,parr:elem2.parr}
-                // narr.push(js)
-                console.log(elem2.date)
-                 return false
- 
-             }
-         }
-         )
-     
-       if(f){elem.parr=f.parr}
-        
-     }); */
       
      res.send(narr)
      }
