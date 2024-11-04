@@ -89,6 +89,29 @@ router.put("/changestatus/:id/:companyId", async (req, res) => {
     }
   });
 
+router.get('/cancelListSis/:companyname',async(req,res)=>{
+   try{
+   let data=await SisterStore.find({companyname:req.params.companyname,status:'canceled'})
+   res.send({
+    message:'data is successfully fetched',
+    success:true,
+    data:data
+   })
+   }
+   catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+      data:null
+     })
+
+   }
+
+
+})
+
+
+
 router.get('/allSisterStock/:id',async(req,res)=>{
   try{
   let data=await SisterStock.find({companyname:req.params.id})
