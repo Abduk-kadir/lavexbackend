@@ -130,7 +130,14 @@ const performaSchema=mongoose.Schema({
         type:Number,
         required:[true,'quantity  is required'],
         
-     }
+     },
+     qty:{
+      type:Number
+
+     },
+     qtyType2:{
+       type:String
+     },
   }],
   total:{
    type:Number,

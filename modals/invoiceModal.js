@@ -134,6 +134,13 @@ const invoiceSchema=mongoose.Schema({
         required:[true,'gst  is required'],
         
      },
+     qty:{
+      type:Number
+
+     },
+     qtyType2:{
+       type:String
+     },
      price:{
         type:Number,
         required:[true,'quantity  is required'],

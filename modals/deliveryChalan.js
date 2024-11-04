@@ -67,6 +67,7 @@ const deliverySchema=mongoose.Schema({
          type:String,
          required:[true,'shipto is required']
      },
+     
       
    },
    invoiceDetail:{
@@ -130,7 +131,14 @@ const deliverySchema=mongoose.Schema({
         type:Number,
         required:[true,'quantity  is required'],
         
-     }
+     },
+     qty:{
+      type:Number
+
+     },
+     qtyType2:{
+       type:String
+     },
   }],
   total:{
    type:Number,
