@@ -10,8 +10,6 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
   let finalarr=[];
     try{
     let {companyname,cid}=req.params
-   
-  
     let prd=''
     let invoiceData=await Invoice.find({companyname:companyname,'clientDetail.id':cid})
     let creditData=await CreditNote.find({companyname:companyname,'clientDetail.id':cid})
@@ -91,46 +89,48 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
 })
 
 router.get('/allTransactionSupp/:companyname/:sid',async(req,res)=>{
-   
      try{
      let {companyname,sid}=req.params
      let prd=''
      let inwardData=await Inward.find({companyname:companyname,'sid':sid})
      let narr=inwardData.reduce((acc,curr)=>{
-           if(curr.inwardCreated==prd){
-              let f=acc.find(elem=>elem.date==curr.inwardCreated)
+           if(curr.dateCreated==prd){
+              let f=acc.find(elem=>elem.date==curr.dateCreated)
               f.invarr.push({mov:curr.mov,total:curr.total})
               return acc
            }
            else{
-              prd=curr.inwardCreated
+              prd=curr.dateCreated
               let js={mov:curr.mov,total:curr.total}
-              acc.push({date:curr.inwardCreated,invarr:[js]})
+              acc.push({date:curr.dateCreated,invarr:[js]})
               return acc
   
            }
          },[])
  
-     pr=''
+     prd=''
    let paymentData=await SuppPayment.find({companyname:companyname,sid:sid})
     let arr= paymentData.reduce((acc,curr)=>{
+          console.log('previsdate:',prd)
+          console.log('currentDate:',curr.paymentDate)
+        
           if(curr.paymentDate==prd){
              let f=acc.find(elem=>elem.date==curr.paymentDate)
-             let js={inwardList:curr.inwardList}
-             f.parr.push(js)
+            // let js={inwardList:curr.inwardList}
+            // f.parr.push(js)
              return acc
           }
           else{
              prd=curr.paymentDate
-             let js={inwardList:curr.inwardList}
+            // let js={inwardList:curr.inwardList}
            
-             acc.push({date:curr.paymentDate,parr:[js]})
+             acc.push({date:curr.paymentDate})
              return acc
  
           }
         },[])
       
-     res.send(narr)
+     res.send({inward:narr,payment:arr})
      }
      catch(err){
       res.send(err.message)
