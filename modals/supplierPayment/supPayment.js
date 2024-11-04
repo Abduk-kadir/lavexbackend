@@ -55,6 +55,9 @@ const SuplierPaymentSchema=mongoose.Schema({
     },
     inwardList:[
      {
+        inwardMov:{
+            type:Number,
+        },
         invoiceDate:{
             type:String,
             required:[true,'invoice date is required']
