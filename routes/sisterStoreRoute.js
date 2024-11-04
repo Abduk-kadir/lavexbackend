@@ -16,7 +16,7 @@ router.put("/changestatus/:id/:companyId", async (req, res) => {
       console.log("current status", status);
       if (status == "canceled") {
         if (preStatus == "pending") {
-          await SisterStore.deleteOne({ _id: req.params.id,companyname:req.params.companyId });
+         // await SisterStore.deleteOne({ _id: req.params.id,companyname:req.params.companyId });
         } else if (preStatus == "confirmed") {
           let {readyStock } = prod;
          
@@ -29,7 +29,7 @@ router.put("/changestatus/:id/:companyId", async (req, res) => {
           );
          
         }
-        await SisterStore.deleteOne({ _id: req.params.id,companyname:req.params.companyId });
+       // await SisterStore.deleteOne({ _id: req.params.id,companyname:req.params.companyId });
          
         }
       }
