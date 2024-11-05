@@ -120,7 +120,7 @@ router.post('/invoiceCreate', async (req, res) => {
             console.log('fjdkjfhd:', s);
           }
           //here i creating movenent for sister store
-          let data2 = await SisterStore.find({ companyname:req.params.companyname })
+          let data2 = await SisterStore.find({ companyname: isSister._id })
           let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
           max2 = max2 + 1;
         
