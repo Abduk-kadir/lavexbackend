@@ -119,7 +119,12 @@ router.post('/invoiceCreate', async (req, res) => {
             s = await sup.save()
             console.log('fjdkjfhd:', s);
           }
-          let js = { address: body.clientDetail.address, gstNumber: body.clientDetail.gstNumber, total: total, pendingAmount: total, sid: s._id, dateCreated: req.body.invoiceDetail.invoiceDate, companyname: isSister._id, readyStock: item }
+          //here i creating movenent for sister store
+          let data2 = await SisterStore.find({ companyname:req.params.companyname })
+          let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
+          max2 = max2 + 1;
+        
+          let js = {mov:max2,address: body.clientDetail.address, gstNumber: body.clientDetail.gstNumber, total: total, pendingAmount: total, sid: s._id, dateCreated: req.body.invoiceDetail.invoiceDate, companyname: isSister._id, readyStock: item }
           let sisterstore = new SisterStore(js)
           await sisterstore.save()
         }
