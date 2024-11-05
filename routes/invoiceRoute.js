@@ -92,6 +92,7 @@ router.post('/invoiceCreate', async (req, res) => {
     if (req.body.selectDc.length == 0) {
 
       if (role == 'master') {
+       
         for (let i = 0; i < item.length; i++) {
           let { id, quantity } = item[i];
 
@@ -106,8 +107,9 @@ router.post('/invoiceCreate', async (req, res) => {
 
 
         const branch = req.body.clientDetail.Branch.trim().toUpperCase();
+       
         let isSister = await Company.findOne({ Branch: branch })
-
+       
         if (isSister) {
           let mascompany = await Company.findById(type)
           let s = await Supplier.findOne({ companyname: isSister._id, supplier: mascompany.company + ' ' + mascompany.Branch })
@@ -117,10 +119,11 @@ router.post('/invoiceCreate', async (req, res) => {
             let js2 = { companyname: isSister._id, supplier: company + ' ' + Branch, address: address, email: email, area: area, state: state, gstNumber: gstNumber, pincode: pincode, panNumber: panNumber, contactPerson: company, mobile1: mobile1, mobile2: mobile2, city: city, stateCode: stateCode }
             let sup = new Supplier(js2);
             s = await sup.save()
-            console.log('fjdkjfhd:', s);
+           
           }
           //here i creating movenent for sister store
           let data2 = await SisterStore.find({ companyname: isSister._id })
+         
           let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
           max2 = max2 + 1;
         
