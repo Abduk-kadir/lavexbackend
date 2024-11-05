@@ -39,7 +39,14 @@ const sisterStockSchema=mongoose.Schema({
         price:{
           type:Number,
           required:[true,'price is required']
-        }
+        },
+        qty:{
+          type:Number
+    
+         },
+         qtyType2:{
+           type:String
+         },
            
      }
    ]
