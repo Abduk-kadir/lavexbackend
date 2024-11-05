@@ -162,9 +162,11 @@ router.post('/addSisterInward/:companyname',async(req,res)=>{
     let body=req.body;
     body.companyname=req.params.companyname
     let {readyStock}=body
-   
     let total=readyStock.reduce((acc,curr)=>acc+curr.price*curr.quantity*(1+curr.gst/100),0)
-    console.log(total)
+    let data = await SisterStore.find({ companyname:req.params.companyname })
+    let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
+    max = max + 1;
+    body.mov = max;
     body.pendingAmount=total
     body.total=total
     let inward=new SisterStore(body);

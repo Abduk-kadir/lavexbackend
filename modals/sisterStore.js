@@ -1,6 +1,9 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const sisterStoreSchema=mongoose.Schema({
+    mov:{
+      type:Number
+    },
     status:{
       type:String,
       default:"pending"
