@@ -4,7 +4,7 @@ router=express.Router()
 let PurchaseStore=require('../modals/store/purchaseStore')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
-        let {type}=req.query;
+        let {type,role}=req.query;
         let {item,onAccount}=req.body
         let js={...req.body,companyname:type}
         let data=await DebitNote.find({companyname:type})
@@ -18,6 +18,7 @@ router.post('/debitNoteCreate',async(req,res)=>{
         await debitnote.save();
      //this code for updating purchaseStore
           if(onAccount){
+            if(role=='master'){
             for (let i = 0; i <item.length; i++) {
                 let { id, quantity } = item[i];
                 const f = await PurchaseStore.updateOne(
@@ -26,6 +27,18 @@ router.post('/debitNoteCreate',async(req,res)=>{
                   { arrayFilters: [{ "elem.id": id }] }
                 );
               }
+            }
+           else{
+            for (let i = 0; i <item.length; i++) {
+                let { id, quantity } = item[i];
+                const f = await SisterStock.updateOne(
+                  { companyname:type,'readyStock.id':id },
+                  { $inc: { "readyStock.$[elem].quantity":-quantity } },
+                  { arrayFilters: [{ "elem.id": id }] }
+                );
+               
+              }
+           }
 
           }
     

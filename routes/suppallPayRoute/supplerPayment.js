@@ -58,6 +58,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
 
 router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
     try{
+     
         let body=req.body;
         body.companyname=req.params.companyname;
         body.sid=req.params.sid
@@ -76,8 +77,14 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         body.paymentNumber=max;
         let supplierPayment=new SupplierPayment(body)
         await supplierPayment.save();
+      
+        
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
+                console.log('insister')
+                console.log(inwardList[i].inwardId)
+                console.log(req.params.sid)
+                console.log(req.params.companyname)
                 await SisterStore.updateOne(
                     {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
                     {$set:{pendingAmount:inwardList[i].pendingAmount}}
@@ -86,6 +93,7 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
 
             }
             else{
+             console.log('in master')   
             await Inward.updateOne(
                 {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
                 {$set:{pendingAmount:inwardList[i].pendingAmount}}
