@@ -91,6 +91,10 @@ const invardSchema=mongoose.Schema({
          type:String,
          required:[true,'type of quantity is required']
         },
+        qtyType2:{
+         type:String,
+         required:[true,'type of quantity is required']
+        },
         gst:{
            type:Number,
            required:[true,'gst  is required'],
