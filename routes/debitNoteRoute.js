@@ -2,6 +2,7 @@ const express=require('express')
 const DebitNote=require('../modals/debitNodeModal')
 router=express.Router()
 let PurchaseStore=require('../modals/store/purchaseStore')
+let SisterStock=require('../modals/sisterStock')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type,role}=req.query;
