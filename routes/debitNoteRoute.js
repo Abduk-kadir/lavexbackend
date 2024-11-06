@@ -3,6 +3,7 @@ const DebitNote=require('../modals/debitNodeModal')
 router=express.Router()
 let PurchaseStore=require('../modals/store/purchaseStore')
 let SisterStock=require('../modals/sisterStock')
+let Company=require('../modals/companyModal')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type,role}=req.query;
@@ -30,6 +31,10 @@ router.post('/debitNoteCreate',async(req,res)=>{
               }
             }
            else{
+
+            let id=req.body.clientDetail.id
+            const branch = req.body.clientDetail.Branch.trim().toUpperCase();
+            let company=await Company.findOne({Branch:branch})
             for (let i = 0; i <item.length; i++) {
                 let { id, quantity } = item[i];
                 const f = await SisterStock.updateOne(
