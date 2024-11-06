@@ -139,6 +139,35 @@ router.get('/allpayment/:companyname',async(req,res)=>{
     }
 
 })
+router.get('/allCashPayment/:companyname',async(req,res)=>{
+
+    try{
+        const { companyname } = req.params;
+        const paymentMethod = "CASH";  
+
+        let data=await SupplierPayment.find(
+            {
+                companyname: companyname,
+                paymentMethod: { $regex: `^${paymentMethod}$`, $options: 'i' } 
+            }
+        )
+        res.send({
+            message:"data is successfully updated",
+            success:true, 
+            data:data
+         })
+
+    }
+    catch(err){
+       
+            res.send({
+                message:err.message,
+                success:false, 
+             })
+    
+    }
+
+})
 
 router.get('/payentReport',async(req,res)=>{
     try{

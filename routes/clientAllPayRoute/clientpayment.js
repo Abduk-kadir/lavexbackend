@@ -34,7 +34,6 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
 router.get('/allpayment/:companyname',async(req,res)=>{
 
     try{
-
         let data=await ClientPayment.find({companyname:req.params.companyname})
         res.send({
             message:"data is successfully updated",
@@ -100,6 +99,28 @@ router.get('/allpayment/:companyname',async(req,res)=>{
             success:true, 
             data:data
          })
+
+    }
+    catch(err){
+       
+            res.send({
+                message:err.message,
+                success:false, 
+             })
+    
+    }
+
+})
+
+router.get('/allCashPayment/:companyname',async(req,res)=>{
+
+    try{
+        const { companyname } = req.params;
+        const paymentMethod = "CASH";  
+        const data = await ClientPayment.find({
+          companyname: companyname,
+          paymentMethod: { $regex: `^${paymentMethod}$`, $options: 'i' } 
+        });
 
     }
     catch(err){
