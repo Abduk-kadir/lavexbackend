@@ -115,12 +115,19 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 router.get('/allCashPayment/:companyname',async(req,res)=>{
 
     try{
+      
         const { companyname } = req.params;
         const paymentMethod = "CASH";  
         const data = await ClientPayment.find({
           companyname: companyname,
           paymentMethod: { $regex: `^${paymentMethod}$`, $options: 'i' } 
         });
+        res.send({
+            message:"data is fetched successfully",
+            success:true,
+            data:data
+
+        })
 
     }
     catch(err){
