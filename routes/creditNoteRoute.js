@@ -51,8 +51,6 @@ router.post('/creditNoteCreate',async(req,res)=>{
       console.log('insister company')
       for (let i = 0; i <item.length; i++) {
         let { id, quantity } = item[i];
-        console.log(id)
-        console.log(quantity)
         const f = await SisterStock.updateOne(
           { companyname:type,'readyStock.id':id },
           { $inc: { "readyStock.$[elem].quantity":+quantity } },

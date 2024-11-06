@@ -175,7 +175,6 @@ router.get('/payentReport',async(req,res)=>{
     let query={$expr:{$ne:['$total','$pendingAmount']}}
     if(companyname){query.companyname=companyname}
     let data=await Inward.find(query);
-
     if (fromDate && toDate) {
         const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
         const [dayTo, monthTo, yearTo] = toDate.split('-');

@@ -32,9 +32,9 @@ router.post('/debitNoteCreate',async(req,res)=>{
             }
            else{
 
-            let id=req.body.clientDetail.id
-            const branch = req.body.clientDetail.Branch.trim().toUpperCase();
-            let company=await Company.findOne({Branch:branch})
+           // let id=req.body.clientDetail.id
+           // const branch = req.body.clientDetail.Branch.trim().toUpperCase();
+            //let company=await Company.findOne({Branch:branch})
             for (let i = 0; i <item.length; i++) {
                 let { id, quantity } = item[i];
                 const f = await SisterStock.updateOne(
