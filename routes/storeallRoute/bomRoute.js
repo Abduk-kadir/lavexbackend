@@ -2,9 +2,13 @@ let express=require('express')
 let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
 const authMidd=require('..//../middleware/authmiddleware')
+const Production=require('../../modals/store/production')
 router.put('/updatingBom/:id',async(req,res)=>{
+
     try{
+        console.log(req.body)
         let js=await BillOfMaterial.findByIdAndUpdate(req.params.id,req.body)
+        console.log(js)
         res.send({
             message:"data is successfully updated",
             success:true, 
@@ -26,11 +30,28 @@ router.put('/updatingBom/:id',async(req,res)=>{
 
 router.delete('/delBom/:id',async(req,res)=>{
     try{
-        let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
+        let bom=await BillOfMaterial.findById(req.params.id)
+        let {readyStock}=bom
+        let {id}=readyStock
+        let f=await Production.findOne({'readyStock.id':id})
+        console.log(f)
+        console.log(bom)
+        if(f){
+            res.send({
+                message:"can not deleted beacuse it is using in Production",
+                success:false, 
+             })
+
+        }
+        else{  
+        //let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
         res.send({
             message:"data is successfully deleted",
             success:true, 
          })
+
+        }
+      
 
     }
     catch(err){
