@@ -34,8 +34,6 @@ router.delete('/delBom/:id',async(req,res)=>{
         let {readyStock}=bom
         let {id}=readyStock
         let f=await Production.findOne({'readyStock.id':id})
-        console.log(f)
-        console.log(bom)
         if(f){
             res.send({
                 message:"can not deleted beacuse it is using in Production",
@@ -44,7 +42,7 @@ router.delete('/delBom/:id',async(req,res)=>{
 
         }
         else{  
-        //let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
+        let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
         res.send({
             message:"data is successfully deleted",
             success:true, 
