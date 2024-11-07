@@ -28,12 +28,12 @@ router.put('/updatingBom/:id',async(req,res)=>{
 
 
 
-router.delete('/delBom/:id',async(req,res)=>{
+router.delete('/delBom/:id/:companyname',async(req,res)=>{
     try{
         let bom=await BillOfMaterial.findById(req.params.id)
         let {readyStock}=bom
         let {id}=readyStock
-        let f=await Production.findOne({'readyStock.id':id})
+        let f=await Production.findOne({'readyStock.id':id,companyname:req.params.companyname})
         if(f){
             res.send({
                 message:"can not deleted beacuse it is using in Production",
