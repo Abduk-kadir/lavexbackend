@@ -23,6 +23,7 @@ let ManufecturerRouter=require('./routes/manufacturerRoute')
 let DropdownRouter=require('./routes/dropdownRoute')
 let SisterRouter=require('./routes/sisterStoreRoute')
 let LedgerRouter=require('./routes/ledgerRoute')
+let CashClientRouter=require('./routes/cashRoutes/cashClient')
 
 const app=express()
 app.use(express.json())
@@ -70,6 +71,7 @@ app.use('/api',DropdownRouter)
 app.use('/api/manufecturer',ManufecturerRouter)
 app.use('/api/sister',SisterRouter)
 app.use('/api/ledger',LedgerRouter)
+app.use('/api/cashClient',CashClientRouter)
 
 
 /*searching all type of invoices*/

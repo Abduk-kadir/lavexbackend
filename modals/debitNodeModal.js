@@ -47,6 +47,9 @@ const debitnoteS=mongoose.Schema({
       
    },
    invoiceDetail:{
+      invoiceNo:{
+         type:String,
+       },   
     invoiceDate:{
         type:String,
         validate: {
@@ -72,6 +75,9 @@ const debitnoteS=mongoose.Schema({
         type:String,    
        },
 
+   },
+   price:{
+      type:String,
    },
   onAccount:{
        type:Boolean,

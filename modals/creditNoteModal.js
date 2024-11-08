@@ -75,6 +75,9 @@ const creditNoteS=mongoose.Schema({
       
    },
    invoiceDetail:{
+    invoiceNo:{
+      type:String,
+    }, 
     invoiceDate:{
         type:String,
         validate: {
@@ -101,29 +104,31 @@ const creditNoteS=mongoose.Schema({
        },
 
    },
-  
+  price:{
+   type:Number
+  },
   item:[{
     id:{
       type:String,
-      required:[true,'id is important']
+     
 
     },
      name:{
         type:String,
-        required:[true,'name of item is required'],
+      
      },
      brand:{
         type:String,
-        required:[true,'name of brand is required'],
+       
      },
      quantity:{
         type:Number,
-        required:[true,'quantity  is required'],
+       
         
      },
      qtyType:{
       type:String,
-      required:[true,'quantity type is required']
+      
 
      },
      gst:{
@@ -133,7 +138,7 @@ const creditNoteS=mongoose.Schema({
      },
      price:{
         type:Number,
-        required:[true,'quantity  is required'],
+      
         
      },
      qty:{
