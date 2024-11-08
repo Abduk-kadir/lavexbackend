@@ -15,45 +15,22 @@ router.post('/debitNoteCreate',async(req,res)=>{
         js.mov=max;
         let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
         js.total=total
-
         let debitnote=new DebitNote(js);
         await debitnote.save();
-     //this code for updating purchaseStore
-          if(onAccount){
-            if(role=='master'){
+         if(onAccount){
+           //do nothinng 
+          }
+          else{
             for (let i = 0; i <item.length; i++) {
-                let { id, quantity } = item[i];
-                const f = await PurchaseStore.updateOne(
-                  { item: { $elemMatch: { id: id } } },
-                  { $inc: { "item.$[elem].quantity":-quantity } },
-                  { arrayFilters: [{ "elem.id": id }] }
-                );
-              }
+              let { id, quantity } = item[i];
+              const f = await PurchaseStore.updateOne(
+                { companyname:type,'readyStock.id':id },
+                { $inc: { "item.$[elem].quantity":-quantity } },
+                { arrayFilters: [{ "elem.id": id }] }
+              );
             }
-           else{
-
-           // let id=req.body.clientDetail.id
-           // const branch = req.body.clientDetail.Branch.trim().toUpperCase();
-            //let company=await Company.findOne({Branch:branch})
-            for (let i = 0; i <item.length; i++) {
-                let { id, quantity } = item[i];
-                const f = await SisterStock.updateOne(
-                  { companyname:type,'readyStock.id':id },
-                  { $inc: { "readyStock.$[elem].quantity":-quantity } },
-                  { arrayFilters: [{ "elem.id": id }] }
-                );
-               
-              }
-           }
-
           }
     
-     //this is ending here
-
-     
-
-
-
      res.send({
         message:"data is successfully added",
         success:true,

@@ -200,7 +200,7 @@ router.get('/invoice/:number/:name', async (req, res) => {
 
 })
 router.get('/getinvoice/:clientid/:name', async (req, res) => {
-  console.log(req.params.number)
+ 
   try {
     let result = await Invoice.find({ $and: [{ "clientDetail.id": req.params.clientid }, { companyname: req.params.name }] })
     if (result.length == 0) {
