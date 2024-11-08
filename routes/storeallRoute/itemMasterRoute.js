@@ -36,6 +36,7 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
       });
+     
     } else {
       inbomdata = await BillOfMaterial.find({ "readyStock.id": rs.id });
     }

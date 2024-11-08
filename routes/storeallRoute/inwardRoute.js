@@ -245,6 +245,39 @@ router.put('/updateInward/:id/:status', async (req, res) => {
 
 
 })
+router.get('/getinward/:sid/:name', async (req, res) => {
+  try {
+    let result = await Inward.find({ $and: [{ "sid": req.params.sid }, { companyname: req.params.name }] })
+    if (result.length == 0) {
+      res.send({
+        message: "no inward is generated from this supplier",
+        success: false
+      })
+    }
+    else {
+      res.send({
+        message: "inward is fetched successfully attached",
+        success: true,
+        data: result
+      })
+    }
+
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+
+
+    })
+  }
+
+})
+
+
+
+
+
 
 router.get('/purchaseReport',async(req,res)=>{
   try{
