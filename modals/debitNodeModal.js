@@ -74,11 +74,12 @@ const debitnoteS=mongoose.Schema({
     poNo:{
         type:String,    
        },
+       price:{
+         type:String,
+      },
 
    },
-   price:{
-      type:String,
-   },
+  
   onAccount:{
        type:Boolean,
        required:[true,'onAccount is true']

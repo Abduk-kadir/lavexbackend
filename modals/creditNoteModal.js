@@ -102,11 +102,12 @@ const creditNoteS=mongoose.Schema({
     poNo:{
         type:String,    
        },
+       price:{
+         type:Number
+        },
 
    },
-  price:{
-   type:Number
-  },
+ 
   item:[{
     id:{
       type:String,
