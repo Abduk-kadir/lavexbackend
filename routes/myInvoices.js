@@ -249,6 +249,21 @@ router.get('/myInvoices',async(req,res)=>{
               { $sort: { mov: 1 } }
              // {$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
             ])
+            let cer = await creditNote.aggregate([
+              {
+                $match: {
+                  $expr: { $eq: [{ $size: "$item" }, 0] }
+                }
+              },
+              {$group:{_id:"$_id",mov:{$first:"$mov"},client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
+              total: { $first: "$invoiceDetail.price"},totalwithoutgst:{$first: "$invoiceDetail.price"}}},
+              { $sort: { mov: 1 } }
+            ]);
+            arr=arr.concat(cer)
+            arr.sort((elem1,elem2)=>-(elem1.mov-elem2.mov))
+
+
+
           
             break;
 
