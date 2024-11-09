@@ -25,12 +25,13 @@ router.post('/debitNoteCreate',async(req,res)=>{
             for (let i = 0; i <item.length; i++) {
               let { id, quantity } = item[i];
               console.log(id)
+              console.log(type)
+              console.log(quantity)
               const f = await PurchaseStore.updateOne(
-                { companyname:type,'readyStock.id':id },
+                { companyname:type,'item.id':id },
                 { $inc: { "item.$[elem].quantity":-quantity } },
                 { arrayFilters: [{ "elem.id": id }] }
               );
-          
             }
           }
     
