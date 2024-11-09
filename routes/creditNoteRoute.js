@@ -34,9 +34,6 @@ router.post('/creditNoteCreate', async (req, res) => {
 
     }
 
-
-
-
     res.send({
       message: "data is successfully added",
       success: true,
