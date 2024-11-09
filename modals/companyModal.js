@@ -5,7 +5,7 @@ const companySchema=mongoose.Schema({
     company:{
         type:String,
         unique:true ,
-        required:[true,'client name is required']
+        ////required:[true,'client name is //required']
     },
     Branch:{
         type:String,
@@ -26,17 +26,17 @@ const companySchema=mongoose.Schema({
             },
             message:props=>'it should be 15 digit'
         },
-        required:[true,'gst number is required']
+        //required:[true,'gst number is //required']
 
     },
     address:{
       type:String,
-      required:[true,'adress is required']
+      //required:[true,'adress is //required']
     },
      
     area:{
         type:String,
-        required:[true,'area is required']
+        //required:[true,'area is //required']
     },
     pincode:{
         type:String,
@@ -52,20 +52,20 @@ const companySchema=mongoose.Schema({
             },
            message:props=>`${props.value} is should be only 6 digit and all are number`
         },
-        required:[true]
+        //required:[true]
     },
     state:{
         type:String,
-        required:[true,'state is required']
+        //required:[true,'state is //required']
     },
     city:{
         type:String,
-        required:[true,'city is required']
+        //required:[true,'city is //required']
     },
     stateCode:{
         type:String,
         enum:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,97,99],
-        required:[true,'state code is required']
+        //required:[true,'state code is //required']
     },
     panNumber:{
         type:String,
@@ -81,7 +81,7 @@ const companySchema=mongoose.Schema({
             },
             message:props=>`${props.value}is not correct shoud be alphanumeric and 10 digit `
         },
-        required:[true,'pan number is required']
+        //required:[true,'pan number is //required']
     },
     
     
@@ -97,7 +97,7 @@ const companySchema=mongoose.Schema({
     },
     contactPerson:{
         type:String,
-        required:[true,'accountable person']
+        //required:[true,'accountable person']
     },
     mobile1:{
         type:String,
@@ -107,11 +107,11 @@ const companySchema=mongoose.Schema({
             },
             message: props => `${props.value} should be contain country code and only digit`
           },
-        required:[true]
+        //required:[true]
     },
     accPerson:{
         type:String,
-        required:[true,'accountable person']
+        //required:[true,'accountable person']
     },
     mobile2:{
         type:String,
@@ -121,7 +121,7 @@ const companySchema=mongoose.Schema({
             },
             message: props => `${props.value} should be contain country code and only digit`
           },
-        required:[true]
+        //required:[true]
     },
     
     createdAt: {
@@ -130,7 +130,7 @@ const companySchema=mongoose.Schema({
     },
     role:{
         type:String,
-        required:[true,'role is required']
+        //required:[true,'role is //required']
         
     }
       
