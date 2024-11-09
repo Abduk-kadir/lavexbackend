@@ -255,15 +255,34 @@ router.get('/myInvoices',async(req,res)=>{
             case "debitnote":
              
             arr= await DebitNote.aggregate([
+             
+              {
+                $match:{
+                companyname:req.query.companyname,
+              }
+            }
+              ,
               {$unwind:{path:"$item"}},
-              {$match:{companyname:req.query.companyname}},
             
               {$group:{_id:"$_id",mov:{$first:"$mov"},client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
               total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}},
               { $sort: { mov: 1 } }
             ])
-            console.log('debitarr,',arr)
+           
+            let deb = await DebitNote.aggregate([
+              {
+                $match: {
+                  $expr: { $eq: [{ $size: "$item" }, 0] }
+                }
+              },
+              {$group:{_id:"$_id",mov:{$first:"$mov"},client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
+              total: { $first: "$invoiceDetail.price"},totalwithoutgst:{$first: "$invoiceDetail.price"}}},
+              { $sort: { mov: 1 } }
+            ]);
+            arr=arr.concat(deb)
+            arr.sort((elem1,elem2)=>-(elem1.mov-elem2.mov))
              break;
+
             case "deliverynote":
              arr= await Deliverynote.aggregate([
               {$unwind:{path:"$item"}},
@@ -274,7 +293,7 @@ router.get('/myInvoices',async(req,res)=>{
               { $sort: { mov: 1 } }
               //{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
             ])   
-          
+        
             
             
             break;
@@ -300,8 +319,11 @@ router.get('/myInvoices',async(req,res)=>{
               ])
              
               let  arr3= await creditNote.aggregate([
+                {$match:
+                  {companyname:req.query.companyname},
+                  item: { $gt: { $size: 0 } }
+                },
                 {$unwind:{path:"$item"}},
-                {$match:{companyname:req.query.companyname}},
                 {$group:{_id:"$_id",mov:{$first:"$mov"},client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
                 total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
                 ,{ $sort: { mov: 1 } }
