@@ -5,7 +5,7 @@ const companySchema=mongoose.Schema({
     company:{
         type:String,
         unique:true ,
-        ////required:[true,'client name is //required']
+        //required:[true,'client name is //required']
     },
     Branch:{
         type:String,
