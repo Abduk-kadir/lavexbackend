@@ -75,6 +75,10 @@ const creditNoteS=mongoose.Schema({
       
    },
    invoiceDetail:{
+    invoiceNo:{
+      type:String,
+
+    },
     invoiceDate:{
         type:String,
         validate: {
@@ -99,6 +103,9 @@ const creditNoteS=mongoose.Schema({
     poNo:{
         type:String,    
        },
+    price:{
+      type:Number
+    }   
 
    },
   
