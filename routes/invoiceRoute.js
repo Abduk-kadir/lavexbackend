@@ -97,7 +97,7 @@ router.post('/invoiceCreate', async (req, res) => {
           let { id, quantity } = item[i];
 
           const f = await ProductionStore.updateOne(
-            { readyStock: { $elemMatch: { id: id } } },
+            { companyname: type, 'readyStock.id': id },
             { $inc: { "readyStock.$[elem].quantity": -quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );

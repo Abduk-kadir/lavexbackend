@@ -1,9 +1,9 @@
 const express=require('express')
-const DebitNote=require('../modals/debitNodeModal')
+const DebitNote=require('../../modals/cashmodals/cashDebitNodeModal')
 router=express.Router()
-let PurchaseStore=require('../modals/store/purchaseStore')
-let SisterStock=require('../modals/sisterStock')
-let Company=require('../modals/companyModal')
+let PurchaseStore=require('../../modals/store/purchaseStore')
+let SisterStock=require('../../modals/sisterStock')
+let Company=require('../../modals/companyModal')
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type,role}=req.query;
