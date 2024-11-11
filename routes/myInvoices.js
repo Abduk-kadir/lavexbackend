@@ -259,6 +259,7 @@ router.get('/myInvoices',async(req,res)=>{
               total: { $first: "$invoiceDetail.price"},totalwithoutgst:{$first: "$invoiceDetail.price"}}},
               { $sort: { mov: 1 } }
             ]);
+            console.log(cer)
             arr=arr.concat(cer)
             arr.sort((elem1,elem2)=>-(elem1.mov-elem2.mov))
 

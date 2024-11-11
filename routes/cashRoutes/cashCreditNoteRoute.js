@@ -24,6 +24,7 @@ router.post('/creditNoteCreate', async (req, res) => {
       for (let i = 0; i < item.length; i++) {
         let { id, quantity } = item[i];
         console.log(quantity, id);
+        console.log(type)
         const f = await ProductionStore.updateOne(
           { companyname:type,'readyStock.id':id },
           { $inc: { "readyStock.$[elem].quantity": +quantity } },
