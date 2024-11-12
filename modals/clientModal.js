@@ -165,6 +165,10 @@ const clientSchema=mongoose.Schema({
         type:String,
         default:''
 
+    },
+    salesman:{
+        type:String,
+        
     }
       
 })
