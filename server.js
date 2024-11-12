@@ -15,7 +15,6 @@ let invardRouter=require('./routes/storeallRoute/inwardRoute')
 let ProductionRouter=require('./routes/storeallRoute/productionRoute')
 let ItemMasterRouter=require('./routes/storeallRoute/itemMasterRoute')
 let BomRouter=require('./routes/storeallRoute/bomRoute')
-
 let CompanyRouter=require('./routes/companyRoute')
 let SupplerPayRouter=require('./routes/suppallPayRoute/supplerPayment')
 let CleintPayRouter=require('./routes/clientAllPayRoute/clientpayment')
@@ -32,7 +31,6 @@ let CashPerformRouter=require('./routes/cashRoutes/cashPorformaRoute')
 let CashClientPaymentRouter=require('./routes/cashRoutes/cashClientpayment');
 let CashMyInvoicesRouter=require('./routes/cashRoutes/myCashInvoices')
 let CashLedgerRouter=require('./routes/cashRoutes/cashLedgerRoute')
-
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -88,8 +86,6 @@ app.use('/api/cashPerforma',CashPerformRouter)
 app.use('/api/cashClientPayment',CashClientPaymentRouter)
 app.use('/api/cashMyInvoices',CashMyInvoicesRouter)
 app.use('/api/cashLedger',CashLedgerRouter)
-
-
 /*searching all type of invoices*/
 app.use('/api/invoices',myInvoicRouter);
  
