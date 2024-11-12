@@ -29,7 +29,8 @@ let CashDebitRouter=require('./routes/cashRoutes/cashDebitNoteRoute')
 let CashCreditRouter=require('./routes/cashRoutes/cashCreditNoteRoute')
 let CashDeliveryRouter=require('./routes/cashRoutes/cashDeliveryChalanRoute')
 let CashPerformRouter=require('./routes/cashRoutes/cashPorformaRoute')
-let CashClientPaymentRouter=require('./routes/cashRoutes/cashClientpayment')
+let CashClientPaymentRouter=require('./routes/cashRoutes/cashClientpayment');
+let CashMyInvoicesRouter=require('./routes/cashRoutes/myCashInvoices')
 
 const app=express()
 app.use(express.json())
@@ -84,8 +85,10 @@ app.use('/api/cashDebit',CashDebitRouter)
 app.use('/api/cashDelivery',CashDeliveryRouter)
 app.use('/api/performa',CashPerformRouter)
 app.use('/api/cashClientPayment',CashClientPaymentRouter)
+app.use('api/cashInvoices',CashMyInvoicesRouter)
 
 
 /*searching all type of invoices*/
- app.use('/api/invoices',myInvoicRouter);
+app.use('/api/invoices',myInvoicRouter);
+ 
  

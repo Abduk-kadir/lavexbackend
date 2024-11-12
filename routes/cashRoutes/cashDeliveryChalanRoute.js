@@ -1,10 +1,9 @@
 const express=require('express')
-const DeliveryChalan=require('../../modals/deliveryChalan')
+const DeliveryChalan=require('../../modals/cashmodals/cashDeliveryChalan')
 const {ProductionStore}=require('../../modals/store/productionStore')
 const SisterStock=require('../../modals/sisterStock')
 const SisterStore=require('../../modals/sisterStore')
 const Company=require('../../modals/companyModal')
-const Supplier=require('../../modals/supplierModal')
 router=express.Router()
 router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type,role}=req.query

@@ -1,5 +1,5 @@
 const express=require('express')
-const Porfarma=require('../../modals/performaModal')
+const Porfarma=require('../../modals/cashmodals/cashPerformaModal')
 const {ProductionStore}=require('../../modals/store/productionStore')
 const Company=require('../../modals/companyModal')
 const SisterStock=require('../../modals/sisterStock')
