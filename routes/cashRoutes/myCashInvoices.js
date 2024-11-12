@@ -9,7 +9,6 @@ const Company=require('../../modals/companyModal')
 let arr=null
 let pagearr=[]
 let f;
-
 router.get('/totalinvoice',async(req,res)=>{
   try{
     let {fromDate,toDate,companyname } = req.query;
@@ -606,12 +605,6 @@ router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
         console.log('indelivery note')
         result=await Deliverynote.findOne({companyname:req.params.companyname,_id:req.params.id})
        }
-     
-     
-     
-     
-
-
 
        res.send({
         message:"invoice is fetched successfully fetched",
@@ -619,8 +612,6 @@ router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
         data:result}
       )
       
-
-     
      }
      catch(err){
         res.send({

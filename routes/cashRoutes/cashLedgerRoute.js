@@ -5,11 +5,9 @@ const CreditNote=require('../../modals/cashmodals/cashCreditNoteModal')
 const ClientPayment=require('../../modals/cashmodals/cashClientPayment')
 router = express.Router();
 router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
-   console.log('hi arman')
   let finalarr=[];
     try{
     let {companyname,cid}=req.params
-    console.log('mycompany is:',companyname)
     let invoiceData=await Invoice.find({companyname:companyname,'clientDetail.id':cid})
     let creditData=await CreditNote.find({companyname:companyname,'clientDetail.id':cid})
     let narr=invoiceData.reduce((acc,curr)=>{
@@ -17,15 +15,11 @@ router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
           if(f){
              f.invarr.push({mov:curr.mov,total:curr.total})
              return acc
- 
-         
           }
           else{
              let js={mov:curr.mov,total:curr.total}
              acc.push({date:curr.invoiceDetail.invoiceDate,invarr:[js]})
-            
              return acc
- 
           }
         },[])
       
