@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const LogitemmasterSchema = mongoose.Schema({
     itemId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ItemMaster',  // Reference to ItemMaster schema
+        type:String,
         required: true
     },
     actionType: {
@@ -17,6 +16,10 @@ const LogitemmasterSchema = mongoose.Schema({
     changeDetails:{
         type: String,
         required: [true, 'Change details are required']
+    },
+    model:{
+        type:String,
+        required:[true, 'model is  required']
     },
     timestamp: {
         type: Date,
