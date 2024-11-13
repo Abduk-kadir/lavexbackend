@@ -86,8 +86,10 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
 router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
   let inbomdata;
   let body=req.body
+  console.log('afkdhgdhfjdgf')
   try {
     let rs = await ItemMaster.findById({ _id: req.params.id });
+    console.log(rs)
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
@@ -105,8 +107,8 @@ router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
     }
     else{
       console.log(rs)
-      let {name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category}=rs
-      console.log(name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category)
+      let {name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category}=rs
+      console.log(name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category)
       let str=`${rs.name} is deleted`
       let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Item Master"}
       let log=new Logs(js)
