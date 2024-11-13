@@ -5,7 +5,7 @@ const LogitemmasterSchema = mongoose.Schema({
         required:true
     },
     itemId: {
-        type:String,
+        type:Number,
         required: true
     },
     actionType: {

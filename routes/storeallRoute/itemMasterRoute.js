@@ -28,7 +28,7 @@ router.get("/usedInBom/:id", async (req, res) => {
   }
 });
 
-router.put('/updatingItemMater/:id',async(req,res)=>{
+router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
   let inbomdata;
   let body=req.body
   try {
@@ -63,7 +63,7 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
       if(price!=body.price){str+=`price was ${price} and changed price is ${body.price}`}
       if(lowqty!=body.lowqty){str+=`lowqty was ${lowqty} and changed name is ${body.lowqty}`}
       if(category!=body.category){str+=`category was ${category} and changed name is ${body.category}`}
-      let js={itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
+      let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
       let log=new Logs(js)
       await log.save()
       
@@ -83,7 +83,7 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
   }
 
 })
-router.delete('/deletingItemMater/:id',async(req,res)=>{
+router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
   let inbomdata;
   let body=req.body
   try {
@@ -109,7 +109,7 @@ router.delete('/deletingItemMater/:id',async(req,res)=>{
       let {name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category}=rs
       console.log(name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category)
       let str=`${rs.name} is deleted`
-      let js={itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Item Master"}
+      let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Item Master"}
       let log=new Logs(js)
       await log.save()
       await ItemMaster.findByIdAndDelete(req.params.id)
@@ -139,7 +139,7 @@ router.post("/addItemMaster/:companyId", async (req, res) => {
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();
     let str=`${body.name} is created`
-    let js={itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
+    let js={companyname:req.params.companyId,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
     let log=new Logs(js)
     await log.save()
     res.send({
@@ -170,28 +170,6 @@ router.get("/allItemMaster/:companyId/:role", async (req, res) => {
     });
   }
 });
-
-router.get('/itemLog',async(req,res)=>{
-  try{
-       let data=await Logitemmaster.find().sort({timestamp:-1})
-       res.send({
-        message:'success',
-        data:data,
-
-       })
-
-  }
-  catch(err){
-    res.send({
-      message:err.message,
-      data:null,
-      
-     })
-
-
-
-  }
-})
 
 
 
