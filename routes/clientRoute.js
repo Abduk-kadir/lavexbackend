@@ -20,16 +20,14 @@ router.post('/addClient',async(req,res)=>{
         body.mov=max
         let client=new Client(body);
         await client.save();
-         let str=`client ${body.name} is created`
-        let js={itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+        let str=`client ${body.name} is created`
+        let js={companyname:req.query.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
         let log=new Logs(js)
         await log.save()
         res.send({
            message:"data is successfully added",
            success:true,
-       
         })
-        
        }
        catch(err){
            res.send({
