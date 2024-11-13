@@ -24,9 +24,6 @@ router.post('/debitNoteCreate',async(req,res)=>{
           console.log('onaccount is false')
           for (let i = 0; i <item.length; i++) {
             let { id, quantity } = item[i];
-            console.log(id)
-            console.log(type)
-            console.log(quantity)
             const f = await PurchaseStore.updateOne(
               { companyname:type,'item.id':id },
               { $inc: { "item.$[elem].quantity":-quantity } },
@@ -34,7 +31,6 @@ router.post('/debitNoteCreate',async(req,res)=>{
             );
           }
         }
-  
    res.send({
       message:"data is successfully added",
       success:true,

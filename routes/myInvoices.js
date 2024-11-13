@@ -21,7 +21,6 @@ router.get('/totalinvoice',async(req,res)=>{
       let creditdata=await creditNote.find({companyname:companyname})
       let debitData=await DebitNote.find({companyname:companyname})
       let porData=await Porfarma.find({companyname:companyname})
-
       const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
       const [dayTo, monthTo, yearTo] = toDate.split('-');
       const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
