@@ -21,7 +21,7 @@ router.post('/addClient',async(req,res)=>{
         let client=new Client(body);
         await client.save();
         let str=`client ${body.name} is created`
-        let js={companyname:req.query.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+        let js={companyname:company,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
         let log=new Logs(js)
         await log.save()
         res.send({
