@@ -144,8 +144,7 @@ router.post("/addItemMaster/:companyId", async (req, res) => {
     let str=`${body.name} is created`
     let js={itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str}
     let log=new Logitemmaster(js)
-      await log.save()
-
+    await log.save()
     res.send({
       message: "data is successfully added",
       success: true,
