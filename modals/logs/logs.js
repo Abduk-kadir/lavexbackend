@@ -32,4 +32,4 @@ const LogitemmasterSchema = mongoose.Schema({
 });
 
 // Export the model based on the schema
-module.exports = mongoose.model('Logitemmaster', LogitemmasterSchema);
+module.exports = mongoose.model('Logs', LogitemmasterSchema);

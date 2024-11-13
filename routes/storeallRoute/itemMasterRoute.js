@@ -3,7 +3,7 @@ let router = express.Router();
 const ItemMaster = require("../../modals/store/itemMaster");
 const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
-let Logitemmaster=require('../../modals/logs/itemMasterLogM')
+let Logs=require('../../modals/logs/logs')
 router.get("/usedInBom/:id", async (req, res) => {
   let inbomdata;
   try {
@@ -64,7 +64,7 @@ router.put('/updatingItemMater/:id',async(req,res)=>{
       if(lowqty!=body.lowqty){str+=`lowqty was ${lowqty} and changed name is ${body.lowqty}`}
       if(category!=body.category){str+=`category was ${category} and changed name is ${body.category}`}
       let js={itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
-      let log=new Logitemmaster(js)
+      let log=new Logs(js)
       await log.save()
       
       await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
@@ -110,7 +110,7 @@ router.delete('/deletingItemMater/:id',async(req,res)=>{
       console.log(name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category)
       let str=`${rs.name} is deleted`
       let js={itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Item Master"}
-      let log=new Logitemmaster(js)
+      let log=new Logs(js)
       await log.save()
       await ItemMaster.findByIdAndDelete(req.params.id)
       res.send({
@@ -143,7 +143,7 @@ router.post("/addItemMaster/:companyId", async (req, res) => {
     await itemmaster.save();
     let str=`${body.name} is created`
     let js={itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
-    let log=new Logitemmaster(js)
+    let log=new Logs(js)
     await log.save()
     res.send({
       message: "data is successfully added",
