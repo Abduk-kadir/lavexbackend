@@ -104,7 +104,6 @@ router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
 
     }
     else{
-
       console.log(rs)
       let {name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category}=rs
       console.log(name,quantitiy,qtytype,qtytype2,qty,hsnCode,brand,stockStatus,status,lowqty,category)
