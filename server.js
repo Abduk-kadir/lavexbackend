@@ -31,6 +31,7 @@ let CashPerformRouter=require('./routes/cashRoutes/cashPorformaRoute')
 let CashClientPaymentRouter=require('./routes/cashRoutes/cashClientpayment');
 let CashMyInvoicesRouter=require('./routes/cashRoutes/myCashInvoices')
 let CashLedgerRouter=require('./routes/cashRoutes/cashLedgerRoute')
+let LogRouter=require('./routes/logs')
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
@@ -88,5 +89,6 @@ app.use('/api/cashMyInvoices',CashMyInvoicesRouter)
 app.use('/api/cashLedger',CashLedgerRouter)
 /*searching all type of invoices*/
 app.use('/api/invoices',myInvoicRouter);
+app.use('/api',LogRouter)
  
  

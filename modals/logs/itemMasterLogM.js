@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const LogitemmasterSchema = mongoose.Schema({
+    companyname:{
+        type:String,
+        required:true
+    },
     itemId: {
         type:String,
         required: true
