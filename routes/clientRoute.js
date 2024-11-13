@@ -6,14 +6,24 @@ const Porfarma=require('../modals/performaModal')
 const Invoice=require('../modals/invoiceModal')
 const CreditNote=require('../modals/creditNoteModal')
 const deliveryChalan = require('../modals/deliveryChalan')
+const Logs=require('../modals/logs/logs')
 
 router.post('/addClient',async(req,res)=>{
     let company=req.query.company
+   
     try{
         let body=req.body;
         body.company=company
+        let data=await Client.find()
+        let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
+        max = max + 1;
+        body.mov=max
         let client=new Client(body);
         await client.save();
+         let str=`client ${body.name} is created`
+        let js={itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+        let log=new Logs(js)
+        await log.save()
         res.send({
            message:"data is successfully added",
            success:true,
