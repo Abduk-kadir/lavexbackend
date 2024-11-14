@@ -33,6 +33,7 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
   let body=req.body
   try {
     let rs = await ItemMaster.findById({ _id: req.params.id });
+    console.log(rs)
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
@@ -63,9 +64,12 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
       if(price!=body.price){str+=`price was ${price} and changed price is ${body.price}`}
       if(lowqty!=body.lowqty){str+=`lowqty was ${lowqty} and changed name is ${body.lowqty}`}
       if(category!=body.category){str+=`category was ${category} and changed name is ${body.category}`}
+      if(str!=''){
       let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
+      console.log('logs is:',js)
       let log=new Logs(js)
       await log.save()
+      }
       
       await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
       res.send({
@@ -86,10 +90,8 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
 router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
   let inbomdata;
   let body=req.body
-  console.log('afkdhgdhfjdgf')
   try {
     let rs = await ItemMaster.findById({ _id: req.params.id });
-    console.log(rs)
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
