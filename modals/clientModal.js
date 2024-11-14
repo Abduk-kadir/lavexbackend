@@ -5,6 +5,9 @@ const clientSchema=mongoose.Schema({
         type:String,
         required:[true,'company name is required']
     },
+    mov:{
+        type:Number,
+    },
     client:{
         type:String,
         required:[true,'client name is required']
