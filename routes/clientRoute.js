@@ -179,9 +179,13 @@ router.delete('/deleteClient/:id',async(req,res)=>{
         else{
             
          let rs=  await Client.findByIdAndDelete(id);
+         console.log(rs)
          let str=`client ${rs.client} is deleted`
-         let js={companyname:company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+         console.log(str)
+         let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+         console.log(js)
          let log=new Logs(js) 
+             await log().save()
             res.send({
                 message:"client is successfully deleted",
                 success:true
