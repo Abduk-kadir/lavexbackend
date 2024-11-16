@@ -176,8 +176,7 @@ router.delete('/deleteClient/:id',async(req,res)=>{
             })
 
         }
-        else{
-            
+        else{ 
          let rs=  await Client.findByIdAndDelete(id);
          console.log(rs)
          let str=`client ${rs.client} is deleted`

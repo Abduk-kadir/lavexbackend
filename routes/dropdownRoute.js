@@ -10,6 +10,7 @@ const gstDropdown = require('../modals/drop/gstDropdown');
 const StatusDropdown = require('../modals/drop/stockStatus');
 const Bank=require('../modals/drop/bankName')
 const PaymentMethod=require('../modals/drop/payMethod')
+const SalesMan=require('../modals/drop/salesMan')
 router.get('/allDropdown',async(req,res)=>{
     try{
        let brandDrop=await Brand.find()
@@ -21,7 +22,8 @@ router.get('/allDropdown',async(req,res)=>{
        let statusDropdown=await StatusDropdown.find()
        let bank=await Bank.find()
        let paymentmethod=await PaymentMethod.find()
-       let js={bank:bank,paymentmethod:paymentmethod,statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop}
+       let salesman=await SalesMan.find()
+       let js={salesMan:salesman,bank:bank,paymentmethod:paymentmethod,statusDropdown:statusDropdown,brandDrop:brandDrop,categDrop:categDrop,qtyDrop:qtyDrop,hsnDrop:hsnDrop,gstDrop:gstDrop}
        res.send({
         message:"data is successfully added",
         success:true, 
@@ -38,6 +40,28 @@ router.get('/allDropdown',async(req,res)=>{
     }
 
 })
+router.post('/createSalesMan',async(req,res)=>{
+  try{
+   
+      let salesMan=new SalesMan(req.body);
+      await salesMan.save();
+      res.send({
+         message:"data is successfully added",
+         success:true, 
+      })
+    
+    
+    }
+     catch(err){
+         res.send({
+             message:err.message,
+             success:false,
+      
+         })
+ 
+     }
+})
+
 router.post('/createPayMethod',async(req,res)=>{
     try{
      
