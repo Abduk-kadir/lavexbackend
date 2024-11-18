@@ -4,7 +4,52 @@ const {ProductionStore}=require('../modals/store/productionStore')
 const Company=require('../modals/companyModal')
 const SisterStock=require('../modals/sisterStock')
 const SisterStore=require('../modals/sisterStore')
-router=express.Router()
+const router = require('./dropdownRoute')
+router.delete('/porpharmaUpdate/:id',async(req,res)=>{
+    try{
+        await Porfarma.findByIdAndUpdate(req.params.id,{runValidators: true })
+        res.send({
+            message:"data is successfully updated",
+            success:true,
+         })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+         })
+
+    }
+})
+
+
+router.delete('/porpharmaDelete/:id',async(req,res)=>{
+    try{
+        await Porfarma.findByIdAndDelete(req.params.id)
+        res.send({
+            message:"data is successfully deleted",
+            success:true,
+          
+         })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+          
+         })
+
+    }
+})
+
+
+
+
+
+
+
 router.post('/porpharmaCreate',async(req,res)=>{
    //here type is company id
     let {type,role}=req.query;

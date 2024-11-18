@@ -6,7 +6,71 @@ router = express.Router();
 const { ProductionStore, ProductionStore2 } = require('./../modals/store/productionStore')
 const SisterStore = require('../modals/sisterStore');
 const SisterStock = require('../modals/sisterStock')
-const Supplier = require('../modals/supplierModal')
+const Supplier = require('../modals/supplierModal');
+const ClientPayment = require('../modals/clientPayment/clientPayment');
+router.delete('/invoice/:id/:companyname',async(req,res)=>{
+  try{
+    let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
+    if(f){
+      res.send({
+        message:"can not deleted it is ussing in Payment",
+        success:false,
+      })
+    }
+    else{
+     await Invoice.findByIdAndDelete(req.params.id)
+    res.send({
+      message:"deleted successfully",
+      success:true,
+    })
+
+    }
+    
+
+  
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+        })
+
+  }
+
+})
+
+
+router.put('/invoice/:id/:companyname',async(req,res)=>{
+  try{
+    
+    let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
+    if(f){
+      res.send({
+        message:"can not updated it is ussing in Payment",
+        success:false,
+      })
+
+    }
+    else{
+     await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+    res.send({
+      message:"updated successfully",
+      success:true,
+    })
+
+    }
+  
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+        })
+
+  }
+
+})
+
 
 
 router.get('/invoicesbyClient/:clientname', async (req, res) => {

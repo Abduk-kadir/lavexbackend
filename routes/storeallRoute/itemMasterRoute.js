@@ -1,9 +1,20 @@
 let express = require("express");
 let router = express.Router();
+const cloudinary = require('cloudinary').v2;
 const ItemMaster = require("../../modals/store/itemMaster");
 const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+cloudinary.config({ 
+  cloud_name: 'dz1mqwzrt', 
+  api_key: '891497942385565', 
+  api_secret: 'owVGCdRJOobWpui8mf4IXfexxxE' // Click 'View API Keys' above to copy your API secret
+});
+
+
+
 router.get("/usedInBom/:id", async (req, res) => {
   let inbomdata;
   try {
@@ -131,14 +142,17 @@ router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
   }
 
 })
-router.post("/addItemMaster/:companyId", async (req, res) => {
+router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
   try {
+    const filePath = req.file.path;
+    let result=await cloudinary.uploader.upload(filePath)
     let body = req.body;
     body.companyname=req.params.companyId
     let data=await ItemMaster.find()
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     body.mov=max
+    body.image=result.url
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();
     let str=`${body.name} is created`

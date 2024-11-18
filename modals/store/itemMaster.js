@@ -65,6 +65,10 @@ ItemMasterSchema=mongoose.Schema({
     stockStatus:{
         type:String,
         default:" "
+    },
+    image:{
+        type:String,
+        
     }
 })
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)

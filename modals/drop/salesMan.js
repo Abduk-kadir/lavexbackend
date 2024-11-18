@@ -5,5 +5,4 @@ let salesmanSchema=mongoose.Schema({
         required:true
     }
 })
-
 module.exports=mongoose.model('SalesMan',salesmanSchema)

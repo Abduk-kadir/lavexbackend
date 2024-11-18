@@ -5,7 +5,72 @@ const SisterStock=require('../modals/sisterStock')
 const SisterStore=require('../modals/sisterStore')
 const Company=require('../modals/companyModal')
 const Supplier=require('../modals/supplierModal')
+const invoice=require('../modals/invoiceModal')
+
 router=express.Router()
+
+router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
+  try{
+     let f=await invoice.findOne({companyname:req.params.companyname,selectDc:req.params.id})
+     if(f){
+      res.send({
+        message:"can not update it is used in invoices",
+        success:true,
+     })
+
+     }
+     else{
+       await DeliveryChalan.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+       res.send({
+        message:"data is successfully updated",
+        success:true,
+     })
+
+     } 
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+       })
+
+  }
+})
+
+
+router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
+  try{
+    let f=await invoice.findOne({companyname:req.params.companyname,selectDc:req.params.id})
+     if(f){
+      res.send({
+        message:"can not delete it is used in invoices",
+        success:true,
+     })
+
+     }
+     else{
+       await DeliveryChalan.findByIdAndDelete(req.params.id)
+       res.send({
+        message:"data is successfully updated",
+        success:true,
+     })
+
+     }
+     
+
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+       })
+
+  }
+})
+
+
+
+
 router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type,role}=req.query
     let {item}=req.body
