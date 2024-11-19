@@ -152,7 +152,7 @@ router.post('/invoiceCreate', async (req, res) => {
     req.body.selectDc.map(async (elem) => {
 
       //await DeliveryChalan.findByIdAndDelete(elem)
-      await DeliveryChalan.products.updateOne(
+      await DeliveryChalan.updateOne(
         { _id:elem},
         { $set:
            {

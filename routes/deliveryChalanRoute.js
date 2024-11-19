@@ -8,36 +8,7 @@ const Supplier=require('../modals/supplierModal')
 const invoice=require('../modals/invoiceModal')
 
 router=express.Router()
-router.put('/changeStatus',async(req,res)=>{
 
-  try{
-    let body=req.body
-    let dc=body;
-    for(let i=0;i<dc.length;i++){
-      db.products.updateOne(
-        { _id: dc.id },
-        { $set:
-           {
-            iscomplete:true
-           }
-        }
-     )
-    
-    }
-    res.send({
-      message:'status is changed',
-      success:true
-    })
-  }
-  catch(err){
-    res.send({
-      message:err.message,
-      sussess:false
-    })
-
-  }
-
-})
 
 router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
   try{
