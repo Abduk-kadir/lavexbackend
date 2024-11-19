@@ -4,6 +4,42 @@ const { ProductionStore } = require('./../modals/store/productionStore')
 const Company = require('../modals/companyModal')
 const SisterStock = require('../modals/sisterStock')
 router = express.Router()
+router.delete('/creditNoteDelete/:id',async(req,res)=>{
+  try{
+  let f=await CreditNote.findByIdAndDelete(req,params.id)
+  res.send({
+    message:"data is successfully deleted",
+    success:true,
+ })
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+   })
+
+  }
+  
+})
+router.put('/creditNoteUpdate/:id',async(req,res)=>{
+  try{
+  let f=await CreditNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
+  res.send({
+    message:"data is successfully updated",
+    success:true,
+ })
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+   })
+
+  }
+  
+
+})
+
 router.post('/creditNoteCreate', async (req, res) => {
   try {
     let { type, role } = req.query;
