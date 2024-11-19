@@ -15,7 +15,7 @@ router.post("/addCompany", async (req, res) => {
     let company = new Company(body);
     await company.save();
     let str=`company ${body.company} is created`
-        let js={companyname:company,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Company"}
+        let js={companyname:body.company,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Company"}
         let log=new Logs(js)
         await log.save()
 
