@@ -14,7 +14,7 @@ router.post('/addSupplier/:companyname',async(req,res)=>{
         body.mov=max
         let supplier=new Supplier(body);
         await supplier.save();
-        let str=`supplier ${body.client} is created`
+        let str=`supplier ${body.supplier} is created`
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
         let log=new Logs(js)
         await log.save()
@@ -54,6 +54,7 @@ router.post('/addSupplier/:companyname',async(req,res)=>{
 })*/
 router.put('/updateSupplier/:id',async(req,res)=>{
     let {id}=req.params
+    let body=req.body
         
         try{
             let d=await DebitNote.findOne({"clientDetail.id":id})
@@ -66,6 +67,7 @@ router.put('/updateSupplier/:id',async(req,res)=>{
     
             }
             else{
+              let c=await Supplier.findById(req.params.id)
                let rs= await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
                 let {
                     supplier,
@@ -83,25 +85,26 @@ router.put('/updateSupplier/:id',async(req,res)=>{
                     mobile2,   
                 }=c
                 let str='';
-                if(supplier!=body.supplier){str+=`$supplier {supplier} is changed to ${body.supplier}  `}
-                if(shortCode!=body.shortCode){str+=`$short {shortCode} is changed to ${body.shortCode}  `}
+                if(supplier!=body.supplier){str+=`supplier ${supplier} is changed to ${body.supplier}  `}
+                //if(shortCode!=body.shortCode){str+=`$short {shortCode} is changed to ${body.shortCode}  `}
                 if(gstNumber!=body.gstNumber){str+=`gstnumber ${gstNumber} is changed to ${body.gstNumber}  `}
                 if(address!=body.address){str+=`address ${address} is changed to ${body.address}  `}
-                if(area!=body.area){str+=`$area {area} is changed to ${body.area}  `}
+                if(area!=body.area){str+=`area ${area} is changed to ${body.area}  `}
                 if(pincode!=body.pincode){str+=`pincode ${pincode} is changed to ${body.pincode}  `}
                 if(state!=body.state){str+=`state ${state} is changed to ${body.state}`}
                 if(city!=body.city){str+=`city ${city} is changed to ${body.city}  `}
                 if(panNumber!=body.panNumber){str+=`pannumber pan number ${panNumber} is changed to ${body.panNumber}  `}
                 if(email!=body.email){str+=`email ${email} is changed to ${body.email}`}
                 if(contactPerson!=body.contactPerson){str+=`contact person ${contactPerson} is changed to ${body.contactPerson}  `}
-                if(mobile1!=body.mobile1){str+=`mobile ${mobile1} is changed to ${body.mobile1}  `}
-                if(accPerson!=body.accPerson){str+=`accountable person ${accPerson} is changed to ${body.accPerson}`}
+                if(mobile!=body.mobile){str+=`mobile ${mobile} is changed to ${body.mobile}  `}
+               
                 if(mobile2!=body.mobile2){str+=`'mobile ${mobile2} is changed to ${body.mobile2}  `}
                
               
-               
+                console.log(str)
                 if(str!=''){
-                let js={companyname:rs.company,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
+                    
+                let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
                 let log=new Logs(js)
                 await log.save()
                 }
@@ -142,7 +145,8 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
             }
             else{
                let rs=await Supplier.findByIdAndDelete(id);
-               let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
+                let str=`supplier ${rs.supplier} is deleted`
+               let js={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
                console.log(js)
                let log=new Logs(js) 
                    await log.save()

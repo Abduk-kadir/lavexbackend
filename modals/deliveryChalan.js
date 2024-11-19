@@ -148,6 +148,10 @@ const deliverySchema=mongoose.Schema({
   createdAt: {
    type: Date,
    default: Date.now
+},
+iscompleted:{
+   type:Boolean,
+   default:false
 }
 
 })
