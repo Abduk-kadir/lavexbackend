@@ -1,16 +1,23 @@
 let express=require('express')
 let router=express.Router()
 let Supplier=require('../modals/supplierModal')
-
+let Logs=require('../modals/logs/logs')
 let Inward=require('../modals/store/inwardModal')
 let DebitNote=require('../modals/debitNodeModal')
 router.post('/addSupplier/:companyname',async(req,res)=>{
     try{
         let body=req.body; 
         body.companyname=req.params.companyname 
-       // body.sid=req.params.sid 
+        let data=await Supplier.find()
+        let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
+        max = max + 1;
+        body.mov=max
         let supplier=new Supplier(body);
         await supplier.save();
+        let str=`supplier ${body.client} is created`
+        let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
+        let log=new Logs(js)
+        await log.save()
         res.send({
            message:"data is successfully added",
            success:true
@@ -59,7 +66,48 @@ router.put('/updateSupplier/:id',async(req,res)=>{
     
             }
             else{
-                await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
+               let rs= await Supplier.findByIdAndUpdate(id,req.body,{runValidators: true });
+                let {
+                    supplier,
+                    gstNumber,
+                    address,
+                    area,
+                    pincode,
+                    state,
+                    city,
+                    panNumber
+                    ,email,
+                    contactPerson,
+                    mobile,
+                    stateCode,
+                    mobile2,   
+                }=c
+                let str='';
+                if(supplier!=body.supplier){str+=`$supplier {supplier} is changed to ${body.supplier}  `}
+                if(shortCode!=body.shortCode){str+=`$short {shortCode} is changed to ${body.shortCode}  `}
+                if(gstNumber!=body.gstNumber){str+=`gstnumber ${gstNumber} is changed to ${body.gstNumber}  `}
+                if(address!=body.address){str+=`address ${address} is changed to ${body.address}  `}
+                if(area!=body.area){str+=`$area {area} is changed to ${body.area}  `}
+                if(pincode!=body.pincode){str+=`pincode ${pincode} is changed to ${body.pincode}  `}
+                if(state!=body.state){str+=`state ${state} is changed to ${body.state}`}
+                if(city!=body.city){str+=`city ${city} is changed to ${body.city}  `}
+                if(panNumber!=body.panNumber){str+=`pannumber pan number ${panNumber} is changed to ${body.panNumber}  `}
+                if(email!=body.email){str+=`email ${email} is changed to ${body.email}`}
+                if(contactPerson!=body.contactPerson){str+=`contact person ${contactPerson} is changed to ${body.contactPerson}  `}
+                if(mobile1!=body.mobile1){str+=`mobile ${mobile1} is changed to ${body.mobile1}  `}
+                if(accPerson!=body.accPerson){str+=`accountable person ${accPerson} is changed to ${body.accPerson}`}
+                if(mobile2!=body.mobile2){str+=`'mobile ${mobile2} is changed to ${body.mobile2}  `}
+               
+              
+               
+                if(str!=''){
+                let js={companyname:rs.company,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
+                let log=new Logs(js)
+                await log.save()
+                }
+
+
+
                 res.send({
                     message:"supplier is successfully deleted",
                     success:true
@@ -93,7 +141,11 @@ router.delete('/deleteSupplier/:id',async(req,res)=>{
     
             }
             else{
-               await Supplier.findByIdAndDelete(id);
+               let rs=await Supplier.findByIdAndDelete(id);
+               let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplier"}
+               console.log(js)
+               let log=new Logs(js) 
+                   await log.save()
                 res.send({
                     message:"supplier is successfully deleted",
                     success:true

@@ -42,7 +42,7 @@ router.get('/allDropdown',async(req,res)=>{
 })
 router.put('/updateSalesMan/:id',async(req,res)=>{
   try{
-    await SalesMan.findByIdAndUpdate(req.params.id,req.body)
+    await SalesMan.findByIdAndUpdate(req.params.id,req.body,{})
     res.send({
       message:"Sales Man updated successfully",
       success:true,

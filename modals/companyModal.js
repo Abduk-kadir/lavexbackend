@@ -2,6 +2,9 @@ const mongoose=require('mongoose');
 const valid=require('validator')
 
 const companySchema=mongoose.Schema({
+    mov:{
+        type:Number,
+    },
     company:{
         type:String,
         unique:true ,
