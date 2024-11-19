@@ -52,7 +52,28 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
 
     }
     else{
+     let rs=await DeliveryChalan.findById(req.params.id) 
      await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+     rs.selectDc.map(async (elem) => {
+      await DeliveryChalan.updateOne(
+        { _id:elem},
+        { $set:
+           {
+            iscomplete:false
+           }
+        }
+     )
+    })
+     req.body.selectDc.map(async (elem) => {
+      await DeliveryChalan.updateOne(
+        { _id:elem},
+        { $set:
+           {
+            iscomplete:true
+           }
+        }
+     )
+    })
     res.send({
       message:"updated successfully",
       success:true,
