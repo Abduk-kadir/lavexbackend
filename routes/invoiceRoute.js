@@ -59,7 +59,7 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
         { _id:elem},
         { $set:
            {
-            iscomplete:false
+            iscompleted:false
            }
         }
      )
@@ -69,7 +69,7 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
         { _id:elem},
         { $set:
            {
-            iscomplete:true
+            iscompleted:true
            }
         }
      )
@@ -177,7 +177,7 @@ router.post('/invoiceCreate', async (req, res) => {
         { _id:elem},
         { $set:
            {
-            iscomplete:true
+            iscompleted:true
            }
         }
      )
