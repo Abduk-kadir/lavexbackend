@@ -4,62 +4,62 @@ const { v4: uuidv4 } = require('uuid');
 ItemMasterSchema=mongoose.Schema({
     mov:{
         type:Number,
-        required:['mov number is required']
+        //required:['mov number is required']
     },
     companyname:{
        type:String,
-       required:[true,'companyid  is required']
+       //required:[true,'companyid  is required']
     },
     name:{
         type:String,
         unique:true ,
-        required:[true,'name is required']
+       // required:[true,'name is required']
 
     },
    qtyType:{
     type:String,
-    required:[true,'type of quantity is required']
+    //required:[true,'type of quantity is required']
    },
    qty:{
     type:Number,
-    required:[true,'quantity is required']
+    //required:[true,'quantity is required']
 
 
    },
    qtyType2:{
         type:String,
-        required:[true,'hsn code is required']
+        //required:[true,'hsn code is required']
         
     },
     brand:{
         type:String,
-        required:[true,'brand is required']
+        //required:[true,'brand is required']
 
     },
     lowqty:{
         type:Number,
-        required:[true,'law qty is important']
+        //required:[true,'law qty is important']
 
     },
     price:{
         type:Number,
-        required:['price is required']
+        //required:['price is required']
     },
     
     gst:{
         type:Number,
-        required:[true,'gst is required']
+        //required:[true,'gst is required']
 
     },
     hsnCode:{
         type:Number,
-       required:[true,'hsn code is required']
+       //required:[true,'hsn code is required']
 
     },
    
     category:{
         type:String,
-        required:[true]
+        //required:[true]
     },
 
     stockStatus:{

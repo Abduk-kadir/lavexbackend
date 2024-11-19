@@ -4,6 +4,45 @@ router=express.Router()
 let PurchaseStore=require('../modals/store/purchaseStore')
 let SisterStock=require('../modals/sisterStock')
 let Company=require('../modals/companyModal')
+
+router.delete('/debitNoteDelete/:id',async(req,res)=>{
+  try{
+  let f=await DebitNote.findByIdAndDelete(req,params.id)
+  res.send({
+    message:"data is successfully deleted",
+    success:true,
+ })
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+   })
+
+  }
+  
+
+})
+router.put('/debitNoteUpdate/:id',async(req,res)=>{
+  try{
+  let f=await DebitNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
+  res.send({
+    message:"data is successfully updated",
+    success:true,
+ })
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+   })
+
+  }
+  
+
+})
+
+
 router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type,role}=req.query;
