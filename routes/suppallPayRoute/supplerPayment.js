@@ -12,14 +12,18 @@ const supplierModal = require('../../modals/supplierModal')
 router.delete('/deletesupplierPayment/:id',async(req,res)=>{
     try{
         let body=req.body;
-        let {inwardList}=body
-       let rs= await SupplierPayment.findByIdAndDelete(req.params.id,body)
-       res.send({
+        let rs= await SupplierPayment.findByIdAndDelete(req.params.id,body)
+        let inarr=inwardList.map(elem=>elem.inwardMov)
+        let str=`payment for  inward no  ${inarr.loin('')} is deleted`
+        let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
+        console.log(js)
+        let log=new Logs(js) 
+        await log.save()
+        res.send({
         message:'payment is deleted successfully',
         success:false,
        })
-       
-       
+         
     }
        catch(err){
            res.send({
