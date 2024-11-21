@@ -2,6 +2,26 @@ let express=require('express')
 let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
+router.delete('/deletePayment/:id',async(req,res)=>{
+    try{
+        let body=req.body;
+        await ClientPayment.findByIdAndDelete(req.params.id,body);
+        let {invoiceList}=body
+        res.send({
+           message:"payment is successfully deleted",
+           success:true, 
+        })
+       }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
+
+})
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;

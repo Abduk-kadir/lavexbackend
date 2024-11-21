@@ -171,8 +171,6 @@ router.post('/invoiceCreate', async (req, res) => {
     let invoice = new Invoice(js);
     await invoice.save();
     req.body.selectDc.map(async (elem) => {
-
-      //await DeliveryChalan.findByIdAndDelete(elem)
       await DeliveryChalan.updateOne(
         { _id:elem},
         { $set:
@@ -182,6 +180,7 @@ router.post('/invoiceCreate', async (req, res) => {
         }
      )
     })
+    
     if (req.body.selectDc.length == 0) {
 
       if (role == 'master') {
@@ -216,7 +215,7 @@ router.post('/invoiceCreate', async (req, res) => {
           }
           //here i creating movenent for sister store
           let data2 = await SisterStore.find({ companyname: isSister._id })
-         
+          console.log('data2 is',data2)
           let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
           max2 = max2 + 1;
         

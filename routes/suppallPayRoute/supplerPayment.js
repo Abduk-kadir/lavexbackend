@@ -7,12 +7,31 @@ const supPayment = require('../../modals/supplierPayment/supPayment')
 const Invoice=require('../../modals/invoiceModal')
 const DeliveryChalan=require('../../modals/deliveryChalan')
 const Logs=require('../../modals/logs/logs')
+const supplierModal = require('../../modals/supplierModal')
 
-/*router.get('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
+router.delete('/deletesupplierPayment/:id',async(req,res)=>{
+    try{
+        let body=req.body;
+        let {inwardList}=body
+       let rs= await SupplierPayment.findByIdAndDelete(req.params.id,body)
+       res.send({
+        message:'payment is deleted successfully',
+        success:false,
+       })
+       
+       
+    }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
 
-    res.send('heloo arbaj')
 })
-*/
+
 router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
     try{
         let body=req.body;
@@ -79,7 +98,7 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         await supplierPayment.save();
         let {inwardList}=body
         let inarr=inwardList.map(elem=>elem.inwardMov)
-        let str=`payment for inward  ${inarr.join()} is created`
+        let str=`payment for inward no: ${inarr.join()} is created`
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
         let log=new Logs(js)
         await log.save()
