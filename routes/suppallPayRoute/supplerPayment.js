@@ -6,6 +6,7 @@ let SisterStore=require('../../modals/sisterStore')
 const supPayment = require('../../modals/supplierPayment/supPayment')
 const Invoice=require('../../modals/invoiceModal')
 const DeliveryChalan=require('../../modals/deliveryChalan')
+const Logs=require('../../modals/logs/logs')
 
 /*router.get('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>{
 

@@ -7,7 +7,7 @@ let Company=require('../modals/companyModal')
 
 router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   try{
-  let f=await DebitNote.findByIdAndDelete(req,params.id)
+  let f=await DebitNote.findByIdAndDelete(req.params.id)
   res.send({
     message:"data is successfully deleted",
     success:true,
@@ -24,7 +24,7 @@ router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
 })
 router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
-  let f=await DebitNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
+  let f=await DebitNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
   res.send({
     message:"data is successfully updated",
     success:true,
