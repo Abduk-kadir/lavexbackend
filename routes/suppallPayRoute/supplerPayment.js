@@ -41,6 +41,13 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
         let body=req.body;
         let {inwardList}=body
         await SupplierPayment.findByIdAndUpdate(req.params.id,body)
+
+
+
+
+
+
+        
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
                 await SisterStore.updateOne(
