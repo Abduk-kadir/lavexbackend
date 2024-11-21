@@ -6,7 +6,7 @@ const SisterStock = require('../modals/sisterStock')
 router = express.Router()
 router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   try{
-  let f=await CreditNote.findByIdAndDelete(req,params.id)
+  let f=await CreditNote.findByIdAndDelete(req.params.id)
   res.send({
     message:"data is successfully deleted",
     success:true,
@@ -23,7 +23,7 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
 })
 router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
-  let f=await CreditNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
+  let f=await CreditNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
   res.send({
     message:"data is successfully updated",
     success:true,
