@@ -81,7 +81,8 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
       let log=new Logs(js)
       await log.save()
       }
-      
+      let result=await cloudinary.uploader.upload(filePath)
+      body.image=result.url
       await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
       res.send({
         message:"item master is successfully updated",
