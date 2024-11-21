@@ -59,7 +59,6 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
 
 router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
     try{
-     
         let body=req.body;
         body.companyname=req.params.companyname;
         body.sid=req.params.sid
@@ -78,7 +77,10 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         body.paymentNumber=max;
         let supplierPayment=new SupplierPayment(body)
         await supplierPayment.save();
-      
+        let str=`payment is created`
+        let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
+        let log=new Logs(js)
+        await log.save()
         
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
