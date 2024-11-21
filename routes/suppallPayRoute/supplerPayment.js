@@ -77,7 +77,9 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
         body.paymentNumber=max;
         let supplierPayment=new SupplierPayment(body)
         await supplierPayment.save();
-        let str=`payment is created`
+        let {inwardList}=body
+        let inarr=inwardList.map(elem=>elem.inwardMov)
+        let str=`payment for inward  ${inarr.join()} is created`
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
         let log=new Logs(js)
         await log.save()
