@@ -5,7 +5,7 @@ let PurchaseStore=require('../modals/store/purchaseStore')
 let SisterStock=require('../modals/sisterStock')
 let Company=require('../modals/companyModal')
 
-router.delete('/debitNoteDelete/:id',async(req,res)=>{
+router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await DebitNote.findByIdAndDelete(req,params.id)
   res.send({
@@ -22,7 +22,7 @@ router.delete('/debitNoteDelete/:id',async(req,res)=>{
   }
   
 })
-router.put('/debitNoteUpdate/:id',async(req,res)=>{
+router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
   let f=await DebitNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
   res.send({

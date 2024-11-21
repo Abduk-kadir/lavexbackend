@@ -4,7 +4,7 @@ const { ProductionStore } = require('./../modals/store/productionStore')
 const Company = require('../modals/companyModal')
 const SisterStock = require('../modals/sisterStock')
 router = express.Router()
-router.delete('/creditNoteDelete/:id',async(req,res)=>{
+router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await CreditNote.findByIdAndDelete(req,params.id)
   res.send({
@@ -21,7 +21,7 @@ router.delete('/creditNoteDelete/:id',async(req,res)=>{
   }
   
 })
-router.put('/creditNoteUpdate/:id',async(req,res)=>{
+router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
   let f=await CreditNote.findByIdAndUpdate(req,params.id,req.body,{runValidators: true })
   res.send({
