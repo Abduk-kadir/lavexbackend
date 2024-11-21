@@ -39,9 +39,10 @@ router.get("/usedInBom/:id", async (req, res) => {
   }
 });
 
-router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
+router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(req,res)=>{
   let inbomdata;
   let body=req.body
+  const filePath = req.file.path;
   try {
     let rs = await ItemMaster.findById({ _id: req.params.id });
     console.log(rs)
@@ -81,8 +82,10 @@ router.put('/updatingItemMater/:id/:companyname',async(req,res)=>{
       let log=new Logs(js)
       await log.save()
       }
+      if(filePath){
       let result=await cloudinary.uploader.upload(filePath)
       body.image=result.url
+      }
       await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
       res.send({
         message:"item master is successfully updated",
