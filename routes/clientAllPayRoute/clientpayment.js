@@ -5,7 +5,7 @@ const Invoice=require('../../modals/invoiceModal')
 const Logs=require('../../modals/logs/logs')
 router.delete('/deletePayment/:id',async(req,res)=>{
     try{
-        let rs=await ClientPayment.findByIdAndDelete(req.params.id,body);
+        let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
         let inarr=rs.inwardList.map(elem=>elem.invoiceMov)
         let str=`payment for  invoice no  ${inarr.join('')} is deleted`
