@@ -2,11 +2,18 @@ let express=require('express')
 let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
+const Logs=require('../../modals/logs/logs')
 router.delete('/deletePayment/:id',async(req,res)=>{
     try{
-        let body=req.body;
-        await ClientPayment.findByIdAndDelete(req.params.id,body);
-        let {invoiceList}=body
+      
+        let rs=await ClientPayment.findByIdAndDelete(req.params.id,body);
+        let {invoiceList}=rs
+        let inarr=rs.inwardList.map(elem=>elem.invoiceMov)
+        let str=`payment for  invoice no  ${inarr.join('')} is deleted`
+        let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
+        console.log(js)
+        let log=new Logs(js) 
+        await log.save()
         res.send({
            message:"payment is successfully deleted",
            success:true, 
@@ -25,10 +32,8 @@ router.delete('/deletePayment/:id',async(req,res)=>{
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
-        
         await ClientPayment.findByIdAndUpdate(req.params.id,body);
         let {invoiceList}=body
-       
         for(let i=0;i<invoiceList.length;i++){
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
