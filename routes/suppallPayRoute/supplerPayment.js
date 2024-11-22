@@ -40,12 +40,30 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
     try{
         let body=req.body;
         let {inwardList}=body
+        let c=await SupplierPayment.findById(req.params.id) 
+        let {
+         sid,
+         sname,
+         paymentDate,
+         paymentMethod,
+         bankName,
+         payCheckorDdNo,
+         note,
+         }=c
+         let str='';
+           if(sid!=body.sid){str+=`supplier id ${sid} is changed to ${body.sid}  `}
+           if(sname!=body.sname){str+=`supplier ${sname} is changed to ${body.sname}  `}
+           if(paymentDate!=body.paymentDate){str+=`payment Date ${paymentDate} is changed to ${body.paymentDate}  `}
+           if(paymentMethod!=body.paymentMethod){str+=`payment method ${paymentMethod} is changed to ${body.paymentMethod}  `}
+           if(bankName!=body.bankName){str+=`${bankName} is changed to ${body.bankName}  `}
+           if(payCheckorDdNo!=body.payCheckorDdNo){str+=`${payCheckorDdNo} is changed to ${body.payCheckorDdNo}  `}
+           if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
+           if(str!=''){
+            let js={companyname:c.company,itemId:c.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
+            let log=new Logs(js)
+            await log.save()
+            }
         await SupplierPayment.findByIdAndUpdate(req.params.id,body)
-
-
-
-
-
 
         
         for(let i=0;i<inwardList.length;i++){
