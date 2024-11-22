@@ -43,6 +43,9 @@ const ProductionSchema = mongoose.Schema({
         type: Number,
         required: [true, "price  is required"],
       },
+      lowqty:{
+        type:Number,
+      }
     },
   ],
 });
