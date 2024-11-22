@@ -50,6 +50,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
          bankName,
          payCheckorDdNo,
          note,
+         payingAmount
          }=c
          let str='';
            if(payingAmount!=body.payingAmount){str+=`paying ammount ${paymentMethod} is changed to ${body.payingAmount}  `}
