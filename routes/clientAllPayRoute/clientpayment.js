@@ -7,7 +7,7 @@ router.delete('/deletePayment/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
-        let inarr=rs.inwardList.map(elem=>elem.invoiceMov)
+        let inarr=rs.invoiceList.map(elem=>elem.invoiceMov)
         let str=`payment for  invoice no  ${inarr.join('')} is deleted`
         let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
         console.log(js)
