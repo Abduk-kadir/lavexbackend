@@ -93,6 +93,9 @@ const sisterStoreSchema=mongoose.Schema({
          qtyType2:{
            type:String
          },
+         lowqty:{
+          type:Number
+         }
            
      }
    ]
