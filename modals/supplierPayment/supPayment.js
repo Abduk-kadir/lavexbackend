@@ -39,7 +39,7 @@ const SuplierPaymentSchema=mongoose.Schema({
     },
    
     payCheckorDdNo:{
-        type:Number
+        type:String
     },
     payingAmount:{
         type:Number,
