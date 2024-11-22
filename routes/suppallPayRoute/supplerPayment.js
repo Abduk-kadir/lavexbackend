@@ -59,7 +59,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
            if(payCheckorDdNo!=body.payCheckorDdNo){str+=`${payCheckorDdNo} is changed to ${body.payCheckorDdNo}  `}
            if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
            if(str!=''){
-            let js={companyname:c.company,itemId:c.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
+            let js={companyname:c.companyname,itemId:c.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
             let log=new Logs(js)
             await log.save()
             }
