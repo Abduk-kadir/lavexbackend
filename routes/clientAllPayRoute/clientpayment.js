@@ -89,8 +89,15 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
         body.paymentNumber=max;
         let clientPayment=new ClientPayment(body);
         let {invoiceList}=body
-        console.log(invoiceList)
         await clientPayment.save();
+        let inarr=invoiceList.map(elem=>elem.invoiceMov)
+        let str=`payment for invoice no: ${inarr.join()} is created`
+        let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+        let log=new Logs(js)
+        await log.save()
+
+
+
         for(let i=0;i<invoiceList.length;i++){
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
