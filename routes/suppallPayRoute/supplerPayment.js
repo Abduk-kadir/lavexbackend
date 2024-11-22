@@ -15,11 +15,10 @@ router.delete('/deletesupplierPayment/:id',async(req,res)=>{
         let rs= await SupplierPayment.findByIdAndDelete(req.params.id)
        
         let inarr=rs.inwardList.map(elem=>elem.inwardMov)
-        let str=`payment for  inward no  ${inarr.join('')} is deleted`
+        let str=`payment for  inward no  ${inarr.join(',')} is deleted`
         let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
         console.log(js)
         let log=new Logs(js) 
-
         await log.save()
         res.send({
         message:'payment is deleted successfully',
@@ -65,7 +64,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
            if(payCheckorDdNo!=body.payCheckorDdNo){str+=`${payCheckorDdNo} is changed to ${body.payCheckorDdNo}  `}
            if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
            if(pInarr.join()!=nInarr.join()){
-            str+=`inward list ${pInarr.join()} is changed to ${nInarr.join()}`
+            str+=`inward list ${pInarr.join(',')} is changed to ${nInarr.join(',')}`
            }
            console.log('str is:',str)
            if(str!=''){
