@@ -62,7 +62,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
            if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
            console.log('str is:',str)
            if(str!=''){
-            let js={companyname:c.companyname,itemId:c.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
+            let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
             let log=new Logs(js)
             await log.save()
             }
