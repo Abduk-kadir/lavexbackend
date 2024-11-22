@@ -18,7 +18,7 @@ router.delete('/deletesupplierPayment/:id',async(req,res)=>{
         let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
         console.log(js)
         let log=new Logs(js) 
-        
+
         await log.save()
         res.send({
         message:'payment is deleted successfully',
@@ -52,6 +52,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
          note,
          }=c
          let str='';
+           if(payingAmount!=body.payingAmount){str+=`paying ammount ${paymentMethod} is changed to ${body.payingAmount}  `}
            if(sname!=body.sname){str+=`supplier ${sname} is changed to ${body.sname}  `}
            if(paymentDate!=body.paymentDate){str+=`payment Date ${paymentDate} is changed to ${body.paymentDate}  `}
            if(paymentMethod!=body.paymentMethod){str+=`payment method ${paymentMethod} is changed to ${body.paymentMethod}  `}
