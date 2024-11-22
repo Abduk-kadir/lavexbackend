@@ -16,7 +16,7 @@ router.delete('/deletesupplierPayment/:id',async(req,res)=>{
        
         let inarr=rs.inwardList.map(elem=>elem.inwardMov)
         let str=`payment for  inward no  ${inarr.join('')} is deleted`
-        let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
+        let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
         console.log(js)
         let log=new Logs(js) 
 
