@@ -13,8 +13,9 @@ router.delete('/deletesupplierPayment/:id',async(req,res)=>{
     try{
         
         let rs= await SupplierPayment.findByIdAndDelete(req.params.id)
+       
         let inarr=rs.inwardList.map(elem=>elem.inwardMov)
-        let str=`payment for  inward no  ${inarr.loin('')} is deleted`
+        let str=`payment for  inward no  ${inarr.join('')} is deleted`
         let js={companyname:rs.company,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Supplir Payment"}
         console.log(js)
         let log=new Logs(js) 
@@ -42,6 +43,9 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
         let body=req.body;
         let {inwardList}=body
         let c=await SupplierPayment.findById(req.params.id) 
+        let pInarr=c.inwardList.map(elem=>elem.inwardMov)
+        let nInarr=inwardList.map(elem=>elem.inwardMov)
+        
         let {
          sid,
          sname,
@@ -60,6 +64,9 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
            if(bankName!=body.bankName){str+=`${bankName} is changed to ${body.bankName}  `}
            if(payCheckorDdNo!=body.payCheckorDdNo){str+=`${payCheckorDdNo} is changed to ${body.payCheckorDdNo}  `}
            if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
+           if(pInarr.join()!=nInarr.join()){
+            str+=`inward list ${pInarr.join()} is changed to ${nInarr.join()}`
+           }
            console.log('str is:',str)
            if(str!=''){
             let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
