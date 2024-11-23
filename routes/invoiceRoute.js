@@ -172,9 +172,9 @@ router.post('/invoiceCreate', async (req, res) => {
     let invoice = new Invoice(js);
     await invoice.save();
     //for log
-    let itmnamearr=body.item.map(elem=>elem.name)
-    let itmqtyarr=body.item.map(elem=>elem.quantity)
-    let str=`ivoice is for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+    let itmnamearr=req.body.item.map(elem=>elem.name)
+    let itmqtyarr=req.body.item.map(elem=>elem.quantity)
+    let str=`ivoice is for client ${req.body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
     let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
     console.log(j)
     let log=new Logs(j) 
