@@ -6,7 +6,7 @@ const SisterStore=require('../modals/sisterStore')
 const Company=require('../modals/companyModal')
 const Supplier=require('../modals/supplierModal')
 const invoice=require('../modals/invoiceModal')
-
+const Logs=require('../modals/logs/logs')
 router=express.Router()
 
 
@@ -86,6 +86,20 @@ router.post('/deliveryChalanCreate',async(req,res)=>{
      js.total=total
      let delivery=new DeliveryChalan(js);
      await delivery.save();
+      //for log
+    let itmnamearr=body.item.map(elem=>elem.name)
+    let itmqtyarr=body.item.map(elem=>elem.quantity)
+    let str=`ivoice is for client ${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+    let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    console.log(j)
+    let log=new Logs(j) 
+    await log.save()
+   //here ending
+
+
+
+
+
      if(role=='master'){
      //updating production store
       for (let i = 0; i < item.length; i++) {
