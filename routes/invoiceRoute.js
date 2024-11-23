@@ -8,6 +8,7 @@ const SisterStore = require('../modals/sisterStore');
 const SisterStock = require('../modals/sisterStock')
 const Supplier = require('../modals/supplierModal');
 const ClientPayment = require('../modals/clientPayment/clientPayment');
+const Logs=require('../modals/logs/logs')
 router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
@@ -170,6 +171,16 @@ router.post('/invoiceCreate', async (req, res) => {
     js.pendingAmount = total;
     let invoice = new Invoice(js);
     await invoice.save();
+    //for log
+    let itmnamearr=body.item.map(elem=>elem.name)
+    let itmqtyarr=body.item.map(elem=>elem.quantity)
+    let str=`ivoice no ${max} is for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+    let j={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
+    console.log(js)
+    let log=new Logs(js) 
+    await log.save()
+   //here ending
+
     req.body.selectDc.map(async (elem) => {
       await DeliveryChalan.updateOne(
         { _id:elem},
