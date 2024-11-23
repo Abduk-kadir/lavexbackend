@@ -32,8 +32,8 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
         let c=ClientPayment.findById(req.params.id)
-        let pInarr=c.invoiceList.map(elem=>elem.inwardMov)
-        let nInarr=body.invoiceList.map(elem=>elem.inwardMov)
+        let pInarr=c.invoiceList.map(elem=>elem.invoiceMov)
+        let nInarr=body.invoiceList.map(elem=>elem.invoiceMov)
         let {
             cid,
             cname,
@@ -57,18 +57,10 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
               }
               console.log('str is:',str)
               if(str!=''){
-               let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
+               let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
                let log=new Logs(js)
                await log.save()
                }
-
-
-
-
-
-
-
-
 
         await ClientPayment.findByIdAndUpdate(req.params.id,body);
         let {invoiceList}=body
