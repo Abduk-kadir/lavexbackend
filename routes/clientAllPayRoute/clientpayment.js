@@ -46,7 +46,7 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
             }=c
             let str='';
               if(payingAmount!=body.payingAmount){str+=`paying ammount ${payingAmount} is changed to ${body.payingAmount}  `}
-              if(cname!=body.cname){str+=`supplier ${cname} is changed to ${body.cname}  `}
+              if(cname!=body.cname){str+=`client ${cname} is changed to ${body.cname}  `}
               if(paymentDate!=body.paymentDate){str+=`payment Date ${paymentDate} is changed to ${body.paymentDate}  `}
               if(paymentMethod!=body.paymentMethod){str+=`payment method ${paymentMethod} is changed to ${body.paymentMethod}  `}
               if(bankName!=body.bankName){str+=`${bankName} is changed to ${body.bankName}  `}
