@@ -5,6 +5,7 @@ const Company=require('../modals/companyModal')
 const SisterStock=require('../modals/sisterStock')
 const SisterStore=require('../modals/sisterStore')
 const router = require('./dropdownRoute')
+const Logs=require('../modals/logs/logs')
 router.delete('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
     try{
         await Porfarma.findByIdAndUpdate(req.params.id,{runValidators: true })
@@ -66,6 +67,22 @@ router.post('/porpharmaCreate',async(req,res)=>{
     
      let porfarma=new Porfarma(js);
      await porfarma.save();
+     //for log
+     let itmnamearr=item.map(elem=>elem.name)
+     let itmqtyarr=item.map(elem=>elem.quantity)
+     let str=`ivoice no ${max} is for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+     let j={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Profarma"}
+     console.log(js)
+     let log=new Logs(js) 
+     await log.save()
+    //here ending
+
+
+
+
+
+
+
      res.send({
         message:"data is successfully added",
         success:true,
