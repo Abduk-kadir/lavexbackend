@@ -31,7 +31,7 @@ router.delete('/deletePayment/:id',async(req,res)=>{
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
-        let c=ClientPayment.findById(req.params.id)
+        let c=await ClientPayment.findById(req.params.id)
         let pInarr=c.invoiceList.map(elem=>elem.invoiceMov)
         let nInarr=body.invoiceList.map(elem=>elem.invoiceMov)
         let {
