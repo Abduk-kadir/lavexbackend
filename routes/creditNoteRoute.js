@@ -57,7 +57,7 @@ router.post('/creditNoteCreate', async (req, res) => {
     //for log
     let itmnamearr=onAccount==false? req.body.item.map(elem=>elem.name).join():"0"
     let itmqtyarr=onAccount==false?req.body.item.map(elem=>elem.quantity).join():"0"
-    let str=`Credit note is for client ${body.clientDetail.client} created and item is ${itmnamearr} and quantity is ${itmqtyarr} recieved `
+    let str=`Credit note is for client ${req.body.clientDetail.client} created and item is ${itmnamearr} and quantity is ${itmqtyarr} recieved `
     let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Credit"}
     console.log(j)
     let log=new Logs(j) 
