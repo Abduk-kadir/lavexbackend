@@ -72,8 +72,8 @@ router.post('/porpharmaCreate',async(req,res)=>{
      let itmqtyarr=item.map(elem=>elem.quantity)
      let str=`Profarma for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
      let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Profarma"}
-     console.log(js)
-     let log=new Logs(js) 
+     console.log(j)
+     let log=new Logs(j) 
      await log.save()
     //here ending
 
