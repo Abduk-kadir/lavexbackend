@@ -70,8 +70,8 @@ router.post('/porpharmaCreate',async(req,res)=>{
      //for log
      let itmnamearr=item.map(elem=>elem.name)
      let itmqtyarr=item.map(elem=>elem.quantity)
-     let str=`ivoice no ${max} is for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
-     let j={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Profarma"}
+     let str=`Profarma for client${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+     let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Profarma"}
      console.log(js)
      let log=new Logs(js) 
      await log.save()
