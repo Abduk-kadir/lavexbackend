@@ -31,6 +31,45 @@ router.delete('/deletePayment/:id',async(req,res)=>{
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
+        let c=ClientPayment.findById(req.params.id)
+        let pInarr=c.invoiceList.map(elem=>elem.inwardMov)
+        let nInarr=body.invoiceList.map(elem=>elem.inwardMov)
+        let {
+            cid,
+            cname,
+            paymentDate,
+            paymentMethod,
+            bankName,
+            payCheckorDdNo,
+            note,
+            payingAmount
+            }=c
+            let str='';
+              if(payingAmount!=body.payingAmount){str+=`paying ammount ${payingAmount} is changed to ${body.payingAmount}  `}
+              if(cname!=body.cname){str+=`supplier ${cname} is changed to ${body.cname}  `}
+              if(paymentDate!=body.paymentDate){str+=`payment Date ${paymentDate} is changed to ${body.paymentDate}  `}
+              if(paymentMethod!=body.paymentMethod){str+=`payment method ${paymentMethod} is changed to ${body.paymentMethod}  `}
+              if(bankName!=body.bankName){str+=`${bankName} is changed to ${body.bankName}  `}
+              if(payCheckorDdNo!=body.payCheckorDdNo){str+=`${payCheckorDdNo} is changed to ${body.payCheckorDdNo}  `}
+              if(note!=body.note){str+=`notes ${note} is changed to ${body.note}  `}
+              if(pInarr.join()!=nInarr.join()){
+               str+=`invoice list ${pInarr.join(',')} is changed to ${nInarr.join(',')}`
+              }
+              console.log('str is:',str)
+              if(str!=''){
+               let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
+               let log=new Logs(js)
+               await log.save()
+               }
+
+
+
+
+
+
+
+
+
         await ClientPayment.findByIdAndUpdate(req.params.id,body);
         let {invoiceList}=body
         for(let i=0;i<invoiceList.length;i++){
