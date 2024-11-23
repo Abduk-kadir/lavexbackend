@@ -3,6 +3,7 @@ const CreditNote = require('../modals/creditNoteModal')
 const { ProductionStore } = require('./../modals/store/productionStore')
 const Company = require('../modals/companyModal')
 const SisterStock = require('../modals/sisterStock')
+const Logs=require('../modals/logs/logs')
 router = express.Router()
 router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   try{
@@ -53,6 +54,17 @@ router.post('/creditNoteCreate', async (req, res) => {
     js.total = total
     let creditnote = new CreditNote(js);
     await creditnote.save();
+    //for log
+    let itmnamearr=onAccount==false? req.body.item.map(elem=>elem.name).join():"0"
+    let itmqtyarr=onAccount==false?req.body.item.map(elem=>elem.quantity).join():"0"
+    let str=`Credit note is for client ${body.clientDetail.client} created and item is ${itmnamearr} and quantity is ${itmqtyarr} recieved `
+    let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Credit"}
+    console.log(j)
+    let log=new Logs(j) 
+    await log.save()
+   //here ending
+
+
     if (onAccount) {
       //do nothing 
     }
