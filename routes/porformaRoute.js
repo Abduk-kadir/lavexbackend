@@ -31,7 +31,7 @@ router.delete('/porpharmaDelete/:id/:companyname',async(req,res)=>{
         let itmnamearr=rs.item.map(elem=>elem.name)
         let itmqtyarr=rs.item.map(elem=>elem.quantity)
         let str=`Profarman no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
-        let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Delivery Chalan"}
+        let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Porfarma"}
         console.log(j)
         let log=new Logs(j) 
         await log.save()
