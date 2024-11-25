@@ -12,6 +12,7 @@ const Logs=require('../modals/logs/logs')
 router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
+
     if(f){
       res.send({
         message:"can not deleted it is ussing in Payment",
@@ -19,7 +20,15 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
       })
     }
     else{
-     await Invoice.findByIdAndDelete(req.params.id)
+    let rs= await Invoice.findByIdAndDelete(req.params.id)
+    let itmnamearr=rs.item.map(elem=>elem.name)
+    let itmqtyarr=rs.item.map(elem=>elem.quantity)
+    let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
+    let j={companyname:rs.companyname,itemId:rs.mov,actionType:'Delete',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    console.log(j)
+    let log=new Logs(j) 
+    await log.save()
+    await log.save()
     res.send({
       message:"deleted successfully",
       success:true,
