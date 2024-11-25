@@ -21,15 +21,7 @@ router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
 
      }
      else{
-      let rs=await DeliveryChalan.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
-       let itmnamearr=rs.item.map(elem=>elem.name)
-       let itmqtyarr=rs.item.map(elem=>elem.quantity)
-       let str=`Delivery no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
-       let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Delivery Chalan"}
-       console.log(j)
-       let log=new Logs(j) 
-       await log.save()
-       await log.save()
+       await DeliveryChalan.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
        res.send({
         message:"data is successfully updated",
         success:true,
@@ -58,7 +50,15 @@ router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
 
      }
      else{
-       await DeliveryChalan.findByIdAndDelete(req.params.id)
+       let rs=await DeliveryChalan.findByIdAndDelete(req.params.id)
+       let itmnamearr=rs.item.map(elem=>elem.name)
+       let itmqtyarr=rs.item.map(elem=>elem.quantity)
+       let str=`Delivery no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
+       let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Delivery Chalan"}
+       console.log(j)
+       let log=new Logs(j) 
+       await log.save()
+       await log.save()
        res.send({
         message:"data is successfully updated",
         success:true,
