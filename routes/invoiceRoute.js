@@ -26,7 +26,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
     for (let i = 0; i <item.length; i++) {
       let { id, quantity } = item[i];
       const f = await ProductionStore.updateOne(
-        { companyname: type, 'readyStock.id': id },
+        { companyname: rs.companyname, 'readyStock.id': id },
         { $inc: { "readyStock.$[elem].quantity": -quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
