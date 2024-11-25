@@ -1,5 +1,6 @@
 const express=require('express')
 const jsonwebToken=require('jsonwebtoken')
+const cors = require('cors');
 require('dotenv').config()
 require('./config/dbConfig')
 let userRoute=require('./routes/userRoute')
@@ -35,7 +36,7 @@ let LogRouter=require('./routes/logs')
 const app=express()
 app.use(express.json())
 app.use(function(req,res,next){
-    res.header("Access-Control-Allow-Origin","*")
+    res.header("Access-Control-Allow-Origin","https://lavex-d25d4.web.app/")
     res.header(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD"
