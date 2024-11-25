@@ -9,6 +9,14 @@ let Logs=require('../modals/logs/logs')
 router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await DebitNote.findByIdAndDelete(req.params.id)
+  let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
+  let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
+  let deciedInvoice=f.onAccount?'invoice related to this debit':'item'
+  let str=`Debit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
+  let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"DebitNote"}
+  
+  let log=new Logs(j) 
+  await log.save()
   res.send({
     message:"data is successfully deleted",
     success:true,

@@ -10,7 +10,7 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   let f=await CreditNote.findByIdAndDelete(req.params.id)
   let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
   let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
-  let deciedInvoice=f.onAccount?'invoice related to this credit ':'item'
+  let deciedInvoice=f.onAccount?'invoice related to this credit':'item'
   let str=`Credit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
   let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
   
