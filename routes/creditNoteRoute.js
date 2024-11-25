@@ -12,11 +12,10 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
   let deciedInvoice=f.onAccount?'invoice':'item'
   let str=`Credit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
-  let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
-  console.log(j)
+  let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
+  
   let log=new Logs(j) 
   await log.save()
-
   res.send({
     message:"data is successfully deleted",
     success:true,
