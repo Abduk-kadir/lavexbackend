@@ -27,7 +27,14 @@ router.delete('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
 
 router.delete('/porpharmaDelete/:id/:companyname',async(req,res)=>{
     try{
-        await Porfarma.findByIdAndDelete(req.params.id)
+       let rs=await Porfarma.findByIdAndDelete(req.params.id)
+        let itmnamearr=rs.item.map(elem=>elem.name)
+        let itmqtyarr=rs.item.map(elem=>elem.quantity)
+        let str=`Profarman no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
+        let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Delivery Chalan"}
+        console.log(j)
+        let log=new Logs(j) 
+        await log.save()
         res.send({
             message:"data is successfully deleted",
             success:true,
@@ -64,7 +71,7 @@ router.post('/porpharmaCreate',async(req,res)=>{
         js.mov=max;
         let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
         js.total=total
-    
+
      let porfarma=new Porfarma(js);
      await porfarma.save();
      //for log

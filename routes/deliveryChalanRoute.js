@@ -58,7 +58,7 @@ router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
        console.log(j)
        let log=new Logs(j) 
        await log.save()
-       await log.save()
+       
        res.send({
         message:"data is successfully updated",
         success:true,
