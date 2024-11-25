@@ -21,6 +21,24 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
     }
     else{
     let rs= await Invoice.findByIdAndDelete(req.params.id)
+    for (let i = 0; i < rs.item.length; i++) {
+      let { id, quantity } = item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: type, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": -quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+
+
+    }
+
+
+
+
+
+
+
+    //log is creating
     let itmnamearr=rs.item.map(elem=>elem.name)
     let itmqtyarr=rs.item.map(elem=>elem.quantity)
     let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
@@ -28,7 +46,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
     console.log(j)
     let log=new Logs(j) 
     await log.save()
-    await log.save()
+    //ending
     res.send({
       message:"deleted successfully",
       success:true,
