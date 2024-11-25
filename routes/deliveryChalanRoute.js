@@ -51,7 +51,8 @@ router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
      }
      else{
        let rs=await DeliveryChalan.findByIdAndDelete(req.params.id)
-       for (let i = 0; i < rs.item.length; i++) {
+       let {item}=rs
+       for (let i = 0; i <item.length; i++) {
         let { id, quantity } = item[i];
         const f = await ProductionStore.updateOne(
           { companyname: type, 'readyStock.id': id },
