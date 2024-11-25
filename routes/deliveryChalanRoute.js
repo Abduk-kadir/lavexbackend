@@ -51,6 +51,18 @@ router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
      }
      else{
        let rs=await DeliveryChalan.findByIdAndDelete(req.params.id)
+       for (let i = 0; i < item.length; i++) {
+        let { id, quantity } = item[i];
+        const f = await ProductionStore.updateOne(
+          { companyname: type, 'readyStock.id': id },
+          { $inc: { "readyStock.$[elem].quantity": quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+
+
+      }
+
+       //maingting log
        let itmnamearr=rs.item.map(elem=>elem.name)
        let itmqtyarr=rs.item.map(elem=>elem.quantity)
        let str=`Delivery no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
