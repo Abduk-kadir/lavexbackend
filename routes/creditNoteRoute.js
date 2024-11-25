@@ -8,6 +8,15 @@ router = express.Router()
 router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await CreditNote.findByIdAndDelete(req.params.id)
+  let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
+  let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
+  let deciedInvoice=f.onAccount?'invoice':'item'
+  let str=`Credit note is for client ${req.body.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
+  let j={companyname:type,itemId:max,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
+  console.log(j)
+  let log=new Logs(j) 
+  await log.save()
+
   res.send({
     message:"data is successfully deleted",
     success:true,
