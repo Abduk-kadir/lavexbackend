@@ -24,7 +24,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
     let itmnamearr=rs.item.map(elem=>elem.name)
     let itmqtyarr=rs.item.map(elem=>elem.quantity)
     let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
-    let j={companyname:rs.companyname,itemId:rs.mov,actionType:'Delete',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
     console.log(j)
     let log=new Logs(j) 
     await log.save()
@@ -52,7 +52,6 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
 
 router.put('/invoice/:id/:companyname',async(req,res)=>{
   try{
-    
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
     if(f){
       res.send({
