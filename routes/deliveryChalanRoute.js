@@ -24,6 +24,37 @@ router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
      else{
        let rs=await DeliveryChalan.findById(req.params.id)
        await DeliveryChalan.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+       //mainting store
+        //mainting store
+    console.log('prevItem',rs.item)
+    console.log('curItem',body.item)
+    for (let i = 0; i <rs.item.length; i++) {
+      let { id, quantity } = rs.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    
+    }
+
+    for (let i = 0; i <body.item.length; i++) {
+      let { id, quantity } = body.item[i];
+      const f2 = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity":-quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+      if (f2.matchedCount == 0) {
+        let elem = readyStock[i];
+        parr.push(elem);
+      }
+    }
+    console.log('newarr is:',parr)
+    if (parr.length > 0) {
+      let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
+      await product.save();
+    }
        //mainting log
        let {
         clientDetail,
