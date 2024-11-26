@@ -84,7 +84,8 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
      let rs=await Invoice.findById(req.params.id) 
      await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
      //mainting store
-    
+    console.log('prevItem',rs.item)
+    console.log('curItem',body.item)
     for (let i = 0; i <rs.item.length; i++) {
       let { id, quantity } = rs.item[i];
       const f = await ProductionStore.updateOne(
@@ -92,15 +93,17 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
         { $inc: { "readyStock.$[elem].quantity": quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
+      console.log('changed or not:',f)
     }
 
     for (let i = 0; i <body.item.length; i++) {
       let { id, quantity } = body.item[i];
-      const f = await ProductionStore.updateOne(
+      const f2 = await ProductionStore.updateOne(
         { companyname: rs.companyname, 'readyStock.id': id },
         { $inc: { "readyStock.$[elem].quantity":-quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
+      console.log('changed or not:',f2)
     }
 
 
