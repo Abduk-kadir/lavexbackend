@@ -89,7 +89,7 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
       let { id, quantity } = rs.item[i];
       const f = await ProductionStore.updateOne(
         { companyname: rs.companyname, 'readyStock.id': id },
-        { $inc: { "readyStock.$[elem].quantity": -quantity } },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
     }
@@ -98,15 +98,10 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
       let { id, quantity } = body.item[i];
       const f = await ProductionStore.updateOne(
         { companyname: rs.companyname, 'readyStock.id': id },
-        { $inc: { "readyStock.$[elem].quantity":quantity } },
+        { $inc: { "readyStock.$[elem].quantity":-quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
     }
-
-
-
-
-
 
 
      //mainting log
