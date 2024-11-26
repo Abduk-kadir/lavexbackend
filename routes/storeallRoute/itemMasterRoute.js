@@ -84,7 +84,8 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       }
       if(filePath){
       let result=await cloudinary.uploader.upload(filePath)
-      body.image=result.url
+      console.log('reslut',result)
+      body.image=result.secure_url
       }
       await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
       res.send({
@@ -150,13 +151,14 @@ router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res
   try {
     const filePath = req.file.path;
     let result=await cloudinary.uploader.upload(filePath)
+    console.log(result)
     let body = req.body;
     body.companyname=req.params.companyId
     let data=await ItemMaster.find()
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     body.mov=max
-    body.image=result.url
+    body.image=result.secure_url
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();
     let str=`${body.name} is created`
