@@ -6,7 +6,7 @@ const SisterStock=require('../modals/sisterStock')
 const SisterStore=require('../modals/sisterStore')
 const router = require('./dropdownRoute')
 const Logs=require('../modals/logs/logs')
-router.delete('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
+router.put('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
     try{
         await Porfarma.findByIdAndUpdate(req.params.id,{runValidators: true })
         res.send({
