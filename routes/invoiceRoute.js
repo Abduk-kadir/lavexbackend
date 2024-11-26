@@ -13,6 +13,8 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
 
+
+
     if(f){
       res.send({
         message:"can not deleted it is ussing in Payment",
@@ -71,6 +73,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
 
 
 router.put('/invoice/:id/:companyname',async(req,res)=>{
+  let body=req.body
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
     if(f){
@@ -78,11 +81,38 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
         message:"can not updated it is ussing in Payment",
         success:false,
       })
-
     }
     else{
      let rs=await Invoice.findById(req.params.id) 
      await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+           let {
+            clientDetail,
+            invoiceDetail,
+            selectDc,
+            item, 
+        }=rs
+           let str='';
+           if(clientDetail.client!=body.clientDetail.client){str+=`client ${clientDetail.client} is changed to ${body.clientDetail.client}  `}
+           if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
+           if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
+           if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
+           let pitmarr=rs.item.map(elem=>elem.name)
+           let nitmarr=body.item.map(elem=>elem.name)
+           let pqitmarr=rs.item.map(elem=>elem.quantity)
+           let nqitmarr=body.item.map(elem=>elem.quantity)
+           str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')}are changed to ${nitmarr.join(',')}`
+           str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')}are changed to ${nqitmarr.join(',')}`
+           if(str!=''){
+           let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+           let log=new Logs(js)
+           await log.save()
+           }
+
+
+
+
+
+     //mainting delivery chalan
      rs.selectDc.map(async (elem) => {
       await DeliveryChalan.updateOne(
         { _id:elem},
