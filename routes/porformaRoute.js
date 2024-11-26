@@ -8,7 +8,7 @@ const router = require('./dropdownRoute')
 const Logs=require('../modals/logs/logs')
 router.put('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
     try{
-        await Porfarma.findByIdAndUpdate(req.params.id,{runValidators: true })
+        await Porfarma.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
         res.send({
             message:"data is successfully updated",
             success:true,
