@@ -32,8 +32,6 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
         { $inc: { "readyStock.$[elem].quantity": -quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
-
-
     }
 // end
 
@@ -85,6 +83,33 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
     else{
      let rs=await Invoice.findById(req.params.id) 
      await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+     //mainting store
+    
+    for (let i = 0; i <rs.item.length; i++) {
+      let { id, quantity } = rs.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": -quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    }
+
+    for (let i = 0; i <body.item.length; i++) {
+      let { id, quantity } = body.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity":quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    }
+
+
+
+
+
+
+
+     //mainting log
            let {
             clientDetail,
             invoiceDetail,
