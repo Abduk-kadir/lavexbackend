@@ -12,6 +12,7 @@ router=express.Router()
 
 router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
   try{
+    let body=req.body
      let f=await invoice.findOne({companyname:req.params.companyname,selectDc:req.params.id})
      if(f){
       res.send({
@@ -21,9 +22,8 @@ router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
 
      }
      else{
-      let rs= await DeliveryChalan.findById(req.params.id)
+       let rs=await DeliveryChalan.findById(req.params.id)
        await DeliveryChalan.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
-
        //mainting log
        let {
         clientDetail,
@@ -43,7 +43,7 @@ router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
        str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')}are changed to ${nitmarr.join(',')}`
        str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')}are changed to ${nqitmarr.join(',')}`
        if(str!=''){
-       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Delivery Chalan"}
+       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
        let log=new Logs(js)
        await log.save()
        }
