@@ -40,10 +40,10 @@ router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
        let nitmarr=body.item.map(elem=>elem.name)
        let pqitmarr=rs.item.map(elem=>elem.quantity)
        let nqitmarr=body.item.map(elem=>elem.quantity)
-       str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')}are changed to ${nitmarr.join(',')}`
-       str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')}are changed to ${nqitmarr.join(',')}`
+       str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
+       str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')} are changed to ${nqitmarr.join(',')}`
        if(str!=''){
-       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Delivery"}
+       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Delivery chalan"}
        let log=new Logs(js)
        await log.save()
        }
