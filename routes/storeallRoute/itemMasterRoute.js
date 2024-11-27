@@ -42,8 +42,10 @@ router.get("/usedInBom/:id", async (req, res) => {
 router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(req,res)=>{
   let inbomdata;
   let body=req.body
-  const filePath = req.file.path;
+ 
   try {
+    const filePath = req?.file?.path;
+    console.log('filepath is:',filePath)
     let rs = await ItemMaster.findById({ _id: req.params.id });
     console.log(rs)
     if (rs.stockStatus == "Raw") {
@@ -65,7 +67,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
     else{
      
       let {name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category,price}=rs
-      console.log(name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category)
+    
       let str='';
       if(name!=body.name){str=`name was ${name} and changed name is ${body.name}  `}
       if(qtyType!=body.qtyType){str+=`quantity type was ${qtyType} and changed quantity type  is ${body.qtyType}`}
@@ -78,16 +80,17 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       if(category!=body.category){str+=`category was ${category} and changed name is ${body.category}`}
       if(str!=''){
       let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
-      console.log('logs is:',js)
+     
       let log=new Logs(js)
       await log.save()
       }
       if(filePath){
       let result=await cloudinary.uploader.upload(filePath)
-      console.log('reslut',result)
+    
       body.image=result.secure_url
       }
       else{
+        console.log('not sending image state')
         let f=await ItemMaster.findById(req.params.id)
         body.image=f.image
       }
