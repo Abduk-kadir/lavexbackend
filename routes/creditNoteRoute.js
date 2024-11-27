@@ -55,7 +55,7 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')} are changed to ${nqitmarr.join(',')}`
        }
        if(str!=''){
-       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Delivery chalan"}
+       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Credit Note"}
        let log=new Logs(js)
        await log.save()
        }
