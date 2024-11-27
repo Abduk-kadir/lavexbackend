@@ -32,8 +32,32 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
 router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
   let body=req.body  
-  let rs=await CreditNote.findById(req.params.id)
+     let rs=await CreditNote.findById(req.params.id)
      await CreditNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
+      //mainting store
+   if(rs.onAccount==false){
+    for (let i = 0; i <rs.item.length; i++) {
+      let { id, quantity } = rs.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    
+    }
+  }
+
+  if(body.onAccount==false){
+    for (let i = 0; i <body.item.length; i++) {
+      let { id, quantity } = body.item[i];
+      const f2 = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity":-quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+     
+    }
+  }
        //mainting log
        let {
         clientDetail,
@@ -47,8 +71,8 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
        if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
        if(body.onAccount==false){
-       let pitmarr=rs.item.map(elem=>elem.name)
-       let nitmarr=body.item.map(elem=>elem.name)
+       let pitmarr=rs.onAccount==true?'':rs.item.map(elem=>elem.name)
+       let nitmarr=rs.onAccount==true?'':body.item.map(elem=>elem.name)
        let pqitmarr=rs.item.map(elem=>elem.quantity)
        let nqitmarr=body.item.map(elem=>elem.quantity)
        str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
