@@ -71,8 +71,8 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
        if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
        if(body.onAccount==false){
-       let pitmarr=rs.onAccount==true?'':rs.item.map(elem=>elem.name)
-       let nitmarr=rs.onAccount==true?'':body.item.map(elem=>elem.name)
+       let pitmarr=rs.onAccount==true?'':rs.item.map(elem=>elem.name).join('')
+       let nitmarr=rs.onAccount==true?'':body.item.map(elem=>elem.name).join('')
        let pqitmarr=rs.item.map(elem=>elem.quantity)
        let nqitmarr=body.item.map(elem=>elem.quantity)
        str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
