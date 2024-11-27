@@ -13,7 +13,6 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   let deciedInvoice=f.onAccount?'invoice related to this credit':'item'
   let str=`Credit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
   let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
-  
   let log=new Logs(j) 
   await log.save()
   res.send({
@@ -32,7 +31,39 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
 })
 router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
-  let f=await CreditNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
+  let body=req.body  
+  let rs=await CreditNote.findById(req.params.id)
+     await CreditNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
+       //mainting log
+       let {
+        clientDetail,
+        invoiceDetail,
+        selectDc,
+        item, 
+    }=rs
+       let str='';
+       if(clientDetail.client!=body.clientDetail.client){str+=`client ${clientDetail.client} is changed to ${body.clientDetail.client}  `}
+       if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
+       if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
+       if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
+       if(body.onAccount==fasle){
+       let pitmarr=rs.item.map(elem=>elem.name)
+       let nitmarr=body.item.map(elem=>elem.name)
+       let pqitmarr=rs.item.map(elem=>elem.quantity)
+       let nqitmarr=body.item.map(elem=>elem.quantity)
+       str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
+       str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')} are changed to ${nqitmarr.join(',')}`
+       }
+       if(str!=''){
+       let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Delivery chalan"}
+       let log=new Logs(js)
+       await log.save()
+       }
+
+
+
+
+
   res.send({
     message:"data is successfully updated",
     success:true,
