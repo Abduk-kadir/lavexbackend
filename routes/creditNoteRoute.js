@@ -70,23 +70,21 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
        if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
        if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
+
        if(body.onAccount==false){
        let pitmarr=rs.onAccount==true?'':rs.item.map(elem=>elem.name).join('')
        let nitmarr=rs.onAccount==true?'':body.item.map(elem=>elem.name).join('')
        let pqitmarr=rs.item.map(elem=>elem.quantity)
        let nqitmarr=body.item.map(elem=>elem.quantity)
-       str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
-       str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')} are changed to ${nqitmarr.join(',')}`
+       
+       str+=pitmarr==nitmarr.join(',')?'':` items ${pitmarr} are changed to ${nitmarr.join(',')}`
+       str+=pqitmarr==nqitmarr.join(',')?'':` quantity ${pqitmarr} are changed to ${nqitmarr.join(',')}`
        }
        if(str!=''){
        let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Credit Note"}
        let log=new Logs(js)
        await log.save()
        }
-
-
-
-
 
   res.send({
     message:"data is successfully updated",
