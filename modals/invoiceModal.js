@@ -161,6 +161,10 @@ const invoiceSchema=mongoose.Schema({
    default:0
 
   },
+  discountAmount:{
+   type:Number,
+   default:0
+  },
   createdAt: {
    type: Date,
    default: Date.now
