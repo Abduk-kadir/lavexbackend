@@ -35,7 +35,8 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
      let rs=await CreditNote.findById(req.params.id)
      await CreditNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
       //mainting store
-   if(rs.onAccount==false){
+        //mainting store
+    if(rs.onAccount==false){
     for (let i = 0; i <rs.item.length; i++) {
       let { id, quantity } = rs.item[i];
       const f = await ProductionStore.updateOne(
@@ -45,9 +46,8 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
       );
     
     }
-  }
-
-  if(body.onAccount==false){
+   }
+    if(body.onAccount==false){
     for (let i = 0; i <body.item.length; i++) {
       let { id, quantity } = body.item[i];
       const f2 = await ProductionStore.updateOne(
@@ -57,7 +57,8 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
       );
      
     }
-  }
+    }
+
        //mainting log
        let {
         clientDetail,
@@ -70,21 +71,29 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
        if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
        if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
-
-       if(body.onAccount==false){
-       let pitmarr=rs.onAccount==true?'':rs.item.map(elem=>elem.name).join('')
-       let nitmarr=rs.onAccount==true?'':body.item.map(elem=>elem.name).join('')
-       let pqitmarr=rs.item.map(elem=>elem.quantity)
-       let nqitmarr=body.item.map(elem=>elem.quantity)
        
-       str+=pitmarr==nitmarr.join(',')?'':` items ${pitmarr} are changed to ${nitmarr.join(',')}`
-       str+=pqitmarr==nqitmarr.join(',')?'':` quantity ${pqitmarr} are changed to ${nqitmarr.join(',')}`
+       if(body.onAccount==false){
+            let pitmarr=rs.item.map(elem=>elem?.name)
+            let nitmarr=body.item.map(elem=>elem.name)
+            let pqitmarr=rs.item.map(elem=>elem?.quantity)
+            let nqitmarr=body.item.map(elem=>elem.quantity)
+            str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')} are changed to ${nitmarr.join(',')}`
+            str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')} are changed to ${nqitmarr.join(',')}`  
+         
+       }
+       else{
+        if(clientDetail.price!=body.clientDetail.price){str+=`${clientDetail.price} is changed to ${body.clientDetail.price}  `}
+
        }
        if(str!=''){
        let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Credit Note"}
        let log=new Logs(js)
        await log.save()
        }
+
+
+
+
 
   res.send({
     message:"data is successfully updated",
