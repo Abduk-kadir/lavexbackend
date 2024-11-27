@@ -126,13 +126,14 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
         let log=new Logs(js)
         await log.save()
-
-
-
         for(let i=0;i<invoiceList.length;i++){
+            //for requesting arbaj to maintin front end
+           let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+            //end
+
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                {$set:{pendingAmount:invoiceList[i].pendingAmount,total:invoiceList[i].total,discountAmount:invoiceList[i].discount}}
+                {$set:{pendingAmount:invoiceList[i].pendingAmount,total:invoiceList[i].total,discountAmount:invoiceList[i].discount+f.discountAmount}}
             
             )
         }
