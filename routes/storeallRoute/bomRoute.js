@@ -68,13 +68,12 @@ router.post('/addBom/:companyId',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyId
         let billOfMaterial=new BillOfMaterial(body);
-        //mainting log
+        //mainting Store
         let readyStock=body.readyStock
-        for(let i=0;i<readyStock.length;i++){
-            let js={...readyStock[i],quantity:0}
-          await ProductionStore({companyname:companyId,readyStock:js})
-        }
-        //
+          let js={...readyStock,quantity:0,companyname:companyId}
+          await ProductionStore(js)
+        
+    
         await billOfMaterial.save();
         res.send({
            message:"data is successfully added",
