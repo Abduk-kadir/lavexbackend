@@ -3,7 +3,7 @@ let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
 const authMidd=require('..//../middleware/authmiddleware')
 const Production=require('../../modals/store/production')
-const ProductionStore=require('../../modals/store/productionStore')
+const {ProductionStore}=require('../../modals/store/productionStore')
 router.put('/updatingBom/:id',async(req,res)=>{
 
     try{
