@@ -115,7 +115,6 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
       await product.save();
     }
 
-
      //mainting log
            let {
             clientDetail,
@@ -248,7 +247,6 @@ router.post('/invoiceCreate', async (req, res) => {
   let { type, role } = req.query;
   let { item } = req.body
   let js = { ...req.body, companyname: type }
-
   let parr = []
   try {
     let body = req.body;
