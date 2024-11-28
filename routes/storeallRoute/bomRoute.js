@@ -3,6 +3,7 @@ let router=express.Router()
 const BillOfMaterial = require('../../modals/store/bomModal');
 const authMidd=require('..//../middleware/authmiddleware')
 const Production=require('../../modals/store/production')
+const ProductionStore=require('../../modals/store/productionStore')
 router.put('/updatingBom/:id',async(req,res)=>{
 
     try{
@@ -67,6 +68,13 @@ router.post('/addBom/:companyId',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyId
         let billOfMaterial=new BillOfMaterial(body);
+        //mainting log
+        let readyStock=body.readyStock
+        for(let i=0;i<readyStock.length;i++){
+            let js={...readyStock[i],quantity:0}
+          await ProductionStore({companyname:companyId,readyStock:js})
+        }
+        //
         await billOfMaterial.save();
         res.send({
            message:"data is successfully added",
