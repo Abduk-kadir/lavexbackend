@@ -65,9 +65,11 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
         await ClientPayment.findByIdAndUpdate(req.params.id,body);
         let {invoiceList}=body
         for(let i=0;i<invoiceList.length;i++){
+           
+           let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                {$set:{pendingAmount:invoiceList[i].pendingAmount,total:invoiceList[i].total}}
+                {$set:{pendingAmount:f.pendingAmount-invoiceList[i].paid-invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
             
             )
         }
