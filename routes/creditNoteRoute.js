@@ -58,7 +58,7 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
      
     }
     }
-
+     /*
        //mainting log
        let {
         clientDetail,
@@ -91,7 +91,7 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
        await log.save()
        }
 
-
+    */
 
 
 
