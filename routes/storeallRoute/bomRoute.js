@@ -67,18 +67,32 @@ router.post('/addBom/:companyId',async(req,res)=>{
     try{
         let body=req.body;
         body.companyname=req.params.companyId
+        
+        let id=body.readyStock.id
+        let b=await BillOfMaterial.findOne({companyname:req.params.companyname,"readyStock.id":id})
+
+       if(b){
+        res.send({
+            message:"this bom is already exist",
+            success:false, 
+         })
+
+       }
+       else{
         let billOfMaterial=new BillOfMaterial(body);
+        await billOfMaterial.save();
         //mainting Store
         let readyStock=body.readyStock
         let js={...readyStock,quantity:0}
-
-         let prod= new ProductionStore({readyStock:[js],companyname:req.params.companyId})
-         await prod.save()
-        await billOfMaterial.save();
+        let prod= new ProductionStore({readyStock:[js],companyname:req.params.companyId})
+        await prod.save()
+        //ending
         res.send({
-           message:"data is successfully added",
-           success:true, 
-        })
+            message:"data is successfully added",
+            success:true, 
+         })
+       }
+       
        }
        catch(err){
            res.send({
