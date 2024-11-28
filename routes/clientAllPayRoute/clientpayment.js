@@ -133,7 +133,7 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
 
             await Invoice.updateOne(
                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                {$set:{pendingAmount:f.pendingAmount-invoiceList[i].payingAmount-invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
+                {$set:{pendingAmount:f.pendingAmount-invoiceList[i].paid-invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
             
             )
         }
