@@ -83,7 +83,7 @@ router.post('/addBom/:companyId',async(req,res)=>{
         await billOfMaterial.save();
         //mainting Store
         let readyStock=body.readyStock
-        let js={...readyStock,quantity:0}
+        let js={...readyStock,quantity:0,price:0}
         let prod= new ProductionStore({readyStock:[js],companyname:req.params.companyId})
         await prod.save()
         //ending
