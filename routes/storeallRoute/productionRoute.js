@@ -8,7 +8,6 @@ const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
 router.get('/allMomvement/:companyname',async(req,res)=>{
  try{
- 
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed',companyname:req.params.companyname}},
@@ -19,7 +18,6 @@ router.get('/allMomvement/:companyname',async(req,res)=>{
       priceValues:{ $push:{$toString:"$readyStock.price" }},
       qtyValues:{ $push:{$toString:"$readyStock.quantity" }},
       gtyTypValues:{ $push: {$toString:"$readyStock.qtyType"} },
-      
       status: { $first: "$status" },mov: { $first: "$mov" },
       type: { $first: "move" },
       date: { $first: "$dateCreated" }, 
@@ -175,6 +173,7 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         const f = await PurchaseStore.updateOne(
           {companyname:req.params.companyId,'item.id':id },
           { $inc: { "item.$[elem].quantity": -quantity } },
+          {$set: { "readyStock.$[elem].price": price }},
           { arrayFilters: [{ "elem.id": id }] }
         );
         if (f.matchedCount == 0) {
