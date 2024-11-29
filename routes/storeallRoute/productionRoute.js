@@ -12,7 +12,24 @@ router.get('/allMomvement/:companyname',async(req,res)=>{
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed',companyname:req.params.companyname}},
-    {$group:{_id:"$_id",status: { $first: "$status" },mov: { $first: "$mov" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}}
+    {$group:{_id:"$_id", productNames: { $push: "$readyStock.name" },status: { $first: "$status" },mov: { $first: "$mov" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}},
+    {$project:{
+      _id:1,
+      status:1,
+      mov:1,
+      type:1,
+      date:1,
+      total:1,
+      totalwithoutgst:1,
+      productNames:{
+        $reduce:{
+          input:"$productNames",
+          initialValue:"",
+          in:{$concat:["$$this","|","$$value"]}
+        }
+      }
+
+    }}
   ])
    res.send({
     message: "data is successfully attached",

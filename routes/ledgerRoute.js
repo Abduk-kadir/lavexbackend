@@ -6,6 +6,53 @@ const ClientPayment=require('../modals/clientPayment/clientPayment')
 const Inward=require('../modals/store/inwardModal')
 const SuppPayment=require('../modals/supplierPayment/supPayment')
 router = express.Router();
+
+
+
+router.get('/allClientOutStanding/:id/:companyname',async(req,res)=>{
+
+     try{
+       let data=await Invoice.aggregate([
+         {
+           $match:{
+            'clientDetail.id':req.params.id,
+           'companyname':req.params.companyname
+           }
+         },
+         {
+            
+            $group:{
+               _id:"$clientDetail.id",
+               fcAmount: { $first: "$clientDetail.fcAmount" }, // Get the first fcAmount
+               fcDays: { $first: "$clientDetail.fcDays" },
+               client: { $first: "$clientDetail.client" },
+               totalpending:{$sum:"$pendingAmount"},
+            }
+         }
+      ])
+      res.send({
+         message:"data is successfully fetched",
+         success:true, 
+         data:data
+      })
+
+     }
+     catch(err){
+      res.send({
+         message:err.message,
+         success:false, 
+      })
+
+     }
+
+
+
+})
+
+
+
+
+
 router.get('/allTransaction/:companyname/:cid',async(req,res)=>{
   let finalarr=[];
     try{
