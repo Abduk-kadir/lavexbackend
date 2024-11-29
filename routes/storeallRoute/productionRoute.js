@@ -199,10 +199,13 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
       //updating production store
       for (let i = 0; i < readyStock.length; i++) {
         let { id, quantity,price } = readyStock[i];
+        console.log('price is:',price)
         const f = await ProductionStore.updateOne(
           { companyname:req.params.companyId,'readyStock.id':id},
-          { $inc: { "readyStock.$[elem].quantity": quantity } },
-          {$set: { "readyStock.$[elem].price": price }},
+          { 
+            $inc: { "readyStock.$[elem].quantity": quantity },
+            $set: { "readyStock.$[elem].price": price }
+          },
           { arrayFilters: [{ "elem.id": id }] }
         );
         if (f.matchedCount == 0) {
