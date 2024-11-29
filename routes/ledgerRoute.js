@@ -9,14 +9,14 @@ router = express.Router();
 
 
 
-router.get('/allClientOutStanding/:id/:companyname',async(req,res)=>{
+router.get('/allClientOutStanding/:companyname',async(req,res)=>{
 
      try{
        let data=await Invoice.aggregate([
          {
            $match:{
-            'clientDetail.id':req.params.id,
-           'companyname':req.params.companyname
+           
+            'companyname':req.params.companyname
            }
          },
          {
@@ -26,6 +26,7 @@ router.get('/allClientOutStanding/:id/:companyname',async(req,res)=>{
                fcAmount: { $first: "$clientDetail.fcAmount" }, // Get the first fcAmount
                fcDays: { $first: "$clientDetail.fcDays" },
                client: { $first: "$clientDetail.client" },
+               branch:{ $first: "$clientDetail.Branch" },
                totalpending:{$sum:"$pendingAmount"},
             }
          }
@@ -241,11 +242,6 @@ router.get('/allTransactionSupp/:companyname/:sid',async(req,res)=>{
 
       }
     },[])
-
-
-
-
-
 
 
 

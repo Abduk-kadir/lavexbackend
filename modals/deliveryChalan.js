@@ -53,6 +53,9 @@ const deliverySchema=mongoose.Schema({
       type:String,
      
      },
+     branch:{
+      type:String,
+     },
      
      scAmount:{
          type:Number,

@@ -67,6 +67,9 @@ const creditNoteS=mongoose.Schema({
       type:String,
      
      },
+     branch:{
+      type:String
+     },
       
      shipTo:{
          type:String,
