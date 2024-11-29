@@ -12,7 +12,19 @@ router.get('/allMomvement/:companyname',async(req,res)=>{
  let data= await Production.aggregate([
     {$unwind:{path:"$readyStock"}},
     {$match:{status:'confirmed',companyname:req.params.companyname}},
-    {$group:{_id:"$_id", productNames: { $push: "$readyStock.name" },status: { $first: "$status" },mov: { $first: "$mov" },type: { $first: "move" },date: { $first: "$dateCreated" },  total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}},
+    {$group:
+      {_id:"$_id", 
+      productNames: { $push: "$readyStock.name" },
+      hsnNames:{ $push: {$toString:"$readyStock.hsnCode"} },
+      priceValues:{ $push:{$toString:"$readyStock.price" }},
+      qtyValues:{ $push:{$toString:"$readyStock.quantity" }},
+      gtyTypValues:{ $push: {$toString:"$readyStock.qtyType"} },
+      
+      status: { $first: "$status" },mov: { $first: "$mov" },
+      type: { $first: "move" },
+      date: { $first: "$dateCreated" }, 
+      total: {$sum:{$multiply: ["$readyStock.price","$readyStock.quantity",{ $add: [1, { $divide: ["$readyStock.gst", 100] }] }]}},
+      totalwithoutgst:{$sum:{ $multiply: [ "$readyStock.price", "$readyStock.quantity" ] }}}},
     {$project:{
       _id:1,
       status:1,
@@ -27,9 +39,40 @@ router.get('/allMomvement/:companyname',async(req,res)=>{
           initialValue:"",
           in:{$concat:["$$this","|","$$value"]}
         }
-      }
+      },
+      hsnNames:{
+        $reduce:{
+          input:"$hsnNames",
+          initialValue:"",
+          in:{$concat:["$$this","|","$$value"]}
+        }
+      },
+      priceValues:{
+        $reduce:{
+          input:"$priceValues",
+          initialValue:"",
+          in:{$concat:["$$this","|","$$value"]}
+        }
+      },
+      qtyValues:{
+        $reduce:{
+          input:"$qtyValues",
+          initialValue:"",
+          in:{$concat:["$$this","|","$$value"]}
+        }
+      },
+      gtyTypValues:{
+        $reduce:{
+          input:"$gtyTypValues",
+          initialValue:"",
+          in:{$concat:["$$this","|","$$value"]}
+        }
+      },
+      
+      
 
-    }}
+    }},
+    
   ])
    res.send({
     message: "data is successfully attached",
