@@ -65,10 +65,12 @@ const invoiceSchema=mongoose.Schema({
      },
      stateCode:{
       type:String,
+      
      
      },
      branch:{
       type:String,
+      required:[true,'branch is required']
      },
       
      shipTo:{
