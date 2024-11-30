@@ -55,8 +55,8 @@ router.get('/allClientOutStanding/:companyname',async(req,res)=>{
        let data=await Invoice.aggregate([
          {
            $match:{
-           
-            'companyname':req.params.companyname
+            'companyname':req.params.companyname,
+            'pendingAmount':{$gte:0}
            }
          },
          {
@@ -68,6 +68,12 @@ router.get('/allClientOutStanding/:companyname',async(req,res)=>{
                client: { $first: "$clientDetail.client" },
                branch:{ $first: "$clientDetail.Branch" },
                totalpending:{$sum:"$pendingAmount"},
+               daysSinceFristInvoie:{
+                  $first:{ $subtract: [
+                     new Date(), // current date
+                     { $dateFromString: { dateString: "$firstInvoiceDate" } } 
+                   ] }
+               }
             }
          }
       ])

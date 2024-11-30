@@ -108,7 +108,11 @@ const invardSchema=mongoose.Schema({
         quantity:{
          type:Number,
          required:[true,'quantity is required']
-        }
+        },
+        lowqty:{
+         type:Number,
+         required:[true,'low quantity is required']
+       },
    
      }],
      status:{
