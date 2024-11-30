@@ -6,6 +6,58 @@ const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
+
+router.get('/alllowProduction',async(req,res)=>{
+    try{
+
+      let data=await ProductionStore.find({$exp:{$lte:["readyStock.quantity","readyStock.lowqty"]}})
+      res.send({
+        message:'all low ready are fetched success fully',
+        success:true,
+        data:data
+      })
+
+    }
+    catch(err){
+      res.send({
+        message:err.message,
+        success:false,
+        data:data
+      })
+
+    }
+
+
+
+})
+
+
+router.get('/alllowProduction',async(req,res)=>{
+  try{
+
+    let data=await PurchaseStore.find({$exp:{$lte:["item.quantity","item.lowqty"]}})
+    res.send({
+      message:'all low ready are fetched success fully',
+      success:true,
+      data:data
+    })
+
+  }
+  catch(err){
+    res.send({
+      message:err.message,
+      success:false,
+      data:data
+    })
+
+  }
+
+
+
+})
+
+
+
 router.get('/allMomvement/:companyname',async(req,res)=>{
  try{
  let data= await Production.aggregate([
