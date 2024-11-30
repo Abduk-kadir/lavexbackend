@@ -48,9 +48,7 @@ router = express.Router();
 })
 */
 
-
 router.get('/allClientOutStanding/:companyname',async(req,res)=>{
-
      try{
        let data=await Invoice.aggregate([
          {
@@ -68,12 +66,19 @@ router.get('/allClientOutStanding/:companyname',async(req,res)=>{
                client: { $first: "$clientDetail.client" },
                branch:{ $first: "$clientDetail.Branch" },
                totalpending:{$sum:"$pendingAmount"},
-               daysSinceFristInvoie:{
-                  $first:{ $subtract: [
-                     new Date(), // current date
-                     { $dateFromString: { dateString: "$firstInvoiceDate" } } 
-                   ] }
-               }
+               daysSinceFirstInvoice: {
+                  $first: {
+                      $divide: [
+                          { 
+                              $subtract: [
+                                  new Date(), 
+                                  { $dateFromString: { dateString: "$invoiceDetail.invoiceDate" } }
+                              ]
+                          },
+                          1000 * 60 * 60 * 24 // Convert milliseconds to days
+                      ]
+                  }
+              }
             }
          }
       ])
