@@ -32,7 +32,7 @@ router.get('/allSuppOutStanding/:companyname',async(req,res)=>{
                                { $dateFromString: { dateString: "$dateCreated" } }
                            ]
                        },
-                       1000 * 60 * 60 * 24 // Convert milliseconds to days
+                       1000 * 60 * 60 * 24
                    ]
                }
            }
