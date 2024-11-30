@@ -50,7 +50,7 @@ router.get('/allLowProduction',async(req,res)=>{
    
 ]);
   let ready=data.length>0?data[0].readyStock:[]
-   let inward=data2.length>0?data2[0]:[]
+   let inward=data2.length>0?data2[0].item:[]
   let finalarr=ready.concat(inward)
       res.send({
         message:'all low ready are fetched success fully',
