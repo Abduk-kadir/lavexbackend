@@ -7,14 +7,53 @@ const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
 
-router.get('/alllowProduction',async(req,res)=>{
+
+router.get('/allLowProduction',async(req,res)=>{
     try{
 
-      let data=await ProductionStore.find({$exp:{$lte:["readyStock.quantity","readyStock.lowqty"]}})
+    let data = await ProductionStore.aggregate([
+      {
+          $unwind: "$readyStock"
+      },
+      {
+          $match: {
+              $expr: {
+                  $lte: ["$readyStock.quantity", "$readyStock.lowqty"]
+              }
+          }
+      },
+      {
+          $group: {
+              _id: null, 
+              readyStock: { $push: "$readyStock" } 
+          }
+      }
+  ]);
+  let data2 = await PurchaseStore.aggregate([
+    {
+        $unwind: "$item"
+    },
+    {
+        $match: {
+            $expr: {
+                $lte: ["$item.quantity", "$item.lowqty"]
+            }
+        }
+    },
+    {
+        $group: {
+            _id: null, 
+            item: { $push: "$item" } 
+        }
+    }
+]);
+  let ready=data.length>0?data[0].readyStock:[]
+    let inward=data2.length>0?data2[0]:[]
+  let finalarr=ready.concat(inward)
       res.send({
         message:'all low ready are fetched success fully',
         success:true,
-        data:data
+        data:finalarr
       })
 
     }
@@ -22,7 +61,7 @@ router.get('/alllowProduction',async(req,res)=>{
       res.send({
         message:err.message,
         success:false,
-        data:data
+        
       })
 
     }
@@ -32,10 +71,13 @@ router.get('/alllowProduction',async(req,res)=>{
 })
 
 
-router.get('/alllowProduction',async(req,res)=>{
+router.get('/allLowInward',async(req,res)=>{
   try{
-
-    let data=await PurchaseStore.find({$exp:{$lte:["item.quantity","item.lowqty"]}})
+    let data = await PurchaseStore.find({
+      $expr: {
+          $lte: ["$readyStock.quantity", "$readyStock.lowqty"]
+      }
+  });
     res.send({
       message:'all low ready are fetched success fully',
       success:true,
