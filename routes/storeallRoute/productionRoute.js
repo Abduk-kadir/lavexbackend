@@ -267,6 +267,8 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
       //updating production store
       for (let i = 0; i < readyStock.length; i++) {
         let { id, quantity,price } = readyStock[i];
+        console.log('id',id)
+        console.log('quantity',quantity)
         console.log('price is:',price)
         const f = await ProductionStore.updateOne(
           { companyname:req.params.companyId,'readyStock.id':id},
