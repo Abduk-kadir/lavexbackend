@@ -8,10 +8,11 @@ const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
 
 
-router.get('/allLowProduction',async(req,res)=>{
+router.get('/allLowProduction/:companyname',async(req,res)=>{
     try{
-
+    const companyname = req.params.companyname;
     let data = await ProductionStore.aggregate([
+      { $match: { companyname } },
       {
           $unwind: "$readyStock"
       },
@@ -31,6 +32,7 @@ router.get('/allLowProduction',async(req,res)=>{
   ]);
   
   let data2 = await PurchaseStore.aggregate([
+    { $match: { companyname } },
     {
         $unwind: "$item"
     },
