@@ -20,7 +20,7 @@ router.get('/allSuppOutStanding/:companyname',async(req,res)=>{
        {
           
           $group:{
-             _id:"_id",
+             _id:"$_id",
              supplier: { $first: "$name" },
              totalpending:{$sum:"$pendingAmount"},
              daysSinceFirstInvoice: {
