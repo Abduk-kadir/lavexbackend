@@ -29,6 +29,7 @@ router.get('/allLowProduction',async(req,res)=>{
           }
       }
   ]);
+  
   let data2 = await PurchaseStore.aggregate([
     {
         $unwind: "$item"
@@ -41,19 +42,20 @@ router.get('/allLowProduction',async(req,res)=>{
         }
     },
     {
-        $group: {
-            _id: null, 
-            item: { $push: "$item" } 
-        }
-    }
+      $group: {
+          _id: null, 
+          item: { $push: "$item" } 
+      }
+  }
+   
 ]);
-  let ready=data.length>0?data[0].readyStock:[]
-    let inward=data2.length>0?data2[0]:[]
-  let finalarr=ready.concat(inward)
+  //let ready=data.length>0?data[0].readyStock:[]
+  //  let inward=data2.length>0?data2[0]:[]
+  //let finalarr=ready.concat(inward)
       res.send({
         message:'all low ready are fetched success fully',
         success:true,
-        data:finalarr
+        data:data2
       })
 
     }
@@ -69,36 +71,6 @@ router.get('/allLowProduction',async(req,res)=>{
 
 
 })
-
-
-router.get('/allLowInward',async(req,res)=>{
-  try{
-    let data = await PurchaseStore.find({
-      $expr: {
-          $lte: ["$readyStock.quantity", "$readyStock.lowqty"]
-      }
-  });
-    res.send({
-      message:'all low ready are fetched success fully',
-      success:true,
-      data:data
-    })
-
-  }
-  catch(err){
-    res.send({
-      message:err.message,
-      success:false,
-      data:data
-    })
-
-  }
-
-
-
-})
-
-
 
 router.get('/allMomvement/:companyname',async(req,res)=>{
  try{

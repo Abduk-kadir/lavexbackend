@@ -32,7 +32,11 @@ const PurchaseSchema=mongoose.Schema({
            type:Number,
            required:[true,'price is required'],
            
-        }
+        },
+        lowqty:{
+         type:Number,
+         required:[true,'low quantity is require']
+       },
       
      }]
 
