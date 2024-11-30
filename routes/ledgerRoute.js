@@ -6,25 +6,36 @@ const ClientPayment=require('../modals/clientPayment/clientPayment')
 const Inward=require('../modals/store/inwardModal')
 const SuppPayment=require('../modals/supplierPayment/supPayment')
 router = express.Router();
-/*router.get('/allSuppOutStanding/:companyname',async(req,res)=>{
+router.get('/allSuppOutStanding/:companyname',async(req,res)=>{
 
    try{
      let data=await Inward.aggregate([
        {
          $match:{
-         
-          'companyname':req.params.companyname
+          'companyname':req.params.companyname,
+          'pendingAmount':{$gte:0},
+          'status':'confirmed'
          }
        },
        {
           
           $group:{
-             _id:"$clientDetail.id",
-             fcAmount: { $first: "$clientDetail.fcAmount" }, // Get the first fcAmount
-             fcDays: { $first: "$clientDetail.fcDays" },
-             client: { $first: "$clientDetail.client" },
-             branch:{ $first: "$clientDetail.Branch" },
+             _id:"_id",
+             supplier: { $first: "$name" },
              totalpending:{$sum:"$pendingAmount"},
+             daysSinceFirstInvoice: {
+               $first: {
+                   $divide: [
+                       { 
+                           $subtract: [
+                               new Date(), 
+                               { $dateFromString: { dateString: "$dateCreated" } }
+                           ]
+                       },
+                       1000 * 60 * 60 * 24 // Convert milliseconds to days
+                   ]
+               }
+           }
           }
        }
     ])
@@ -46,7 +57,8 @@ router = express.Router();
 
 
 })
-*/
+
+
 
 router.get('/allClientOutStanding/:companyname',async(req,res)=>{
      try{
