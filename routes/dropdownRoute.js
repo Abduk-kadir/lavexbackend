@@ -12,7 +12,7 @@ const Bank=require('../modals/drop/bankName')
 const PaymentMethod=require('../modals/drop/payMethod')
 const SalesMan=require('../modals/drop/salesMan')
 
-router.put('/deleteDropdown/:id/:model',async(req,res)=>{
+router.delete('/deleteDropdown/:id/:model',async(req,res)=>{
   let m=req.params.model
   try{ 
    f= await m.findByIdAndDelete(req.params.id)
