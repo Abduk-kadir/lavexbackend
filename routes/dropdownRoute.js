@@ -12,11 +12,14 @@ const Bank = require('../modals/drop/bankName')
 const PaymentMethod = require('../modals/drop/payMethod')
 const SalesMan = require('../modals/drop/salesMan')
 
+router.delete('/hi',async(req,res)=>{
+  res.send('arman')
+})
 
-router.delete('/deleteDropdown/:id/:model', async (req, res) => {
-  let { id, model } = req.params
+router.delete('/deleteDropdown/:id/:m', async (req, res) => {
+  let { id, m } = req.params
   try {
-    switch (req.params.model) {
+    switch (m) {
       case 'Brand':
         await Brand.findByIdAndDelete(req.params.id)
         break;
@@ -48,6 +51,10 @@ router.delete('/deleteDropdown/:id/:model', async (req, res) => {
         await Bank.findByIdAndDelete(req.params.id)
         break;
     }
+    res.send({
+      message:'deleted succesfully',
+      success: true,
+    })
   }
   catch (err) {
     res.send({
