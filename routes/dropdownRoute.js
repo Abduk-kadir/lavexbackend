@@ -11,6 +11,30 @@ const StatusDropdown = require('../modals/drop/stockStatus');
 const Bank=require('../modals/drop/bankName')
 const PaymentMethod=require('../modals/drop/payMethod')
 const SalesMan=require('../modals/drop/salesMan')
+
+router.put('/deleteDropdown/:id/:model',async(req,res)=>{
+  let m=req.params.model
+  try{ 
+   f= await m.findByIdAndDelete(req.params.id)
+    res.send({
+      message:" deleted successfully",
+      success:true,
+    })
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+        })
+
+  }
+
+})
+
+
+
+
+
 router.get('/allDropdown',async(req,res)=>{
     try{
        let brandDrop=await Brand.find()
