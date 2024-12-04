@@ -4,6 +4,7 @@ const Inward = require('../../modals/store/inwardModal');
 const PurchaseStore = require('../../modals/store/purchaseStore');
 const authMidd = require('..//../middleware/authmiddleware')
 let SupplierPayment = require('../../modals/supplierPayment/supPayment')
+let Logs=require('../../modals/logs/logs')
 
 router.put('/changestatus/:companyId/:id', async (req, res) => {
   let parr = []
@@ -162,8 +163,6 @@ router.post('/addinward3/:companyname', async (req, res) => {
     body.baseAmount = baseAmount
 
     let ind = await Inward.find({ companyname: req.params.companyname, sid: body.sid })
-    // console.log('invoice no:',ind.suplierInvoiceNo)
-    // console.log('invoice no:',body.suplierInvoiceNo)
     if (ind[ind.length - 1]?.suplierInvoiceNo == body?.suplierInvoiceNo) {
       res.send({
         message: "invoice number can not be same",
@@ -173,6 +172,20 @@ router.post('/addinward3/:companyname', async (req, res) => {
     else {
       let inward = new Inward(body);
       await inward.save();
+     //mainting log
+     let itmnamearr=item.map(elem=>elem.name)
+     let itmqtyarr=item.map(elem=>elem.quantity)
+     let str=`inward come from supplier ${body.name} and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+     let j={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+     console.log(j)
+     let log=new Logs(j) 
+     await log.save()
+    //here ending
+
+
+
+
+
 
       res.send({
         message: "data is successfully added",

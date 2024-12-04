@@ -8,6 +8,7 @@ router = express.Router()
 router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await CreditNote.findByIdAndDelete(req.params.id)
+  //mainting log
   let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
   let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
   let deciedInvoice=f.onAccount?'invoice related to this credit':'item'
@@ -15,6 +16,20 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"CreditNote"}
   let log=new Logs(j) 
   await log.save()
+  //end
+ //mainting store
+ if(f.onAccount==false){
+  for (let i = 0; i <f.item.length; i++) {
+    let { id, quantity } = f.item[i];
+    const f1 = await ProductionStore.updateOne(
+      { companyname:req.params.companyname, 'readyStock.id': id },
+      { $inc: { "readyStock.$[elem].quantity":-quantity } },
+      { arrayFilters: [{ "elem.id": id }] }
+    );
+  
+  }
+ }
+
   res.send({
     message:"data is successfully deleted",
     success:true,
