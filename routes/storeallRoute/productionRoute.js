@@ -353,7 +353,7 @@ router.post("/production3/:companyname", async (req, res) => {
  //mainting log
  let itmnamearr=readyStock.map(elem=>elem.name)
  let itmqtyarr=readyStock.map(elem=>elem.quantity)
- let str=`inward come from supplier ${body.name} and item is ${readyStock.join(',')} and quantity is ${readyStock.join(',')} `
+ let str=` Production are ${itmnamearr.join(',')} and quantity ate ${itmqtyarr.join(',')} `
  let j={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
  console.log(j)
  let log=new Logs(j) 
