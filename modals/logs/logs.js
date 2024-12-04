@@ -10,7 +10,7 @@ const LogitemmasterSchema = mongoose.Schema({
     },
     actionType: {
         type: String,
-        enum: ['UPDATE', 'DELETE','CREATE'],
+        enum: ['UPDATE', 'DELETE','CREATE','CONFIRM','CANCEL','PENDING'],
         
     },
     changedBy: {

@@ -15,6 +15,11 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
     let preStatus = prod.status
     console.log('previsous status:', preStatus)
     console.log('current status', status)
+    //this code for mainting log
+     let itmnamearr=prod.item.map(elem=>elem.name)
+     let itmqtyarr=prod.item.map(elem=>elem.quantity)
+     let str=`inward come from supplier ${body.name} and item are ${itmnamearr.join(',')} and quantity are ${itmqtyarr.join(',')}`
+     //ending
     if (status == 'canceled') {
       if (preStatus == 'pending') {
         // await Inward.deleteOne({companyname:req.params.companyId,_id:req.params.id})
@@ -40,6 +45,13 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
 
 
       }
+      //mainting log
+      str+=' are canceled'
+      let j={companyname:req.params.companyname,itemId:prod.max,actionType:'CANCEL',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+      console.log(j)
+      let log=new Logs(j) 
+      await log.save()
+      //endig
     }
 
 
@@ -62,6 +74,11 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
       }
 
       //ending
+      str+=' are pending'
+      let j={companyname:req.params.companyname,itemId:prod.max,actionType:'PENDING',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+      console.log(j)
+      let log=new Logs(j) 
+      await log.save()
 
 
 
@@ -97,6 +114,14 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
 
       }
       //ending
+
+       //mainting log
+      str+=' are confrimed'
+     let j={companyname:req.params.companyname,itemId:prod.max,actionType:'CONFIRM',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+     console.log(j)
+     let log=new Logs(j) 
+     await log.save()
+    //here ending
 
     }
     res.send({
