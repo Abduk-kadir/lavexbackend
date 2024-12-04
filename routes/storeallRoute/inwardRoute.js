@@ -18,7 +18,7 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
     //this code for mainting log
      let itmnamearr=prod.item.map(elem=>elem.name)
      let itmqtyarr=prod.item.map(elem=>elem.quantity)
-     let str=`inward come from supplier ${body.name} and item are ${itmnamearr.join(',')} and quantity are ${itmqtyarr.join(',')}`
+     let str=`inward come from supplier ${prod.name} and item are ${itmnamearr.join(',')} and quantity are ${itmqtyarr.join(',')}`
      //ending
     if (status == 'canceled') {
       if (preStatus == 'pending') {
