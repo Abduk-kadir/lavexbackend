@@ -47,7 +47,7 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
       }
       //mainting log
       str+=' are canceled'
-      let j={companyname:req.params.companyname,itemId:prod.max,actionType:'CANCEL',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+      let j={companyname:req.params.companyId,itemId:prod.max,actionType:'CANCEL',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
       console.log(j)
       let log=new Logs(j) 
       await log.save()
@@ -75,7 +75,7 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
 
       //ending
       str+=' are pending'
-      let j={companyname:req.params.companyname,itemId:prod.max,actionType:'PENDING',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+      let j={companyname:req.params.companyId,itemId:prod.max,actionType:'PENDING',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
       console.log(j)
       let log=new Logs(j) 
       await log.save()
@@ -117,7 +117,7 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
 
        //mainting log
       str+=' are confrimed'
-     let j={companyname:req.params.companyname,itemId:prod.max,actionType:'CONFIRM',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+     let j={companyname:req.params.companyId,itemId:prod.max,actionType:'CONFIRM',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
      console.log(j)
      let log=new Logs(j) 
      await log.save()

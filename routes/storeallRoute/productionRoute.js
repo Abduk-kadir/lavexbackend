@@ -6,6 +6,7 @@ const PurchaseStore = require("../../modals/store/purchaseStore");
 const {ProductionStore} = require("../../modals/store/productionStore");
 const production = require("../../modals/store/production");
 const authMidd=require('../../middleware/authmiddleware')
+const Logs=require('../../modals/logs/logs')
 
 
 router.get('/allLowProduction/:companyname',async(req,res)=>{
@@ -163,6 +164,11 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
     let status = req.body.status;
     let prod = await Production.findOne({companyname:req.params.companyId, _id: req.params.id });
     console.log(prod)
+    //this code for mainting log
+    let itmnamearr=prod.readyStock.map(elem=>elem.name)
+    let itmqtyarr=prod.readyStock.map(elem=>elem.quantity)
+    let str=`inward come from supplier ${prod.name} and item are ${itmnamearr.join(',')} and quantity are ${itmqtyarr.join(',')}`
+    //ending
     let result = await Production.updateOne(
       {companyname:req.params.companyId,_id: req.params.id },
       { $set: { status: req.body.status } }
@@ -201,6 +207,13 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
        // await Production.deleteOne({companyname:req.params.companyId, _id: req.params.id });
        
       }
+      //mainting
+      str+=' are canceled'
+      let j={companyname:req.params.companyId,itemId:prod.max,actionType:'CANCEL',changedBy:"ABDUL",changeDetails:str,model:"Production"}
+      console.log(j)
+      let log=new Logs(j) 
+      await log.save()
+      //
     }
 
     if (status == "pending" && preStatus == "confirmed") {
@@ -227,6 +240,13 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         );
        
       }
+       //mainting
+       str+=' are pending'
+       let j={companyname:req.params.companyId,itemId:prod.max,actionType:'PENDING',changedBy:"ABDUL",changeDetails:str,model:"Production"}
+       console.log(j)
+       let log=new Logs(j) 
+       await log.save()
+       //
 
       //let rs= await ProductionStore.updateMany({},{$pull:{readyStock:{qty:0}}}) this may use
       //let rs2= await ProductionStore.deleteMany({ readyStock: { $size: 0 } }); this may use
@@ -289,6 +309,13 @@ router.put("/changestatus/:companyId/:id", async (req, res) => {
         await product.save();
       }
       //ending
+       //mainting
+       str+=' are confirmed'
+       let j={companyname:req.params.companyId,itemId:prod.max,actionType:'CONFIRM',changedBy:"ABDUL",changeDetails:str,model:"Production"}
+       console.log(j)
+       let log=new Logs(j) 
+       await log.save()
+       //
     }
     res.send({
       message: "status is successfully update",
@@ -323,6 +350,18 @@ router.post("/production3/:companyname", async (req, res) => {
 
     let production = Production(body);
     await production.save();
+ //mainting log
+ let itmnamearr=readyStock.map(elem=>elem.name)
+ let itmqtyarr=readyStock.map(elem=>elem.quantity)
+ let str=`inward come from supplier ${body.name} and item is ${readyStock.join(',')} and quantity is ${readyStock.join(',')} `
+ let j={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Inward"}
+ console.log(j)
+ let log=new Logs(j) 
+ await log.save()
+//here ending
+
+
+
     res.send({
       message: "data is added success fully added",
       success: true,
