@@ -53,7 +53,7 @@ const registrationSchema=mongoose.Schema({
                     {
                         pagename:{
                             type:String,
-                            default:"invice"
+                          
                         },
                         access:{
                             type:[String],
@@ -68,15 +68,15 @@ const registrationSchema=mongoose.Schema({
       ],
       default:[
       {
-        companyname:"armancompany",
+        companyname:"",
         pages:[
             {
-                pagename:"invoice",
-                access:['put','delete']
+                pagename:"",
+                access:['','']
             },
             {
-                pagename:"itemmaster",
-                access:['add','delete']
+                pagename:"",
+                access:['','']
             }
         ]
       }

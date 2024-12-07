@@ -29,6 +29,7 @@ router.get('/allUsers',async(req,res)=>{
 router.patch('/givePermission/:id',async(req,res)=>{
     let {body}=req;
     let {permission}=body
+   
    let id=req.params.id
    let f= await Registration.findOne({_id:id})
    if(f){

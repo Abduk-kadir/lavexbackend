@@ -18,15 +18,16 @@ module.exports=(req,res,next)=>{
                })
             }
             else{
-                
+                console.log(data)
                 let permission=data.permission.find((elem)=>elem.companyname==req.params.companyname)
-                let page=permission.pages.find(elem=>elem=='invoice')
-                console.log(permission.access)
-                let access=permission.access.find(elem=>elem=='delete')
-                console.log(page,access)
+                let page=permission.pages.find(elem=>elem.pagename=='invoice')
+                let accessarr=page.access
+                let access=accessarr.find(elem=>elem=='delete')
+               
+                console.log(page)
                 if(page){
-                   if(access){
                     console.log(access)
+                   if(access){
                     next()
                    }
                    else{
