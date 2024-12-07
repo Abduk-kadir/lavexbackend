@@ -20,11 +20,10 @@ module.exports=(req,res,next)=>{
             else{
                 
                 let permission=data.permission.find((elem)=>elem.companyname==req.params.companyname)
-                let page=permission.pages.find(elem=>elem=='invoice')
-                console.log(permission.access)
-                let access=permission.access.find(elem=>elem=='put')
-                console.log(page,access)
+                let page=permission.pages.find(elem=>elem.pagename=='invoice')
                 if(page){
+                    let accessarr=page.access
+                    let access=accessarr.find(elem=>elem=='put')
                    if(access){
                     console.log(access)
                     next()

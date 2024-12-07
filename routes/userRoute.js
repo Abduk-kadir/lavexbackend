@@ -29,7 +29,6 @@ router.get('/allUsers',async(req,res)=>{
 router.patch('/givePermission/:id',async(req,res)=>{
     let {body}=req;
     let {permission}=body
-   
    let id=req.params.id
    let f= await Registration.findOne({_id:id})
    if(f){
@@ -107,7 +106,12 @@ router.post('/login',async(req,res)=>{
         res.send({
             message:'user is successfully login',
             success:true,
-            token:token
+            details:{
+                token:token,
+                user:user.id,
+                permission:user.permission
+
+            }
         })
    
      }
