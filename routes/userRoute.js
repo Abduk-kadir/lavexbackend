@@ -11,6 +11,7 @@ router.get('/allUsers',async(req,res)=>{
          res.send({
             message:'all users fetched successfull',
             success:true,
+            data:data
            
         })
         
