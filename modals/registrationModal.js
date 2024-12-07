@@ -38,6 +38,56 @@ const registrationSchema=mongoose.Schema({
           },
         required:[true]  
     },
+    permission:{
+      type:[
+        
+          {
+              companyname: {
+                  type: String,
+                
+                 
+              },
+             
+              pages: {
+                 type:[
+                    {
+                        pagename:{
+                            type:String,
+                            default:"invice"
+                        },
+                        access:{
+                            type:[String],
+
+                        }
+                    }
+                 ],
+               
+                
+              },
+          },
+      ],
+      default:[
+      {
+        companyname:"armancompany",
+        pages:[
+            {
+                pagename:"invoice",
+                access:['put','delete']
+            },
+            {
+                pagename:"itemmaster",
+                access:['add','delete']
+            }
+        ]
+      }
+
+
+      ]
+     
+    },
+
+
+
     isAdmin:{
       type:Boolean,
       default:false

@@ -5,6 +5,56 @@ const router=express.Router()
 const Registration=require('../modals/registrationModal')
 const bcrypt = require('bcryptjs');
 
+router.get('/allUsers',async(req,res)=>{
+    try{
+         let data=await Registration.find()
+         res.send({
+            message:'all users fetched successfull',
+            success:true,
+           
+        })
+        
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+           
+        })
+
+    }
+})
+
+router.patch('/givePermission/:id',async(req,res)=>{
+    let {body}=req;
+    let {permission}=body
+   let id=req.params.id
+   let f= await Registration.findOne({_id:id})
+   if(f){
+      await Registration.updateOne({_id:id},{$set:{permission:permission}})
+      res.send({
+        message:'permission is given successfully',
+        success:true,
+       
+    })
+   }
+   else{
+    res.send({
+        message:'permission is not set successfully',
+        success:false,
+       
+    })
+
+   }
+
+
+})
+
+
+
+
+
+
 router.post('/register',async(req,res)=>{
     let {body}=req;
    let {email,password}=body
@@ -46,10 +96,12 @@ router.post('/register',async(req,res)=>{
 router.post('/login',async(req,res)=>{
     try{
     let user=await Registration.findOne({email:req.body.email})
+   
     if(user){
      let fpass=await bcrypt.compare(req.body.password,user.password)
      if(fpass){
-     let token=jsonwebToken.sign({role:user.isAdmin},process.env.secretKey,{expiresIn:'1w'})
+     console.log(user.permission)
+     let token=jsonwebToken.sign({role:user.isAdmin,permission:user.permission},process.env.secretKey,{expiresIn:'1w'})
         res.send({
             message:'user is successfully login',
             success:true,

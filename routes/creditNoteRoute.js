@@ -5,7 +5,11 @@ const Company = require('../modals/companyModal')
 const SisterStock = require('../modals/sisterStock')
 const Logs=require('../modals/logs/logs')
 router = express.Router()
-router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
+const invoiceDelMidd=require('../middleware/invoiceDelMidd')
+const invoiceAddMidd=require('../middleware/invoiceAddMidd')
+const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+
+router.delete('/creditNoteDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
   try{
   let f=await CreditNote.findByIdAndDelete(req.params.id)
   //mainting log
@@ -44,7 +48,7 @@ router.delete('/creditNoteDelete/:id/:companyname',async(req,res)=>{
   }
   
 })
-router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
+router.put('/creditNoteUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
   try{
   let body=req.body  
      let rs=await CreditNote.findById(req.params.id)
@@ -126,7 +130,7 @@ router.put('/creditNoteUpdate/:id/:companyname',async(req,res)=>{
 
 })
 
-router.post('/creditNoteCreate', async (req, res) => {
+router.post('/creditNoteCreate',invoiceAddMidd, async (req, res) => {
   try {
     let { type, role } = req.query;
     let js = { ...req.body, companyname: type }

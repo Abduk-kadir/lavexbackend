@@ -8,8 +8,14 @@ const SisterStore = require('../modals/sisterStore');
 const SisterStock = require('../modals/sisterStock')
 const Supplier = require('../modals/supplierModal');
 const ClientPayment = require('../modals/clientPayment/clientPayment');
-const Logs=require('../modals/logs/logs')
-router.delete('/invoice/:id/:companyname',async(req,res)=>{
+const Logs=require('../modals/logs/logs');
+
+
+const invoiceDelMidd=require('../middleware/invoiceDelMidd')
+const invoiceAddMidd=require('../middleware/invoiceAddMidd')
+const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+
+router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
 
@@ -45,7 +51,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
     let itmqtyarr=rs.item.map(elem=>elem.quantity)
     let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
     let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
-    console.log(j)
+    
     let log=new Logs(j) 
     await log.save()
     //ending
@@ -70,7 +76,7 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
 })
 
 
-router.put('/invoice/:id/:companyname',async(req,res)=>{
+router.put('/invoice/:id/:companyname',invoiceUpMidd,async(req,res)=>{
   let body=req.body
   let parr=[]
   try{
@@ -243,7 +249,7 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate', async (req, res) => {
+router.post('/invoiceCreate',invoiceAddMidd, async (req, res) => {
   let { type, role } = req.query;
   let { item } = req.body
   let js = { ...req.body, companyname: type }
