@@ -16,9 +16,22 @@ router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   let deciedInvoice=f.onAccount?'invoice related to this debit':'item'
   let str=`Debit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
   let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"DebitNote"}
-  
   let log=new Logs(j) 
   await log.save()
+  //mainting store
+ if(f.onAccount==false){
+  for (let i = 0; i <f.item.length; i++) {
+    let { id, quantity } = f.item[i];
+    const f1 = await ProductionStore.updateOne(
+      { companyname:req.params.companyname, 'readyStock.id': id },
+      { $inc: { "readyStock.$[elem].quantity":-quantity } },
+      { arrayFilters: [{ "elem.id": id }] }
+    );
+  
+  }
+ }
+
+
   res.send({
     message:"data is successfully deleted",
     success:true,
@@ -35,7 +48,30 @@ router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
 })
 router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
+  let rs=await DebitNote.findById(req.params.id)
   let f=await DebitNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
+  if(rs.onAccount==false){
+    for (let i = 0; i <rs.item.length; i++) {
+      let { id, quantity } = rs.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    
+    }
+   }
+    if(body.onAccount==false){
+    for (let i = 0; i <body.item.length; i++) {
+      let { id, quantity } = body.item[i];
+      const f2 = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity":-quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+     
+    }
+    }
   res.send({
     message:"data is successfully updated",
     success:true,
