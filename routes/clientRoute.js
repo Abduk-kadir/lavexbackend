@@ -75,7 +75,7 @@ router.put('/updateClient/:id',async(req,res)=>{
         if(p||d||c||i){
             let c=await Client.findById(req.params.id)
 
-            if(c.gstNumber==body.gstNumber&&c.client==body.client&&c.grade==body.grade&&c.panNumber==body.panNumber&&c.fcAmount==body.fcAmount&&c.scAmount==body.scAmount&&c.fcDays==body.fcDays&&c.scDays==body.scDays)
+            if(c.gstNumber!=body.gstNumber&&c.client!=body.client&&c.grade!=body.grade&&c.panNumber!=body.panNumber&&c.fcAmount!=body.fcAmount&&c.scAmount!=body.scAmount&&c.fcDays!=body.fcDays&&c.scDays!=body.scDays)
             {
                 res.send({
                     message:"client can not update it is used invoices",
