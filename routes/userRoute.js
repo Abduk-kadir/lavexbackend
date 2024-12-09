@@ -1,10 +1,8 @@
 const express=require('express')
-
 const jsonwebToken=require('jsonwebtoken')
 const router=express.Router()
 const Registration=require('../modals/registrationModal')
 const bcrypt = require('bcryptjs');
-
 router.get('/allUsers',async(req,res)=>{
     try{
          let data=await Registration.find()

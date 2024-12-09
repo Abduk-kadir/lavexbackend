@@ -15,11 +15,9 @@ const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 
-router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
-
-
 
     if(f){
       res.send({
@@ -76,7 +74,7 @@ router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
 })
 
 
-router.put('/invoice/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/invoice/:id/:companyname',async(req,res)=>{
   let body=req.body
   let parr=[]
   try{
@@ -249,7 +247,7 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate',invoiceAddMidd, async (req, res) => {
+router.post('/invoiceCreate',async (req, res) => {
   let { type, role } = req.query;
   let { item } = req.body
   let js = { ...req.body, companyname: type }

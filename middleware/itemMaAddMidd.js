@@ -22,7 +22,7 @@ module.exports=(req,res,next)=>{
                 let permission=data.permission.find((elem)=>elem.companyname==req.params.companyname)
                 console.log('permission:',permission)
                 if(permission){
-                    let page=permission.pages.find(elem=>elem.pagename.toLowerCase()=='invoice'.toLowerCase())
+                    let page=permission.pages.find(elem=>elem.pagename.toLowerCase()=='itemMaster'.toLowerCase())
                     console.log('page is:',page)
                     if(page){
                         let accessarr=page.access
