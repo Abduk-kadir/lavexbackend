@@ -73,9 +73,13 @@ router.put('/updateClient/:id',async(req,res)=>{
         let c=await CreditNote.findOne({"clientDeltail.id":id})
         let i=await Invoice.findOne({"clientDetail.id":id})
         if(p||d||c||i){
-            let c=await Client.findById(req.params.id)
+            let c=await Client.findById(id)
+             console.log(c.client)
+             console.log(body.client)
+            console.log(c.gstNumber!=body.gstNumber&&c.client!=body.client&&c.grade!=body.grade&&c.panNumber!=body.panNumber&&c.fcAmount!=body.fcAmount&&c.scAmount!=body.scAmount&&c.fcDays!=body.fcDays&&c.scDays!=body.scDays)
+            
 
-            if(c.gstNumber!=body.gstNumber&&c.client!=body.client&&c.grade!=body.grade&&c.panNumber!=body.panNumber&&c.fcAmount!=body.fcAmount&&c.scAmount!=body.scAmount&&c.fcDays!=body.fcDays&&c.scDays!=body.scDays)
+            if(c.gstNumber!=body.gstNumber||c.client!=body.client||c.grade!=body.grade||c.panNumber!=body.panNumber||c.fcAmount!=body.fcAmount||c.scAmount!=body.scAmount||c.fcDays!=body.fcDays||c.scDays!=body.scDays)
             {
                 res.send({
                     message:"client can not update it is used invoices",
