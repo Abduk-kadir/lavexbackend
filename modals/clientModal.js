@@ -158,7 +158,7 @@ const clientSchema=mongoose.Schema({
      
     shipTo:{
         type:String,
-       // required:[true,'shipto is required']
+      
     },
     createdAt: {
         type:String,

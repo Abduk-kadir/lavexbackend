@@ -26,7 +26,7 @@ router.delete('/deleteDropdown/:id/:m', async (req, res) => {
       case 'Category':
         await Category.findByIdAndDelete(req.params.id)
         break;
-      case 'Salesman':
+      case 'SalesMan':
         await SalesMan.findByIdAndDelete(req.params.id)
         break;
       case 'PaymentMethod':
