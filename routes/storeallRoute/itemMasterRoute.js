@@ -6,7 +6,7 @@ const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
-const upload = multer({dest: "uploads/", })
+const upload = multer({ storage: multer.memoryStorage() })
 const xlsx=require('xlsx')
 cloudinary.config({ 
   cloud_name: 'dz1mqwzrt', 
@@ -14,7 +14,41 @@ cloudinary.config({
   api_secret: 'owVGCdRJOobWpui8mf4IXfexxxE' // Click 'View API Keys' above to copy your API secret
 });
 
+router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
+  try {
+   
+    if (!req.file) {
+      return res.status(400).send({
+        message: "No image file provided.",
+        success: false,
+      });
+    }
+    cloudinary.uploader.upload_stream({resource_type: 'auto', }, async (error, result) => {
+      if (error) {
+        return res.status(500).send({
+          message: error.message,
+          success: false,
+        });
+      }
+      let body = req.body;
+      body.companyname = req.params.companyId;
+      body.image = result.secure_url; 
+      let itemmaster = new ItemMaster(body);
+      await itemmaster.save();
 
+      res.send({
+        message: "Data successfully added",
+        success: true,
+      });
+    }).end(req.file.buffer); // Send the file buffer directly to Cloudinary
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    });
+  }
+  
+});
 
 router.post('/itemImport', upload.single('file'),async(req,res)=>{
    
@@ -185,32 +219,7 @@ router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
   }
 
 })
-router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
-  try {
-    const filePath = req.file.path;
-    let result=await cloudinary.uploader.upload(filePath)
-    console.log(result)
-    let body = req.body;
-    body.companyname=req.params.companyId
-    
-    body.image=result.secure_url
-    let itemmaster = new ItemMaster(body);
-    await itemmaster.save();
-    //let str=`${body.name} is created`
-    //let js={companyname:req.params.companyId,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
-    //let log=new Logs(js)
-    //await log.save()
-    res.send({
-      message: "data is successfully added",
-      success: true,
-    });
-  } catch (err) {
-    res.send({
-      message: err.message,
-      success: false,
-    });
-  }
-});
+
 router.get("/allItemMaster/:companyId/:role", async (req, res) => {
   try {
     let role=req.params.role
