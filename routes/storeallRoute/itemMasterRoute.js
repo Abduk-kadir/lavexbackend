@@ -53,7 +53,9 @@ router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res
 router.post('/itemImport', upload.single('file'),async(req,res)=>{
    
     try{
+      
       if (!req.file) {
+       
         res.send({message:"no file uploaded",success:false,})
       }
       else{
@@ -62,9 +64,7 @@ router.post('/itemImport', upload.single('file'),async(req,res)=>{
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
-       
         
-      
 
       }
 
@@ -108,12 +108,9 @@ router.get("/usedInBom/:id", async (req, res) => {
 router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(req,res)=>{
   let inbomdata;
   let body=req.body
- 
   try {
-    const filePath = req?.file?.path;
-    console.log('filepath is:',filePath)
+    const file = req?.file;
     let rs = await ItemMaster.findById({ _id: req.params.id });
-    console.log(rs)
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
@@ -131,32 +128,19 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
 
     }
     else{
-     
-      let {name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category,price}=rs
-    
-      let str='';
-      if(name!=body.name){str=`name was ${name} and changed name is ${body.name}  `}
-      if(qtyType!=body.qtyType){str+=`quantity type was ${qtyType} and changed quantity type  is ${body.qtyType}`}
-      if(qtyType2!=body.qtyType2){str+=`quantity type2  was ${qtyType2} and changed qtytype2 is ${body.qtyType2}`}
-      if(qty!=body.qty){str+=`quantity was ${qty} and changed quantity is ${body.qty}`}
-      if(hsnCode!=body.hsnCode){str+=`hsncode was ${hsnCode} and changed hsncode is ${body.hsnCode}`}
-      if(brand!=body.brand){str+=`brand was ${brand} and changed brand is ${body.brand}`}
-      if(price!=body.price){str+=`price was ${price} and changed price is ${body.price}`}
-      if(lowqty!=body.lowqty){str+=`lowqty was ${lowqty} and changed name is ${body.lowqty}`}
-      if(category!=body.category){str+=`category was ${category} and changed name is ${body.category}`}
-      if(str!=''){
-      let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"abdul",changeDetails:str,model:'Item Master'}
-     
-      let log=new Logs(js)
-      await log.save()
-      }
-      if(filePath){
-      let result=await cloudinary.uploader.upload(filePath)
-    
-      body.image=result.secure_url
+      if(file){
+        cloudinary.uploader.upload_stream({resource_type: 'auto', }, async (error, result) => {
+          if (error) {
+            return res.status(500).send({
+              message: error.message,
+              success: false,
+            });
+          }
+          body.image = result.secure_url; 
+         
+        }).end(req.file.buffer);
       }
       else{
-        console.log('not sending image state')
         let f=await ItemMaster.findById(req.params.id)
         body.image=f.image
       }

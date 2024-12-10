@@ -221,7 +221,7 @@ router.get('/myInvoices',async(req,res)=>{
             {$group:{_id:"$_id",pending:{$first:"$pendingAmount"},mov:{$first:"$mov"},branch: { $first: "$clientDetail.Branch" },client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
             total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}},
             { $sort: { mov: 1 } }
-            //{$group:{_id:"$_id", client: { $first: "$clientDetail.client" },total:{$sum:{$add:[{ $multiply: [ "$item.price", "$item.quantity" ] },{"$divide":["$item.gst",100]}]} },totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}}
+          
             ])
             break;
             case "invoice":
@@ -234,7 +234,7 @@ router.get('/myInvoices',async(req,res)=>{
                 total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}},
                 { $sort: { mov: 1 } }
                 
-              
+        
               
               ])
             break;

@@ -7,6 +7,42 @@ const Invoice=require('../modals/invoiceModal')
 const CreditNote=require('../modals/creditNoteModal')
 const deliveryChalan = require('../modals/deliveryChalan')
 const Logs=require('../modals/logs/logs')
+const multer  = require('multer')
+const upload = multer({ storage: multer.memoryStorage() })
+const xlsx=require('xlsx')
+
+router.post('/clientImport', upload.single('file'),async(req,res)=>{
+   
+    try{
+      if (!req.file) {
+        res.send({message:"no file uploaded",success:false,})
+      }
+      else{
+        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        console.log(workbook)
+        const sheetName = workbook.SheetNames[0];
+        const worksheet=workbook.Sheets[sheetName]
+        const data = xlsx.utils.sheet_to_json(worksheet);
+        await Client.insertMany(data)
+        res.send({
+            message:"clients are  successfully added",
+            success:true,
+         })
+        
+
+      }
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+        })
+    }
+   
+
+})
+
 
 router.post('/addClient',async(req,res)=>{
     let company=req.query.company

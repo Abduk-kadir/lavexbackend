@@ -4,6 +4,41 @@ let Supplier=require('../modals/supplierModal')
 let Logs=require('../modals/logs/logs')
 let Inward=require('../modals/store/inwardModal')
 let DebitNote=require('../modals/debitNodeModal')
+const multer  = require('multer')
+const upload = multer({ storage: multer.memoryStorage() })
+const xlsx=require('xlsx')
+
+router.post('/supplierImport', upload.single('file'),async(req,res)=>{
+   
+    try{
+      if (!req.file) {
+        res.send({message:"no file uploaded",success:false,})
+      }
+      else{
+        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        console.log(workbook)
+        const sheetName = workbook.SheetNames[0];
+        const worksheet=workbook.Sheets[sheetName]
+        const data = xlsx.utils.sheet_to_json(worksheet);
+        await Supplier.insertMany(data)
+        res.send({
+            message:"suppliers are  successfully added",
+            success:true,
+         })
+        
+      }
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+        })
+    }
+   
+
+})
+
 router.post('/addSupplier/:companyname',async(req,res)=>{
     try{
         let body=req.body; 
