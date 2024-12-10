@@ -6,7 +6,7 @@ const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
-const upload = multer({ storage: multer.memoryStorage() })
+const upload = multer({dest: "uploads/", })
 const xlsx=require('xlsx')
 cloudinary.config({ 
   cloud_name: 'dz1mqwzrt', 
