@@ -58,6 +58,7 @@ router.post('/itemImport', upload.single('file'),async(req,res)=>{
       }
       else{
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        console.log(workbook)
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
