@@ -196,10 +196,10 @@ router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res
     body.image=result.secure_url
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();
-    let str=`${body.name} is created`
-    let js={companyname:req.params.companyId,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
-    let log=new Logs(js)
-    await log.save()
+    //let str=`${body.name} is created`
+    //let js={companyname:req.params.companyId,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Item master"}
+    //let log=new Logs(js)
+    //await log.save()
     res.send({
       message: "data is successfully added",
       success: true,
