@@ -6,12 +6,43 @@ const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ storage: multer.memoryStorage() })
+const xlsx=require('xlsx')
 cloudinary.config({ 
   cloud_name: 'dz1mqwzrt', 
   api_key: '891497942385565', 
   api_secret: 'owVGCdRJOobWpui8mf4IXfexxxE' // Click 'View API Keys' above to copy your API secret
 });
+
+
+
+router.post('/itemImport', upload.single('file'),async(req,res)=>{
+   
+    try{
+      if (!req.file) {
+        res.send({message:"no file uploaded",success:false,})
+      }
+      else{
+        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet=workbook.Sheets[sheetName]
+        const data = xlsx.utils.sheet_to_json(worksheet);
+       
+        
+      
+
+      }
+
+
+
+    }
+    catch(err){
+
+       res.send(err.message)
+    }
+   
+
+})
 
 
 
@@ -161,10 +192,7 @@ router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res
     console.log(result)
     let body = req.body;
     body.companyname=req.params.companyId
-    let data=await ItemMaster.find()
-    let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
-    max = max + 1;
-    body.mov=max
+    
     body.image=result.secure_url
     let itemmaster = new ItemMaster(body);
     await itemmaster.save();

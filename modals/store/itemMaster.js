@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
+const mongooseSequence = require('mongoose-sequence')(mongoose);
 ItemMasterSchema=mongoose.Schema({
     mov:{
         type:Number,
@@ -71,4 +72,11 @@ ItemMasterSchema=mongoose.Schema({
         
     }
 })
+
+ItemMasterSchema.plugin(mongooseSequence, {
+    inc_field: 'mov', // field to auto-increment
+    start_seq: 1, // starting number
+    collection_name: 'itemmasters', // collection to store counter information
+  });
+
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)
