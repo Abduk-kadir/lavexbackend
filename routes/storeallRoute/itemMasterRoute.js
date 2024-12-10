@@ -109,7 +109,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
   let inbomdata;
   let body=req.body
   try {
-    const file = req?.file;
+   
     let rs = await ItemMaster.findById({ _id: req.params.id });
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
@@ -128,7 +128,8 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
 
     }
     else{
-      if(file){
+      
+      if(req.file){
         cloudinary.uploader.upload_stream({resource_type: 'auto', }, async (error, result) => {
           if (error) {
             return res.status(500).send({
@@ -137,18 +138,26 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
             });
           }
           body.image = result.secure_url; 
-         
+          await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
+          res.send({
+            message:"item master is successfully updated",
+            success:true,
+          })
+          
         }).end(req.file.buffer);
       }
       else{
+      
         let f=await ItemMaster.findById(req.params.id)
         body.image=f.image
+        await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
+        res.send({
+          message:"item master is successfully updated",
+          success:true,
+        })
+        
       }
-      await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
-      res.send({
-        message:"item master is successfully updated",
-        success:true,
-      })
+      
 
     }
    
