@@ -175,8 +175,12 @@ const invoiceSchema=mongoose.Schema({
    default: Date.now
 },
 termAndCondition:{
-   type:String,
+   type:[String],
    required:[true,'term and condition is mannadatory']
+},
+bankDetail:{
+   type:String,
+   required:[true,'mandatory']
 },
 qrImage:{
    type:String,

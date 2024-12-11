@@ -1,13 +1,10 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
-const { v4: uuidv4 } = require('uuid');
-
-
-
+const Counter=require('../counter/itemConterSchem')
 ItemMasterSchema=mongoose.Schema({
     mov:{
         type:Number,
-        default: uuidv4,
+        //required:['mov number is required']
     },
     companyname:{
        type:String,
@@ -74,7 +71,6 @@ ItemMasterSchema=mongoose.Schema({
         
     }
 })
-
 
 
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)
