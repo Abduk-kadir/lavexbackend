@@ -11,6 +11,7 @@ const StatusDropdown = require('../modals/drop/stockStatus');
 const Bank = require('../modals/drop/bankName')
 const PaymentMethod = require('../modals/drop/payMethod')
 const SalesMan = require('../modals/drop/salesMan')
+const Term=require('../modals/drop/term')
 
 router.delete('/hi',async(req,res)=>{
   res.send('arman')
@@ -20,6 +21,9 @@ router.delete('/deleteDropdown/:id/:m', async (req, res) => {
   let { id, m } = req.params
   try {
     switch (m) {
+      case 'Term':
+        await Term.findByIdAndDelete(req.params.id)
+        break;
       case 'Brand':
         await Brand.findByIdAndDelete(req.params.id)
         break;
@@ -82,7 +86,8 @@ router.get('/allDropdown', async (req, res) => {
     let bank = await Bank.find()
     let paymentmethod = await PaymentMethod.find()
     let salesman = await SalesMan.find()
-    let js = { salesMan: salesman, bank: bank, paymentmethod: paymentmethod, statusDropdown: statusDropdown, brandDrop: brandDrop, categDrop: categDrop, qtyDrop: qtyDrop, hsnDrop: hsnDrop, gstDrop: gstDrop }
+    let term=await Term.find()
+    let js = { termandcondtion:term,salesMan: salesman, bank: bank, paymentmethod: paymentmethod, statusDropdown: statusDropdown, brandDrop: brandDrop, categDrop: categDrop, qtyDrop: qtyDrop, hsnDrop: hsnDrop, gstDrop: gstDrop }
     res.send({
       message: "data is successfully added",
       success: true,
@@ -94,6 +99,23 @@ router.get('/allDropdown', async (req, res) => {
       message: "data is successfully added",
       success: true,
       data: null
+    })
+
+  }
+
+})
+router.put('/term/:id', async (req, res) => {
+  try {
+    await Term.findByIdAndUpdate(req.params.id, req.body, {})
+    res.send({
+      message: "term and condition updated successfully",
+      success: true,
+    })
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
     })
 
   }
@@ -116,6 +138,29 @@ router.put('/updateSalesMan/:id', async (req, res) => {
   }
 
 })
+
+router.post('/createTermAndCondition', async (req, res) => {
+  try {
+
+    let term = new Term(req.body);
+    await term.save();
+    res.send({
+      message: "term and condtion is  added successfully",
+      success: true,
+    })
+
+
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+
+    })
+
+  }
+})
+
 
 
 
