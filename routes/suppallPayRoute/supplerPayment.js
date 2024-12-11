@@ -128,19 +128,17 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
           })
         }
        else{
-        let data=await SupplierPayment.find({companyname:req.params.companyname})
-        let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
-        max=max+1;
-        body.paymentNumber=max;
+      
         let supplierPayment=new SupplierPayment(body)
         await supplierPayment.save();
         let {inwardList}=body
+        /*
         let inarr=inwardList.map(elem=>elem.inwardMov)
         let str=`payment for inward no: ${inarr.join()} is created`
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
         let log=new Logs(js)
         await log.save()
-        
+        */
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
                 console.log('insister')

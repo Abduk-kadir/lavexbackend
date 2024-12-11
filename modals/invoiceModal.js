@@ -173,6 +173,15 @@ const invoiceSchema=mongoose.Schema({
   createdAt: {
    type: Date,
    default: Date.now
+},
+termAndCondition:{
+   type:String,
+   required:[true,'term and condition is mannadatory']
+},
+qrImage:{
+   type:String,
+   default:""
 }
+
 })
 module.exports=mongoose.model('InVoice',invoiceSchema)

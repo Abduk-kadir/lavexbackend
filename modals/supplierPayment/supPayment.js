@@ -1,5 +1,37 @@
 const mongoose=require('mongoose')
 var valid = require('validator');
+const FinancialYearModel=require('../financialYear')
+const getNewPaymentNumber = async () => {
+    // Get the current year and check if it's the start of the new financial year
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // Months are zero-indexed
+    const newFinancialYearStart = 4; // Assuming financial year starts in April
+    console.log('current year:',currentYear)
+    console.log('current month:',currentMonth)
+
+    let year = currentYear;
+    if (currentMonth < newFinancialYearStart) {
+        year = currentYear - 1; // If before April, use the previous year's financial year
+    }
+
+    // Find or create the financial year document
+    let financialYear = await FinancialYearModel.findOne({ year });
+    if (!financialYear) {
+        // If no document exists for the financial year, create a new one and reset counter
+        financialYear = new FinancialYearModel({ year, paymentNumberCounter: 1 });
+        await financialYear.save();
+    }
+
+    // Increment and return the next payment number
+    const paymentNumber = financialYear.paymentNumberCounter;
+    financialYear.paymentNumberCounter += 1; // Increment the counter for the next payment
+    await financialYear.save(); // Save the updated counter
+
+    return paymentNumber;
+};
+
+
+
 const SuplierPaymentSchema=mongoose.Schema({
     companyname:{
          type:String,
@@ -12,10 +44,13 @@ const SuplierPaymentSchema=mongoose.Schema({
     sname:{
         type:String
     },
-    paymentNumber:{
-        type:Number,
-       
-        required:[true,'payment number is required']
+    paymentNumber: {
+        type: Number,
+        required: [true, 'payment number is required'],
+        default: async function() {
+            // Use the custom function to get the new payment number
+            return await getNewPaymentNumber();
+        },
     },
     paymentDate:{
         type:String,
