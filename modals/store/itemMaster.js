@@ -71,6 +71,34 @@ ItemMasterSchema=mongoose.Schema({
         
     }
 })
+ItemMasterSchema.pre('save', async function (next) {
+    const item = this;
+    console.log('first')
+    console.log('item in middleware:',item)
+    
+    // If `mov` is not set, we need to fetch the counter for the company
+    if (!item.mov) {
+      const counter = await Counter.findOne({ companyname: item.companyname });
+  
+      if (counter) {
+        // Increment the counter for the company
+        item.mov = counter.mov + 1;
+        // Update the counter document with the new `mov` value
+        counter.mov += 1;
+        await counter.save();
+      } else {
+        // If no counter exists for the company, create a new counter
+        const newCounter = new Counter({
+          companyname: item.companyname,
+          mov: 1,
+        });
+        await newCounter.save();
+        item.mov = 1;
+      }
+    }
+  
+    next();
+  });
 
 
 module.exports=mongoose.model('ItemMaster',ItemMasterSchema)

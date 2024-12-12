@@ -34,7 +34,9 @@ let CashMyInvoicesRouter=require('./routes/cashRoutes/myCashInvoices')
 let CashLedgerRouter=require('./routes/cashRoutes/cashLedgerRoute')
 let LogRouter=require('./routes/logs')
 const app=express()
-app.use(express.json())
+//app.use(express.json())
+app.use(express.json({ limit: '10mb' }));  // Adjust limit as needed (e.g., '10mb', '50mb', etc.)
+
 app.use(function(req,res,next){
     res.header("Access-Control-Allow-Origin","*")
     res.header(

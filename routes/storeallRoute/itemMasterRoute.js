@@ -16,7 +16,7 @@ cloudinary.config({
 
 router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
   try {
-   
+    console.log('second')
     if (!req.file) {
       return res.status(400).send({
         message: "No image file provided.",
