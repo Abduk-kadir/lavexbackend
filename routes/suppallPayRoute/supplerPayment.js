@@ -108,11 +108,6 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
 
 })
 
-
-
-
-
-
 router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
     try{
         let body=req.body;
@@ -127,17 +122,19 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
           })
         }
        else{
-      
+        /*let data=await SupplierPayment.find({companyname:req.params.companyname})
+        let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
+        max=max+1;
+        body.paymentNumber=max;*/
         let supplierPayment=new SupplierPayment(body)
         await supplierPayment.save();
-        let {inwardList}=body
-        /*
+       /* let {inwardList}=body
         let inarr=inwardList.map(elem=>elem.inwardMov)
         let str=`payment for inward no: ${inarr.join()} is created`
         let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
         let log=new Logs(js)
-        await log.save()
-        */
+        await log.save()*/
+        
         for(let i=0;i<inwardList.length;i++){
             if(req.params.role=='sister'){
                 console.log('insister')
@@ -179,7 +176,6 @@ router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
 router.get('/allpayment/:companyname',async(req,res)=>{
 
     try{
-
         let data=await SupplierPayment.find({companyname:req.params.companyname})
         res.send({
             message:"data is successfully updated",

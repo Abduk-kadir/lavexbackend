@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 var valid = require('validator');
 const Counter=require('../counter/paymentConterSchem');
-const paymentConterSchem = require('../counter/paymentConterSchem');
+
 const { compareSync } = require('bcryptjs');
 
 const SuplierPaymentSchema=mongoose.Schema({
@@ -95,47 +95,55 @@ const SuplierPaymentSchema=mongoose.Schema({
        
     
 })
-/*
+
 SuplierPaymentSchema.pre('save', async function (next) {
-    const item = this;
+    let item = this;
     let paymentDate=item.paymentDate
     const parts = paymentDate.split(/[-/]/);
     let month=parts[1]
     let year=parts[2]
-    let f= await paymentConterSchem.find({companyname:item.companyname}) 
-    console.log('find:',f)
-    if(f){
-        item.mov+=f.mov
-        f.mov+=1
-        if(f.year!==year){
-            if(month==4){
-                f.year=year
-                await paymentConterSchem.deleteMany({})
-            }
-        }
-        else{
-            if(month==4)
-        }
-        
-        await f.save()
-      
-    }
-    else{
-       
-        let paycounter=new paymentConterSchem({
-            mov:1,
-            companyname:item.companyname,
-            year:year
-        })
-       await paycounter.save()
-       item.mov=1
-
-    }
+    let date1 = new Date('2020-04-01'); // Start date (e.g., 1st April 2020)
+    let date2 = new Date('2024-12-12')
   
-    next();
+        const counter = await Counter.findOne({ companyname: item.companyname });
+    
+        if (counter) {
+          
+          item.paymentNumber = counter.paymentNumber + 1;
+          counter.paymentNumber += 1;
+          console.log(counter.year)
+          console.log(year)
+          console.log(counter.year>year)
+          if(year>counter.year){
+            if(Number(month)==1||Number(month)==2||Number(month)==3)
+            {
+
+            }
+            else{
+                item.paymentNumber=1
+                counter.paymentNumber=1
+                counter.year=year
+            }
+           
+          }
+          await counter.save();
+        } else {
+          // If no counter exists for the company, create a new counter
+          console.log('hi')
+          const newCounter = new Counter({
+            companyname: item.companyname,
+            paymentNumber: 1,
+            year:year
+          });
+          await newCounter.save();
+          item.paymentNumber = 1;
+        }
+    
+    
+      next();
   });
 
-*/
+
 
 
 
