@@ -2,7 +2,7 @@ const express=require('express')
 const DebitNote=require('../modals/debitNodeModal')
 router=express.Router()
 let PurchaseStore=require('../modals/store/purchaseStore')
-let ProductionStore=require('../modals/store/productionStore')
+const { ProductionStore } = require('./../modals/store/productionStore')
 let SisterStock=require('../modals/sisterStock')
 let Company=require('../modals/companyModal')
 let Logs=require('../modals/logs/logs')
@@ -11,14 +11,14 @@ const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   try{
-  let f=await DebitNote.findByIdAndDelete(req.params.id)
-  let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
-  let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
-  let deciedInvoice=f.onAccount?'invoice related to this debit':'item'
-  let str=`Debit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
-  let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"DebitNote"}
-  let log=new Logs(j) 
-  await log.save()
+  //let f=await DebitNote.findByIdAndDelete(req.params.id)
+  //let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
+  //let itmqtyarr=f.onAccount==false?`and quantity ${f.item.map(elem=>elem.quantity).join()}`:"";
+  //let deciedInvoice=f.onAccount?'invoice related to this debit':'item'
+  //let str=`Debit note is for client ${f.clientDetail.client}  and ${deciedInvoice} ${itmnamearr}  ${itmqtyarr} is deleted `
+  //let j={companyname:f.companyname,itemId:f.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"DebitNote"}
+  //let log=new Logs(j) 
+ // await log.save()
   //mainting store
  if(f.onAccount==false){
   for (let i = 0; i <f.item.length; i++) {
@@ -49,6 +49,7 @@ router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
 })
 router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
+    let body=req.body
   let rs=await DebitNote.findById(req.params.id)
   let f=await DebitNote.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
   if(rs.onAccount==false){
