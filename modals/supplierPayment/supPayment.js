@@ -115,16 +115,23 @@ SuplierPaymentSchema.pre('save', async function (next) {
           console.log(year)
           console.log(counter.year>year)
           if(year>counter.year){
-            if(Number(month)==1||Number(month)==2||Number(month)==3)
-            {
-
-            }
+            if(Number(month)==1||Number(month)==2||Number(month)==3){}
             else{
                 item.paymentNumber=1
                 counter.paymentNumber=1
                 counter.year=year
+                counter.month=4
             }
            
+          }
+          if(year==counter.year){
+            console.log(counter.month)
+            console.log(month)
+            if(Number(month)==counter.month){
+                item.paymentNumber=1
+                counter.paymentNumber=1
+                counter.month=45;
+            }
           }
           await counter.save();
         } else {

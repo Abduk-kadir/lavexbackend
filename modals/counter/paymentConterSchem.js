@@ -11,6 +11,10 @@ const CounterSchema = mongoose.Schema({
   },
   year:{
     type:String,
+  },
+  month:{
+    type:String,
+    default:"4"
   }
 
 });

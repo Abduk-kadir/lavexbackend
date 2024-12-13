@@ -295,9 +295,9 @@ router.get('/myInvoices',async(req,res)=>{
               { $sort: { mov: 1 } }
             ]);
             arr=arr.concat(deb)
-            arr.sort((elem1,elem2)=>-(elem1.mov-elem2.mov))
+            arr.sort((elem1,elem2)=>-(elem1.mov-elem2.mov))*/
              break;
-           */
+           
             case "deliverynote":
              arr= await Deliverynote.aggregate([
               {$unwind:{path:"$item"}},
