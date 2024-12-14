@@ -60,16 +60,20 @@ router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
       }
       else{
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-        console.log(workbook)
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
-        data=data.map(elem=>{
-          elem.companyname=req.params.companyname
-          return elem
+        console.log('data is:',data)
+        let newdata=data.map(elem=>{
+          let js={}
+          js={...elem,companyname:req.params.companyname}
+        
+        
+          return js
         }
         )
-        await ItemMaster.insertMany(data)
+       
+        await ItemMaster.insertMany(newdata)
         res.send(
                    {
                     message:"clients are  successfully added",
