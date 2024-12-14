@@ -25,7 +25,7 @@ router.post('/clientImport/:companyname', upload.single('file'),async(req,res)=>
         const data = xlsx.utils.sheet_to_json(worksheet);
         let newdata=data.map(elem=>{
             let js={}
-            js={...elem,companyname:req.params.companyname}
+            js={...elem,company:req.params.companyname}
           
           
             return js
