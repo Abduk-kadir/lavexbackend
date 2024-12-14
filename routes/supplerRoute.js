@@ -12,7 +12,7 @@ router.post('/supplierImport/:companyname', upload.single('file'),async(req,res)
    
     try{
       if (!req.file) {
-        res.send({message:"no file uploaded",success:false,})
+        res.send({message:"no file upload",success:false,})
       }
       else{
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
