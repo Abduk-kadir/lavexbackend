@@ -11,7 +11,7 @@ const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const xlsx=require('xlsx')
 
-router.post('/clientImport', upload.single('file'),async(req,res)=>{
+router.post('/clientImport/:companyname', upload.single('file'),async(req,res)=>{
    
     try{
       if (!req.file) {
@@ -23,6 +23,7 @@ router.post('/clientImport', upload.single('file'),async(req,res)=>{
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
+        data.companyname=req.params.companyname
         await Client.insertMany(data)
         res.send({
             message:"clients are  successfully added",
