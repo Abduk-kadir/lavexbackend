@@ -64,8 +64,12 @@ router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
-        
-        await ItemMaster.insertMany({...data,companyname:req.params.companyname})
+        data=data.map(elem=>{
+          elem.companyname=req.params.companyname
+          return elem
+        }
+        )
+        await ItemMaster.insertMany(data)
         res.send(
                    {
                     message:"clients are  successfully added",
