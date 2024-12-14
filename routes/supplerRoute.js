@@ -20,7 +20,15 @@ router.post('/supplierImport', upload.single('file'),async(req,res)=>{
         const sheetName = workbook.SheetNames[0];
         const worksheet=workbook.Sheets[sheetName]
         const data = xlsx.utils.sheet_to_json(worksheet);
-        await Supplier.insertMany(data)
+        let newdata=data.map(elem=>{
+            let js={}
+            js={...elem,companyname:req.params.companyname}
+          
+          
+            return js
+          }
+          )
+        await Supplier.insertMany(newdata)
         res.send({
             message:"suppliers are  successfully added",
             success:true,
