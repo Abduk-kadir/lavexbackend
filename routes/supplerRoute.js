@@ -8,7 +8,7 @@ const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const xlsx=require('xlsx')
 
-router.post('/supplierImport', upload.single('file'),async(req,res)=>{
+router.post('/supplierImport/:companyname', upload.single('file'),async(req,res)=>{
    
     try{
       if (!req.file) {
