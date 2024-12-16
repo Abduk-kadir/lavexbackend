@@ -116,19 +116,18 @@ router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyname;
         body.cid=req.params.cid
-        let {invoiceList}=body
-       /* let data=await ClientPayment.find({companyname:req.params.companyname})
-        let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
-        max=max+1;
-        body.paymentNumber=max;
+        //let data=await ClientPayment.find({companyname:req.params.companyname})
+        //let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
+        //max=max+1;
+        //body.paymentNumber=max;
         let clientPayment=new ClientPayment(body);
-       
+        let {invoiceList}=body
         await clientPayment.save();
-        let inarr=invoiceList.map(elem=>elem.invoiceMov)
-        let str=`payment for invoice no: ${inarr.join()} is created`
-        let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
-        let log=new Logs(js)
-        await log.save()*/
+       // let inarr=invoiceList.map(elem=>elem.invoiceMov)
+       // let str=`payment for invoice no: ${inarr.join()} is created`
+       // let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
+       // let log=new Logs(js)
+        //await log.save()
         for(let i=0;i<invoiceList.length;i++){
             //for requesting arbaj to maintin front end
            let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})

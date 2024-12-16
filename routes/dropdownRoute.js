@@ -12,10 +12,31 @@ const Bank = require('../modals/drop/bankName')
 const PaymentMethod = require('../modals/drop/payMethod')
 const SalesMan = require('../modals/drop/salesMan')
 const Term=require('../modals/drop/term')
+const BankDetail=require('../modals/drop/bankDetail')
 
 router.delete('/hi',async(req,res)=>{
   res.send('arman')
 })
+
+router.get('/bankDetialAndTerm/:companyid',async(req,res)=>{
+  try{
+     let termData=await Term.find();
+     let bankDetail=await BankDetail.find()
+     let js={termandcondition:termData,bankDetail:bankDetail}
+     res.send({
+      message:'successfully fetched',
+      success:true,
+      data:js
+     })
+  }
+  catch(err){
+    res.send({
+      message:'successfully fetched',
+      success:false
+     })
+  }
+})
+
 
 router.delete('/deleteDropdown/:id/:m', async (req, res) => {
   let { id, m } = req.params
@@ -123,7 +144,7 @@ router.put('/term/:id', async (req, res) => {
 })
 router.put('/updateSalesMan/:id', async (req, res) => {
   try {
-    await SalesMan.findByIdAndUpdate(req.params.id, req.body, {})
+    await SalesMan.findByIdAndUpdate(req.params.id, req.body)
     res.send({
       message: "Sales Man updated successfully",
       success: true,
@@ -138,6 +159,71 @@ router.put('/updateSalesMan/:id', async (req, res) => {
   }
 
 })
+
+
+
+
+
+
+
+
+router.put('/updateBankDetail/:id', async (req, res) => {
+  try {
+    await BankDetail.findByIdAndUpdate(req.params.id, req.body)
+    res.send({
+      message: "detail of bank updated successfully",
+      success: true,
+    })
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    })
+
+  }
+
+})
+router.put('/deleteBankDetail/:id', async (req, res) => {
+  try {
+    await BankDetail.findByIdAndDelete(req.params.id)
+    res.send({
+      message: "detail of bank is deleted updated successfully",
+      success: true,
+    })
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    })
+
+  }
+
+})
+
+router.post('/createBankDetail/:companyname', async (req, res) => {
+  try {
+     let js={...req.body,companyname:req.params.companyname}
+    let detail = new BankDetail(req.body);
+    await detail.save();
+    res.send({
+      message: "bank detail is saved",
+      success: true,
+    })
+
+
+  }
+  catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+
+    })
+
+  }
+})
+
 
 router.post('/createTermAndCondition', async (req, res) => {
   try {
