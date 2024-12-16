@@ -75,7 +75,7 @@ const invoiceSchema=mongoose.Schema({
       
      shipTo:{
          type:String,
-         required:[true,'shipto is required']
+        
      },
       
    },

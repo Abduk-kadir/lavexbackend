@@ -6,7 +6,26 @@ const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
-const upload = multer({ storage: multer.memoryStorage() })
+const storage = multer.memoryStorage();
+const fileFilter = (req, file, cb) => {
+  // Log the file's mimetype for debugging
+  console.log('Uploaded file MIME type:', file.mimetype);
+
+  // Accept only PNG, JPG, and PDF files
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'application/pdf') {
+    console.log('helloc')
+    cb(null, true);  // Accept the file
+  } else {
+    console.log('no heloot')
+    cb(new Error('Invalid file type'), false);  // Reject the file
+  }
+};
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },  // Limit to 10MB (adjust as needed)
+  fileFilter: fileFilter,
+});
+
 const xlsx=require('xlsx')
 cloudinary.config({ 
   cloud_name: 'dz1mqwzrt', 
@@ -15,39 +34,76 @@ cloudinary.config({
 });
 
 router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
+  console.log('arman')
   try {
-    console.log('second')
+   
     if (!req.file) {
       return res.status(400).send({
         message: "No image file provided.",
         success: false,
       });
     }
-    cloudinary.uploader.upload_stream({resource_type: 'auto', }, async (error, result) => {
+
+    
+    cloudinary.uploader.upload_stream({ resource_type: 'auto' }, async (error, result) => {
+     
       if (error) {
+        console.error("Cloudinary upload error: ", error.message);
         return res.status(500).send({
-          message: error.message,
+          message: "Error uploading to Cloudinary: " + error.message,
           success: false,
         });
       }
-      let body = req.body;
-      body.companyname = req.params.companyId;
-      body.image = result.secure_url; 
-      let itemmaster = new ItemMaster(body);
-      await itemmaster.save();
 
-      res.send({
-        message: "Data successfully added",
-        success: true,
-      });
+      try {
+      
+        let body = req.body;
+        body.companyname = req.params.companyId; // Add companyId from route params
+        body.image = result.secure_url; // Get the Cloudinary image URL
+       
+        // Create a new ItemMaster document
+        let itemmaster = new ItemMaster(body);
+        
+        // Save the document to the database
+        await itemmaster.save();
+        
+        // Respond with success message
+        res.send({
+          message: "Data successfully added.",
+          success: true,
+        });
+      } catch (err) {
+        console.error("Error saving to database: ", err.message);
+        res.status(500).send({
+          message: "Error saving item to the database: " + err.message,
+          success: false,
+        });
+      }
     }).end(req.file.buffer); // Send the file buffer directly to Cloudinary
+
   } catch (err) {
-    res.send({
-      message: err.message,
+    console.error("General error: ", err.message);
+    res.status(500).send({
+      message: "An unexpected error occurred: " + err.message,
       success: false,
     });
   }
   
+});
+router.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    // Multer specific error, typically for file size limit exceeded
+    return res.status(400).send({
+      message: err.message,  // Send Multer's error message
+      success: false,
+    });
+  }
+  
+  // Handle general errors (like custom errors from fileFilter)
+  res.status(400).send({
+    message: err.message,  // Send custom error message from fileFilter
+    success: false,
+  });
 });
 
 router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
