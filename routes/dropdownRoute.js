@@ -186,11 +186,11 @@ router.put('/deleteBankDetail/:id', async (req, res) => {
 router.get('/getBankDetail/:companyname',async(req,res)=>{
     
   try{
-    let data=await BankDetail.findOne({companyname:req.params.companyname})
+    let data=await BankDetail.find({companyname:req.params.companyname})
     res.send({
       message: "all bank detail fetched",
       success: true,
-      data:data
+      data:data[data.length-1]
     })
   }
   catch(err){
