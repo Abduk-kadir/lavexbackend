@@ -180,7 +180,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
   let body=req.body
   try {
    
-    let rs = await ItemMaster.findById({ _id: req.params.id });
+   /* let rs = await ItemMaster.findById({ _id: req.params.id });
     if (rs.stockStatus == "Raw") {
       inbomdata = await BillOfMaterial.find({
         raw: { $elemMatch: { id: rs.id } },
@@ -197,7 +197,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       })
 
     }
-    else{
+    else{*/
       
       if(req.file){
         cloudinary.uploader.upload_stream({resource_type: 'auto', }, async (error, result) => {
@@ -219,7 +219,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       else{
       
         let f=await ItemMaster.findById(req.params.id)
-        body.image=f.image
+        body.image=''
         await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
         res.send({
           message:"item master is successfully updated",
@@ -229,7 +229,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       }
       
 
-    }
+    //}
    
   } catch (err) {
     res.send({
