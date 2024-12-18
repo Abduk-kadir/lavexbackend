@@ -1,11 +1,16 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
+const bankName = require('./bankName');
 bankDetail=mongoose.Schema({
     companyname:{
         type:String,
         required:[true,'companyid is required']
     },
-    name:{
+    accountHolder:{
+        type:String,
+        required:[true,'payment name is required']
+    },
+    bankName:{
         type:String,
         required:[true,'payment name is required']
     },
@@ -28,6 +33,10 @@ bankDetail=mongoose.Schema({
         type:String,
         required:[true,'payment name is required']
 
+    },
+    term:{
+        type:[String],
+        required:[true,'term and condition is manadatory']
     }
 
 })
