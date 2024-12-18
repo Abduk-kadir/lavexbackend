@@ -16,7 +16,7 @@ bankDetail=mongoose.Schema({
     },
     branch:{
         type:String,
-        required:[true,'payment name is required']
+       
 
     },
     accountNo:{
@@ -31,7 +31,7 @@ bankDetail=mongoose.Schema({
     },
     qrImage:{
         type:String,
-        required:[true,'payment name is required']
+       
 
     },
     term:{
