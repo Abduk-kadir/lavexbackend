@@ -9,7 +9,7 @@ let Logs=require('../modals/logs/logs')
 const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
-router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
+router.delete('/debitNoteDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
   try{
   let f=await DebitNote.findByIdAndDelete(req.params.id)
   let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
@@ -47,7 +47,7 @@ router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   }
   
 })
-router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
+router.put('/debitNoteUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
   try{
     let body=req.body
   let rs=await DebitNote.findById(req.params.id)
@@ -91,7 +91,7 @@ router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
 })
 
 
-router.post('/debitNoteCreate',async(req,res)=>{
+router.post('/debitNoteCreate',invoiceAddMidd,async(req,res)=>{
     try{
         let {type,role}=req.query;
         let {item,onAccount}=req.body
