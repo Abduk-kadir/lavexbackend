@@ -247,14 +247,15 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate',invoiceAddMidd,async (req, res) => {
-  let { type, role } = req.query;
+router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
+  let { id, role } = req.params;
+  console.log(id,role)
   let { item } = req.body
-  let js = { ...req.body, companyname: type }
+  let js = { ...req.body, companyname: id}
   let parr = []
   try {
     let body = req.body;
-    let data = await Invoice.find({ companyname: type })
+    let data = await Invoice.find({ companyname: id })
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     js.mov = max;

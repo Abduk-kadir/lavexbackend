@@ -19,10 +19,8 @@ module.exports=(req,res,next)=>{
             }
             else{
                 console.log('data is:',data)
-                console.log('company:',req.params.companyname)
-                let type=req.query.type
-                console.log(type)
-                let permission=data.permission.find((elem)=>elem.companyname==type)
+                 let id=req.params.id
+                let permission=data.permission.find((elem)=>elem.companyname==id)
                 console.log('permission:',permission)
                 if(permission){
                     let page=permission.pages.find(elem=>elem.pagename.toLowerCase()=='Create Invoice'.toLowerCase())
