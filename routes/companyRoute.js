@@ -30,7 +30,7 @@ router.post("/addCompany",async (req, res) => {
     });
   }
 });
-router.get("/allcompany",companymidd, async (req, res) => {
+router.get("/allcompany", async (req, res) => {
   let com=req.com
   console.log('allcompany',com)
   try {
