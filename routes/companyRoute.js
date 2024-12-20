@@ -1,8 +1,9 @@
 const express = require("express");
 const Company = require("../modals/companyModal");
 const Logs=require('../modals/logs/logs')
+const companymidd=require('../middleware/companymiddleware')
 router = express.Router();
-router.post("/addCompany", async (req, res) => {
+router.post("/addCompany",async (req, res) => {
   try {
     let body = req.body;
     body.role = body.role.toLowerCase();
@@ -29,9 +30,12 @@ router.post("/addCompany", async (req, res) => {
     });
   }
 });
-router.get("/allcompany", async (req, res) => {
+router.get("/allcompany",companymidd, async (req, res) => {
+  let com=req.com
   try {
-    let result = await Company.find();
+    let result =await Company.find({
+      _id: { $in: com }  
+    });
     res.send({
       message: "data is fetched successfully",
       success: true,
