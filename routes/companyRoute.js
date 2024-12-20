@@ -32,6 +32,7 @@ router.post("/addCompany",async (req, res) => {
 });
 router.get("/allcompany",companymidd, async (req, res) => {
   let com=req.com
+  console.log('allcompany',com)
   try {
     let result =await Company.find({
       _id: { $in: com }  

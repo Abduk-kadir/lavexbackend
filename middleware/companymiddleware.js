@@ -18,9 +18,11 @@ module.exports=(req,res,next)=>{
                })
             }
             else{
-                let allcompany=data.map(elem=>elem.companyname)
+                console.log(data)
+                let allcompany=data.permission.map(elem=>elem.companyname)
                 req.com=allcompany
-                next()
+                
+               next()
                 
                 
                 
