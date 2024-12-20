@@ -18,11 +18,14 @@ module.exports=(req,res,next)=>{
                })
             }
             else{
-                console.log('data:',data)
-                let permission=data.permission.find((elem)=>elem.companyname==req.params.companyname)
+                console.log('data is:',data)
+                console.log('company:',req.params.companyname)
+                let type=req.query.type
+                console.log(type)
+                let permission=data.permission.find((elem)=>elem.companyname==type)
                 console.log('permission:',permission)
                 if(permission){
-                    let page=permission.pages.find(elem=>elem.pagename.toLowerCase()=='invoice'.toLowerCase())
+                    let page=permission.pages.find(elem=>elem.pagename.toLowerCase()=='Create Invoice'.toLowerCase())
                     console.log('page is:',page)
                     if(page){
                         let accessarr=page.access
