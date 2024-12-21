@@ -248,14 +248,14 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 
 
 router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
-  let { id, role } = req.params;
-  console.log(id,role)
+  let {role } = req.params;
+  
   let { item } = req.body
   let js = { ...req.body, companyname: id}
   let parr = []
   try {
     let body = req.body;
-    let data = await Invoice.find({ companyname: id })
+    let data = await Invoice.find({ companyname: req.params.id })
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     js.mov = max;
@@ -267,7 +267,7 @@ router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
     let itmnamearr=body.item.map(elem=>elem.name)
     let itmqtyarr=body.item.map(elem=>elem.quantity)
     let str=`ivoice is for client ${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
-    let j={companyname:id,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    let j={companyname:req.params.id,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
     console.log(j)
     let log=new Logs(j) 
     await log.save()
@@ -292,7 +292,7 @@ router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
           let { id, quantity } = item[i];
 
           const f = await ProductionStore.updateOne(
-            { companyname: type, 'readyStock.id': id },
+            { companyname: req.params.id, 'readyStock.id': id },
             { $inc: { "readyStock.$[elem].quantity": -quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
@@ -306,7 +306,7 @@ router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
         let isSister = await Company.findOne({ Branch: branch })
        
         if (isSister) {
-          let mascompany = await Company.findById(type)
+          let mascompany = await Company.findById(req.params.id)
           let s = await Supplier.findOne({ companyname: isSister._id, supplier: mascompany.company + ' ' + mascompany.Branch })
 
           if (!s) {
@@ -335,7 +335,7 @@ router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
         for (let i = 0; i < item.length; i++) {
           let { id, quantity } = item[i];
           const f = await SisterStock.updateOne(
-            { companyname: type, 'readyStock.id': id },
+            { companyname: req.params.id, 'readyStock.id': id },
             { $inc: { "readyStock.$[elem].quantity": -quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
