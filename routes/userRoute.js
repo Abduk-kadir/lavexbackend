@@ -107,7 +107,8 @@ router.post('/login',async(req,res)=>{
             details:{
                 token:token,
                 user:user.id,
-                permission:user.permission
+                permission:user.permission,
+                isAdmin:user.isAdmin
 
             }
         })
