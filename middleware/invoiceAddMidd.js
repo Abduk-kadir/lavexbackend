@@ -19,7 +19,7 @@ module.exports=(req,res,next)=>{
             }
             else{
                 console.log('data is:',data)
-                 let id=req.params.id
+                 let id=req.query.type
                 let permission=data.permission.find((elem)=>elem.companyname==id)
                 console.log('permission:',permission)
                 if(permission){
