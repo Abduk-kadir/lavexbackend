@@ -251,7 +251,7 @@ router.post('/invoiceCreate/:id/:role',invoiceAddMidd,async (req, res) => {
   let {role } = req.params;
   
   let { item } = req.body
-  let js = { ...req.body, companyname: id}
+  let js = { ...req.body, companyname: req.params.id}
   let parr = []
   try {
     let body = req.body;
