@@ -176,4 +176,4 @@ const invoiceSchema=mongoose.Schema({
 },
 
 })
-module.exports=mongoose.model('InVoice',invoiceSchema)
+module.exports=mongoose.model('CashInVoice',invoiceSchema)

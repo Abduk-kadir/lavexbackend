@@ -204,7 +204,7 @@ router.get('/totalinvoice',async(req,res)=>{
 
 
 router.get('/myInvoices',async(req,res)=>{
-   console.log('fkjdhfjdhfjhfhfgh')
+   console.log('hello')
     let {type,page=1,limit=2}=req.query
     page=+page;
     limit=+limit;
@@ -224,7 +224,7 @@ router.get('/myInvoices',async(req,res)=>{
             ])
             break;
             case "invoice":
-              console.log('armab')
+              console.log('***')
               arr= await Invoice.aggregate([
                 {$unwind:{path:"$item"}},
                 {$match:{companyname:req.query.companyname}},
