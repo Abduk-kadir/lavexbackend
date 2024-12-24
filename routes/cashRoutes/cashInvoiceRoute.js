@@ -102,10 +102,10 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
         { $inc: { "readyStock.$[elem].quantity":-quantity } },
         { arrayFilters: [{ "elem.id": id }] }
       );
-      if (f2.matchedCount == 0) {
+     /* if (f2.matchedCount == 0) {
         let elem = readyStock[i];
         parr.push(elem);
-      }
+      }*/
     }
     console.log('newarr is:',parr)
     if (parr.length > 0) {
