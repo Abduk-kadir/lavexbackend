@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 var valid = require('validator');
+let Counter=require('../counter/clientPaymentCounter')
 const ClientPaymentSchema=mongoose.Schema({
    companyname:{
         type:String,
@@ -38,7 +39,7 @@ const ClientPaymentSchema=mongoose.Schema({
    },
   
    payCheckorDdNo:{
-       type:Number
+       type:String
    },
    payingAmount:{
        type:Number,
@@ -91,4 +92,64 @@ const ClientPaymentSchema=mongoose.Schema({
       
   
 })
+ClientPaymentSchema.pre('save', async function (next) {
+    let item = this;
+    let paymentDate=item.paymentDate
+    const parts = paymentDate.split(/[-/]/);
+    let month=parts[1]
+    let year=parts[2]
+    let date1 = new Date('2020-04-01'); // Start date (e.g., 1st April 2020)
+    let date2 = new Date('2024-12-12')
+  
+        const counter = await Counter.findOne({ companyname: item.companyname });
+    
+        if (counter) {
+          
+          item.paymentNumber = counter.paymentNumber + 1;
+          counter.paymentNumber += 1;
+          console.log(counter.year)
+          console.log(year)
+          console.log(counter.year>year)
+          if(year>counter.year){
+            if(Number(month)==1||Number(month)==2||Number(month)==3){}
+            else{
+                item.paymentNumber=1
+                counter.paymentNumber=1
+                counter.year=year
+                counter.month=4
+            }
+           
+          }
+          if(year==counter.year){
+            console.log(counter.month)
+            console.log(month)
+            if(Number(month)==counter.month){
+                item.paymentNumber=1
+                counter.paymentNumber=1
+                counter.month=45;
+            }
+          }
+          await counter.save();
+        } else {
+          // If no counter exists for the company, create a new counter
+          console.log('hi')
+          const newCounter = new Counter({
+            companyname: item.companyname,
+            paymentNumber: 1,
+            year:year
+          });
+          await newCounter.save();
+          item.paymentNumber = 1;
+        }
+    
+    
+      next();
+  });
+
+
+
+
+
+
+
 module.exports=mongoose.model('CashClientPayment',ClientPaymentSchema)
