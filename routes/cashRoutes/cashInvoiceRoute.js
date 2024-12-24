@@ -70,6 +70,9 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
 
 router.put('/invoice/:id/:companyname',async(req,res)=>{
   let body=req.body
+  let total = req.body.item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+    req.body.total = total;
+    req.body.pendingAmount = total;
   let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
