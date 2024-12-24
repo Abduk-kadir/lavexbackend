@@ -4,7 +4,7 @@ router=express.Router()
 let PurchaseStore=require('../../modals/store/purchaseStore')
 let Company=require('../../modals/companyModal')
 const Logs=require('../../modals/logs/logs')
-router.delete('/debitNoteDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+router.delete('/debitNoteDelete/:id/:companyname',async(req,res)=>{
   try{
   let f=await DebitNote.findByIdAndDelete(req.params.id)
   let itmnamearr=f.onAccount==false? f.item.map(elem=>elem.name).join():f.invoiceDetail.invoiceNo;
@@ -42,7 +42,7 @@ router.delete('/debitNoteDelete/:id/:companyname',invoiceDelMidd,async(req,res)=
   }
   
 })
-router.put('/debitNoteUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/debitNoteUpdate/:id/:companyname',async(req,res)=>{
   try{
     let body=req.body
   let rs=await DebitNote.findById(req.params.id)
@@ -86,7 +86,7 @@ router.put('/debitNoteUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
 })
 
 
-router.post('/debitNoteCreate',invoiceAddMidd,async(req,res)=>{
+router.post('/debitNoteCreate',async(req,res)=>{
     try{
         let {type,role}=req.query;
         let {item,onAccount}=req.body

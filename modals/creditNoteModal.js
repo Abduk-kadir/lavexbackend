@@ -164,4 +164,4 @@ const creditNoteS=mongoose.Schema({
 }
    
 })
-module.exports=mongoose.model('CreditNote',creditNoteS)
+module.exports=mongoose.model('CashCreditNote',creditNoteS)

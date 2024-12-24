@@ -158,4 +158,4 @@ iscompleted:{
 }
 
 })
-module.exports=mongoose.model('DeliveryChalan',deliverySchema)
+module.exports=mongoose.model('CashDeliveryChalan',deliverySchema)

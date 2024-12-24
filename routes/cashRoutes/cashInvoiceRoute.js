@@ -7,8 +7,8 @@ const { ProductionStore, ProductionStore2 } = require('../../modals/store/produc
 const SisterStore = require('../../modals/sisterStore');
 const SisterStock = require('../../modals/sisterStock');
 const Logs=require('../../modals/logs/logs')
-const Supplier = require('../modals/supplierModal')
-router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+const Supplier = require('../../modals/supplierModal')
+router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
 
@@ -67,7 +67,7 @@ router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
 })
 
 
-router.put('/invoice/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/invoice/:id/:companyname',async(req,res)=>{
   let body=req.body
   let parr=[]
   try{
@@ -240,7 +240,7 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate',invoiceAddMidd,async (req, res) => {
+router.post('/invoiceCreate',async (req, res) => {
   let { type, role } = req.query;
   console.log(type,role)
   let { item } = req.body

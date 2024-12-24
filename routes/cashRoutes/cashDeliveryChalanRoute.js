@@ -6,7 +6,7 @@ const SisterStore=require('../../modals/sisterStore')
 const Company=require('../../modals/companyModal')
 const Logs=require('../../modals/logs/logs')
 router=express.Router()
-router.put('/deliveryUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/deliveryUpdate/:id/:companyname',async(req,res)=>{
   try{
     let body=req.body
      let f=await invoice.findOne({companyname:req.params.companyname,selectDc:req.params.id})
@@ -86,7 +86,7 @@ router.put('/deliveryUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
 })
 
 
-router.delete('/deliveryDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+router.delete('/deliveryDelete/:id/:companyname',async(req,res)=>{
   try{
     let f=await invoice.findOne({companyname:req.params.companyname,selectDc:req.params.id})
      if(f){
@@ -140,7 +140,7 @@ router.delete('/deliveryDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>
 
 
 
-router.post('/deliveryChalanCreate',invoiceAddMidd,async(req,res)=>{
+router.post('/deliveryChalanCreate',async(req,res)=>{
     let {type,role}=req.query
     let {item}=req.body
     let {body}=req

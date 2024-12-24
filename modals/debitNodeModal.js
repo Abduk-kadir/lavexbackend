@@ -136,4 +136,4 @@ const debitnoteS=mongoose.Schema({
    default: Date.now
 }
 })
-module.exports=mongoose.model('DebitNote',debitnoteS)
+module.exports=mongoose.model('CashDebitNote',debitnoteS)

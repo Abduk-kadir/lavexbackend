@@ -6,7 +6,7 @@ const SisterStock=require('../../modals/sisterStock')
 const SisterStore=require('../../modals/sisterStore')
 const Logs=require('../../modals/logs/logs')
 router=express.Router()
-router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
     try{
         await Porfarma.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
         res.send({
@@ -25,7 +25,7 @@ router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
 })
 
 
-router.delete('/porpharmaDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+router.delete('/porpharmaDelete/:id/:companyname',async(req,res)=>{
     try{
        let rs=await Porfarma.findByIdAndDelete(req.params.id)
         let itmnamearr=rs.item.map(elem=>elem.name)
@@ -53,7 +53,7 @@ router.delete('/porpharmaDelete/:id/:companyname',invoiceDelMidd,async(req,res)=
 })
 
 
-router.post('/porpharmaCreate',invoiceAddMidd,async(req,res)=>{
+router.post('/porpharmaCreate',async(req,res)=>{
    //here type is company id
     let {type,role}=req.query;
     let {item}=req.body
