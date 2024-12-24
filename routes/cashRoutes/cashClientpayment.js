@@ -4,12 +4,12 @@ const ClientPayment= require('../../modals/cashmodals/cashClientPayment');
 const Invoice=require('../../modals/cashmodals/cashInvoiceModal')
 
 router.get('/allPaymentDatewise',async(req,res)=>{
-
     try{
           let data=await ClientPayment.aggregate([
             {$group:{
               _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
-              total: { $sum: "$payingAmount" }
+              total: { $sum: "$payingAmount" },
+              paymentDate: { $first: "$paymentDate" }
 
             }},
 
