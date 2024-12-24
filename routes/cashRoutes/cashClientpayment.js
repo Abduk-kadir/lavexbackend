@@ -36,8 +36,31 @@ router.get('/allPaymentDatewise',async(req,res)=>{
 })
 
 
+router.delete('/deletePayment/:id',async(req,res)=>{
+    try{
+        let rs=await ClientPayment.findByIdAndDelete(req.params.id);
+        let {invoiceList}=rs
+        /*let inarr=rs.invoiceList.map(elem=>elem.invoiceMov)
+        let str=`payment for  invoice no  ${inarr.join(',')} is deleted`
+        let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
+        console.log(js)
+        let log=new Logs(js) 
+        await log.save()*/
+        res.send({
+           message:"payment is successfully deleted",
+           success:true, 
+        })
+       }
+       catch(err){
+           res.send({
+               message:err.message,
+               success:false,
+        
+           })
+   
+       }
 
-
+})
 
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
