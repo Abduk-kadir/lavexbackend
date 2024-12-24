@@ -8,6 +8,7 @@ const SisterStore = require('../../modals/sisterStore');
 const SisterStock = require('../../modals/sisterStock');
 const Logs=require('../../modals/logs/logs')
 const Supplier = require('../../modals/supplierModal')
+const ClientPayment=require('../../modals/cashmodals/cashClientPayment')
 router.delete('/invoice/:id/:companyname',async(req,res)=>{
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})

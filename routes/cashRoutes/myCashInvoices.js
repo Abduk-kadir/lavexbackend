@@ -582,9 +582,12 @@ router.put('/update/:type/:id',async(req,res)=>{
 
 })
 
+router.get('/hi',async(req,res)=>{
+  res.send('fdjkhfkjdshfkjdsh')
+})
 
 router.get('/InvoiceDetail/:companyname/:type/:id',async(req,res)=>{
-  console.log('fhfjdnjjkhjhjkh')
+
   try{
       let result;
       let type=req.params.type
