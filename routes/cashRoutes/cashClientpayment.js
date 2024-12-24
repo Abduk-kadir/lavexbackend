@@ -15,8 +15,18 @@ router.get('/allPaymentDatewise',async(req,res)=>{
 
           ])
 
+          res.send({
+            message:"data is successfully added",
+            data:data,
+            success:true
+          })
+
     }
     catch(err){
+        res.send({
+            message:err.message,
+            success:false
+          })
 
 
 
