@@ -6,7 +6,179 @@ router = express.Router();
 const { ProductionStore, ProductionStore2 } = require('../../modals/store/productionStore')
 const SisterStore = require('../../modals/sisterStore');
 const SisterStock = require('../../modals/sisterStock');
-//const Supplier = require('../modals/supplierModal')
+const Logs=require('../../modals/logs/logs')
+const Supplier = require('../modals/supplierModal')
+router.delete('/invoice/:id/:companyname',invoiceDelMidd,async(req,res)=>{
+  try{
+    let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
+
+    if(f){
+      res.send({
+        message:"can not deleted it is ussing in Payment",
+        success:false,
+      })
+    }
+    else{
+    let rs= await Invoice.findByIdAndDelete(req.params.id)
+    //mainting stor
+    let {item}=rs
+    for (let i = 0; i <item.length; i++) {
+      let { id, quantity } = item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    }
+// end
+
+
+
+
+
+
+    //log is creating
+    let itmnamearr=rs.item.map(elem=>elem.name)
+    let itmqtyarr=rs.item.map(elem=>elem.quantity)
+    let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
+    let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    
+    let log=new Logs(j) 
+    await log.save()
+    //ending
+    res.send({
+      message:"deleted successfully",
+      success:true,
+    })
+
+    }
+    
+
+  
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+        })
+
+  }
+
+})
+
+
+router.put('/invoice/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+  let body=req.body
+  let parr=[]
+  try{
+    let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
+    if(f){
+      res.send({
+        message:"can not updated it is ussing in Payment",
+        success:false,
+      })
+    }
+    else{
+     let rs=await Invoice.findById(req.params.id) 
+     await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
+     //mainting store
+    console.log('prevItem',rs.item)
+    console.log('curItem',body.item)
+    for (let i = 0; i <rs.item.length; i++) {
+      let { id, quantity } = rs.item[i];
+      const f = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity": quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+    
+    }
+
+    for (let i = 0; i <body.item.length; i++) {
+      let { id, quantity } = body.item[i];
+      const f2 = await ProductionStore.updateOne(
+        { companyname: rs.companyname, 'readyStock.id': id },
+        { $inc: { "readyStock.$[elem].quantity":-quantity } },
+        { arrayFilters: [{ "elem.id": id }] }
+      );
+      if (f2.matchedCount == 0) {
+        let elem = readyStock[i];
+        parr.push(elem);
+      }
+    }
+    console.log('newarr is:',parr)
+    if (parr.length > 0) {
+      let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
+      await product.save();
+    }
+
+     //mainting log
+           let {
+            clientDetail,
+            invoiceDetail,
+            selectDc,
+            item, 
+        }=rs
+           let str='';
+           if(clientDetail.client!=body.clientDetail.client){str+=`client ${clientDetail.client} is changed to ${body.clientDetail.client}  `}
+           if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
+           if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
+           if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
+           let pitmarr=rs.item.map(elem=>elem.name)
+           let nitmarr=body.item.map(elem=>elem.name)
+           let pqitmarr=rs.item.map(elem=>elem.quantity)
+           let nqitmarr=body.item.map(elem=>elem.quantity)
+           str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')}are changed to ${nitmarr.join(',')}`
+           str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')}are changed to ${nqitmarr.join(',')}`
+           if(str!=''){
+           let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+           let log=new Logs(js)
+           await log.save()
+           }
+
+
+
+
+
+     //mainting delivery chalan
+     rs.selectDc.map(async (elem) => {
+      await DeliveryChalan.updateOne(
+        { _id:elem},
+        { $set:
+           {
+            iscompleted:false
+           }
+        }
+     )
+    })
+     req.body.selectDc.map(async (elem) => {
+      await DeliveryChalan.updateOne(
+        { _id:elem},
+        { $set:
+           {
+            iscompleted:true
+           }
+        }
+     )
+    })
+    res.send({
+      message:"updated successfully",
+      success:true,
+    })
+
+    }
+  
+  }
+  catch(err){
+      res.send({
+          message:err.message,
+          success:false,
+        })
+
+  }
+
+})
+
 
 
 router.get('/invoicesbyClient/:clientname', async (req, res) => {
@@ -68,15 +240,15 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate', async (req, res) => {
+router.post('/invoiceCreate',invoiceAddMidd,async (req, res) => {
   let { type, role } = req.query;
+  console.log(type,role)
   let { item } = req.body
-  let js = { ...req.body, companyname: type }
-
+  let js = { ...req.body, companyname: type}
   let parr = []
   try {
     let body = req.body;
-    let data = await Invoice.find({ companyname: type })
+    let data = await Invoice.find({ companyname:type })
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     js.mov = max;
@@ -85,10 +257,26 @@ router.post('/invoiceCreate', async (req, res) => {
     js.pendingAmount = total;
     let invoice = new Invoice(js);
     await invoice.save();
-    req.body.selectDc.map(async (elem) => {
+    let itmnamearr=body.item.map(elem=>elem.name)
+    let itmqtyarr=body.item.map(elem=>elem.quantity)
+    let str=`ivoice is for client ${body.clientDetail.client} created and item is ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} `
+    let j={companyname:type,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
+    console.log(j)
+    let log=new Logs(j) 
+    await log.save()
+   //here ending
 
-      await DeliveryChalan.findByIdAndDelete(elem)
+    req.body.selectDc.map(async (elem) => {
+      await DeliveryChalan.updateOne(
+        { _id:elem},
+        { $set:
+           {
+            iscompleted:true
+           }
+        }
+     )
     })
+    
     if (req.body.selectDc.length == 0) {
 
       if (role == 'master') {
@@ -97,7 +285,7 @@ router.post('/invoiceCreate', async (req, res) => {
           let { id, quantity } = item[i];
 
           const f = await ProductionStore.updateOne(
-            { companyname: type, 'readyStock.id': id},
+            { companyname: type, 'readyStock.id': id },
             { $inc: { "readyStock.$[elem].quantity": -quantity } },
             { arrayFilters: [{ "elem.id": id }] }
           );
@@ -123,7 +311,7 @@ router.post('/invoiceCreate', async (req, res) => {
           }
           //here i creating movenent for sister store
           let data2 = await SisterStore.find({ companyname: isSister._id })
-         
+          console.log('data2 is',data2)
           let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
           max2 = max2 + 1;
         
@@ -374,9 +562,6 @@ router.get('/salesReport',async(req,res)=>{
 
 
 })
-
-
-
 
 
 module.exports = router

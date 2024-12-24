@@ -53,6 +53,9 @@ const deliverySchema=mongoose.Schema({
       type:String,
      
      },
+     Branch:{
+      type:String,
+     },
      
      scAmount:{
          type:Number,
@@ -65,7 +68,7 @@ const deliverySchema=mongoose.Schema({
       
      shipTo:{
          type:String,
-         required:[true,'shipto is required']
+       
      },
      
       
@@ -148,7 +151,11 @@ const deliverySchema=mongoose.Schema({
   createdAt: {
    type: Date,
    default: Date.now
+},
+iscompleted:{
+   type:Boolean,
+   default:false
 }
 
 })
-module.exports=mongoose.model('CashDeliveryChalan',deliverySchema)
+module.exports=mongoose.model('DeliveryChalan',deliverySchema)

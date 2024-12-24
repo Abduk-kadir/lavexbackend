@@ -2,6 +2,33 @@ let express=require('express')
 let router=express.Router()
 const ClientPayment= require('../../modals/cashmodals/cashClientPayment');
 const Invoice=require('../../modals/cashmodals/cashInvoiceModal')
+
+router.get('/allPaymentDatewise',async(req,res)=>{
+
+    try{
+          let data=await ClientPayment.aggregate([
+            {$group:{
+              _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
+              total: { $sum: "$payingAmount" }
+
+            }},
+
+          ])
+
+    }
+    catch(err){
+
+
+
+    }
+
+
+})
+
+
+
+
+
 router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let body=req.body;
@@ -29,27 +56,7 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
        }
 
 })
-router.get('/allpayment/:companyname',async(req,res)=>{
 
-    try{
-        let data=await ClientPayment.find({companyname:req.params.companyname})
-        res.send({
-            message:"data is successfully updated",
-            success:true, 
-            data:data
-         })
-
-    }
-    catch(err){
-       
-            res.send({
-                message:err.message,
-                success:false, 
-             })
-    
-    }
-
-})
 
 
 router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
@@ -110,33 +117,6 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 
 })
 
-router.get('/allCashPayment/:companyname',async(req,res)=>{
 
-    try{
-      
-        const { companyname } = req.params;
-        const paymentMethod = "CASH";  
-        const data = await ClientPayment.find({
-          companyname: companyname,
-          paymentMethod: { $regex: `^${paymentMethod}$`, $options: 'i' } 
-        });
-        res.send({
-            message:"data is fetched successfully",
-            success:true,
-            data:data
-
-        })
-
-    }
-    catch(err){
-       
-            res.send({
-                message:err.message,
-                success:false, 
-             })
-    
-    }
-
-})
 
 module.exports=router

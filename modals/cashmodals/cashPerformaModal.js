@@ -62,10 +62,12 @@ const performaSchema=mongoose.Schema({
          type:Number,
          required:[true,'second credit days is required']
      },
-      
+     branch:{
+      type:String,
+     },
      shipTo:{
          type:String,
-         required:[true,'shipto is required']
+        
      },
       
    },
@@ -151,4 +153,4 @@ const performaSchema=mongoose.Schema({
    
 
 })
-module.exports=mongoose.model('CashPerforma',performaSchema)
+module.exports=mongoose.model('Performa',performaSchema)

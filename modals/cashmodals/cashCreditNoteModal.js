@@ -67,18 +67,20 @@ const creditNoteS=mongoose.Schema({
       type:String,
      
      },
+     Branch:{
+      type:String
+     },
       
      shipTo:{
          type:String,
-         required:[true,'shipto is required']
+        
      },
       
    },
    invoiceDetail:{
     invoiceNo:{
       type:String,
-
-    },
+    }, 
     invoiceDate:{
         type:String,
         validate: {
@@ -103,34 +105,34 @@ const creditNoteS=mongoose.Schema({
     poNo:{
         type:String,    
        },
-    price:{
-      type:Number
-    }   
+       price:{
+         type:Number
+        },
 
    },
-  
+ 
   item:[{
     id:{
       type:String,
-      required:[true,'id is important']
+     
 
     },
      name:{
         type:String,
-        required:[true,'name of item is required'],
+      
      },
      brand:{
         type:String,
-        required:[true,'name of brand is required'],
+       
      },
      quantity:{
         type:Number,
-        required:[true,'quantity  is required'],
+       
         
      },
      qtyType:{
       type:String,
-      required:[true,'quantity type is required']
+      
 
      },
      gst:{
@@ -140,7 +142,7 @@ const creditNoteS=mongoose.Schema({
      },
      price:{
         type:Number,
-        required:[true,'quantity  is required'],
+      
         
      },
      qty:{
@@ -162,4 +164,4 @@ const creditNoteS=mongoose.Schema({
 }
    
 })
-module.exports=mongoose.model('CashCreditNote',creditNoteS)
+module.exports=mongoose.model('CreditNote',creditNoteS)

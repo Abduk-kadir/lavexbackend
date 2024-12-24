@@ -65,12 +65,17 @@ const invoiceSchema=mongoose.Schema({
      },
      stateCode:{
       type:String,
+      
+     
+     },
+     Branch:{
+      type:String,
      
      },
       
      shipTo:{
          type:String,
-         required:[true,'shipto is required']
+        
      },
       
    },
@@ -161,9 +166,14 @@ const invoiceSchema=mongoose.Schema({
    default:0
 
   },
+  discountAmount:{
+   type:Number,
+   default:0
+  },
   createdAt: {
    type: Date,
    default: Date.now
-}
+},
+
 })
-module.exports=mongoose.model('CashInVoice',invoiceSchema)
+module.exports=mongoose.model('InVoice',invoiceSchema)

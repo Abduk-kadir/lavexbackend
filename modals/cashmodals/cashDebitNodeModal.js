@@ -47,10 +47,9 @@ const debitnoteS=mongoose.Schema({
       
    },
    invoiceDetail:{
-    invoiceNo:{
-      type:String,
-
-    } , 
+      invoiceNo:{
+         type:String,
+       },   
     invoiceDate:{
         type:String,
         validate: {
@@ -75,11 +74,12 @@ const debitnoteS=mongoose.Schema({
     poNo:{
         type:String,    
        },
-    price:{
-      type:Number
-    }   
+       price:{
+         type:Number,
+      },
 
    },
+  
   onAccount:{
        type:Boolean,
        required:[true,'onAccount is true']
@@ -136,4 +136,4 @@ const debitnoteS=mongoose.Schema({
    default: Date.now
 }
 })
-module.exports=mongoose.model('CashDebitNote',debitnoteS)
+module.exports=mongoose.model('DebitNote',debitnoteS)
