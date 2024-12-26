@@ -3,12 +3,23 @@ let router=express.Router()
 const ClientPayment= require('../../modals/cashmodals/cashClientPayment');
 const Invoice=require('../../modals/cashmodals/cashInvoiceModal')
 
+
+
+
+
+
 router.get('/allPaymentDatewise',async(req,res)=>{
     try{
           let data=await ClientPayment.aggregate([
+            {
+                // Unwind the invoiceList to flatten the array
+                $unwind: "$invoiceList",
+              },
             {$group:{
               _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
               total: { $sum: "$payingAmount" },
+              invoiceAmount: { $sum: "$invoiceList.total" },
+              invoiceList: { $push: "$invoiceList" },
               paymentDate: { $first: "$paymentDate" }
 
             }},
