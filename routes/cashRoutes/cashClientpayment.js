@@ -3,6 +3,70 @@ let router=express.Router()
 const ClientPayment= require('../../modals/cashmodals/cashClientPayment');
 const Invoice=require('../../modals/cashmodals/cashInvoiceModal')
 
+router.delete('/DeletebyDateAndCompany',async(req,res)=>{
+
+    let { companyname, paymentDate } = req.body;
+    console.log(companyname, paymentDate);
+    try {
+      // Aggregation pipeline to unwind and group invoiceList into one array
+      const data = await ClientPayment.aggregate([
+        {
+          // Match documents based on companyname and paymentDate
+          $match: {
+            companyname: companyname,
+            paymentDate: paymentDate
+          }
+        },
+        {
+          // Unwind the invoiceList array to flatten the documents
+          $unwind: "$invoiceList"
+        },
+        {
+          // Group the results and combine all invoiceList items into one array
+          $group: {
+            _id: null, // We're combining everything into one result
+            invoiceList: { $push: "$invoiceList" } // Push each invoiceList item into a new array
+          }
+        }
+      ]);
+      if (data.length === 0) {
+        return res.status(404).send({
+          message: "No matching data found to delete",
+          success: false
+        });
+      }
+    
+     
+      for(let i=0;i<data[0].invoiceList.length;i++){
+        let inNo=data[0].invoiceList[i].invoiceId
+        await Invoice.findOneAndDelete({_id:inNo,pendingAmount:0})
+
+      }
+
+      await ClientPayment.findOneAndDelete({companyname:companyname,paymentDate:paymentDate})
+
+
+  
+      // Return the combined invoiceList
+      res.send({
+        message: "data is successfully deleted",
+        success: true
+      });
+  
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+        success: false
+      });
+    }
+
+
+
+})
+
+
+
+
 router.put('/paymentStatusChange',async(req,res)=>{
     let {companyname,paymentDate}=req.body;
 
