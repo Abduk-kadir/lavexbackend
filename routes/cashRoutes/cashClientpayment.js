@@ -40,6 +40,7 @@ router.get('/allPaymentDatewise',async(req,res)=>{
               },
             {$group:{
               _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
+              company:{$first:"$company"},
               total: { $sum: "$payingAmount" },
               invoiceAmount: { $sum: "$invoiceList.total" },
               invoiceList: { $push: "$invoiceList" },
