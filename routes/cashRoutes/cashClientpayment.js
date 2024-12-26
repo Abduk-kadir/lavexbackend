@@ -3,7 +3,30 @@ let router=express.Router()
 const ClientPayment= require('../../modals/cashmodals/cashClientPayment');
 const Invoice=require('../../modals/cashmodals/cashInvoiceModal')
 
+router.put('/paymentStatusChange',async(req,res)=>{
+    let {companyname,paymentDate}=req.body;
 
+    try{
+        await ClientPayment.updateMany(
+            { companyname: companyname, paymentDate: paymentDate }, // Correct filter object
+            { $set: { status: "ok" } } // Correct update operation
+          );
+      res.send({
+        message:"data is successfully updated",
+        success:true
+      })
+
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false
+          })
+
+
+    }
+})
 
 
 
