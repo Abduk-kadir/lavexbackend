@@ -28,15 +28,18 @@ router.put('/paymentStatusChange',async(req,res)=>{
     }
 })
 
-
-
-
-router.get('/allPaymentDatewise',async(req,res)=>{
+router.get('/allPaymentRecieved',async(req,res)=>{
     try{
           let data=await ClientPayment.aggregate([
-            {
+             {
                 // Unwind the invoiceList to flatten the array
                 $unwind: "$invoiceList",
+              },
+              {
+                $match:{
+                    status: { $eq: 'ok' }
+                }
+
               },
             {$group:{
               _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
@@ -44,6 +47,56 @@ router.get('/allPaymentDatewise',async(req,res)=>{
               total: { $sum: "$payingAmount" },
               invoiceAmount: { $sum: "$invoiceList.total" },
               invoiceList: { $push: "$invoiceList" },
+              clientName:{$push:"$cname"},
+              paymentDate: { $first: "$paymentDate" }
+
+            }},
+
+          ])
+
+          res.send({
+            message:"data is successfully added",
+            data:data,
+            success:true
+          })
+
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false
+          })
+
+
+
+    }
+
+
+})
+
+
+
+
+router.get('/allPaymentDatewise',async(req,res)=>{
+    try{
+          let data=await ClientPayment.aggregate([
+             {
+                // Unwind the invoiceList to flatten the array
+                $unwind: "$invoiceList",
+              },
+              {
+                $match:{
+                    status: { $ne: 'ok' }
+                }
+
+              },
+            {$group:{
+              _id:{companyname:"$companyname",paymentDate:"$paymentDate"},
+              company:{$first:"$company"},
+              total: { $sum: "$payingAmount" },
+              invoiceAmount: { $sum: "$invoiceList.total" },
+              invoiceList: { $push: "$invoiceList" },
+              clientName:{$push:"$cname"},
               paymentDate: { $first: "$paymentDate" }
 
             }},
