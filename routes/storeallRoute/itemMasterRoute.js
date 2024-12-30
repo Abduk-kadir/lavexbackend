@@ -1,18 +1,38 @@
 let express = require("express");
 let router = express.Router();
-
+const cloudinary = require('cloudinary').v2;
 const ItemMaster = require("../../modals/store/itemMaster");
 const BillOfMaterial = require("../../modals/store/bomModal");
 const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
-const upload = multer({ storage: multer.memoryStorage() })
-
+const storage = multer.memoryStorage();
 const {ProductionStore}=require('../../modals/store/productionStore')
+const fileFilter = (req, file, cb) => {
+  // Log the file's mimetype for debugging
+  console.log('Uploaded file MIME type:', file.mimetype);
 
+  // Accept only PNG, JPG, and PDF files
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'application/pdf') {
+    console.log('helloc')
+    cb(null, true);  // Accept the file
+  } else {
+    console.log('no heloot')
+    cb(new Error('Invalid file type'), false);  // Reject the file
+  }
+};
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },  // Limit to 10MB (adjust as needed)
+  fileFilter: fileFilter,
+});
 
 const xlsx=require('xlsx')
-
+cloudinary.config({ 
+  cloud_name: 'dz1mqwzrt', 
+  api_key: '891497942385565', 
+  api_secret: 'owVGCdRJOobWpui8mf4IXfexxxE' // Click 'View API Keys' above to copy your API secret
+});
 
 router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res) => {
   console.log('arman')
