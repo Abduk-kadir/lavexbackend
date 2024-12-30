@@ -64,10 +64,11 @@ ItemMasterSchema=mongoose.Schema({
 
     stockStatus:{
         type:String,
-        default:" "
+        default:""
     },
     image:{
         type:String,
+        default:""
         
     }
 })

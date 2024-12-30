@@ -38,9 +38,13 @@ router.post("/addItemMaster/:companyId", upload.single('image'), async (req, res
   try {
    
     if (!req.file) {
-      return res.status(400).send({
-        message: "No image file provided.",
-        success: false,
+      let body=req.body;
+      body.companyname=req.params.companyId
+      let itemmaster = new ItemMaster(body);
+      await itemmaster.save();
+      return res.send({
+        message: "Data successfully added.",
+        success: true,
       });
     }
 
