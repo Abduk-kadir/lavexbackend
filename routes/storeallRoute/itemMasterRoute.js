@@ -7,6 +7,7 @@ const authMidd=require('../../middleware/authmiddleware')
 let Logs=require('../../modals/logs/logs')
 const multer  = require('multer')
 const storage = multer.memoryStorage();
+const {ProductionStore}=require('../../modals/store/productionStore')
 const fileFilter = (req, file, cb) => {
   // Log the file's mimetype for debugging
   console.log('Uploaded file MIME type:', file.mimetype);
@@ -264,14 +265,18 @@ router.delete('/deletingItemMater/:id/:companyname',async(req,res)=>{
 
     }
     else{
-      console.log(rs)
+     // console.log(rs)
       let {name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category}=rs
-      console.log(name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category)
+     // console.log(name,qtyType,qtyType2,qty,hsnCode,brand,stockStatus,lowqty,category)
       let str=`${rs.name} is deleted`
       let js={companyname:req.params.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Item Master"}
       let log=new Logs(js)
       await log.save()
       await ItemMaster.findByIdAndDelete(req.params.id)
+      let f=await ProductionStore.findOne({"readyStock.id":req.params.id,"readyStock.quantity":{$gt:0}})
+      if(f){
+       // await ProductionStore.deleteOne({"readyStock.id":req.params.id})
+      }
       res.send({
         message:"item master is successfully deleted",
         success:true,
