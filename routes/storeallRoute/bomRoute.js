@@ -36,7 +36,7 @@ router.delete('/delBom/:id/:companyname',async(req,res)=>{
         let {id}=readyStock
         let f=await Production.findOne({'readyStock.id':id,companyname:req.params.companyname})
         
-        console.log('production is:',f)
+        console.log('production:',f)
         if(f){
            
             if(f.status='canceled'){
