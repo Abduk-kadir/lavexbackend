@@ -35,25 +35,11 @@ router.delete('/delBom/:id/:companyname',async(req,res)=>{
         let {readyStock}=bom
         let {id}=readyStock
         let f=await Production.findOne({'readyStock.id':id,companyname:req.params.companyname})
-        
-        console.log('production:',f)
         if(f){
-           
-            if(f.status='canceled'){
-                let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
-                res.send({
-                    message:"data is successfully deleted",
-                    success:true, 
-                 })
-            
-            }
-            else{
             res.send({
                 message:"can not deleted beacuse it is using in Production",
                 success:false, 
              })
-            }
-
         }
         else{  
         let js= await BillOfMaterial.findByIdAndDelete(req.params.id)
@@ -80,10 +66,8 @@ router.post('/addBom/:companyId',async(req,res)=>{
     try{
         let body=req.body;
         body.companyname=req.params.companyId
-        
         let id=body.readyStock.id
         let b=await BillOfMaterial.findOne({companyname:req.params.companyname,"readyStock.id":id})
-
        if(b){
         res.send({
             message:"this bom is already exist",
