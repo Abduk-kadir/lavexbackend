@@ -223,7 +223,7 @@ router.put('/updatingItemMater/:id/:companyname', upload.single('image'),async(r
       else{
       
         let f=await ItemMaster.findById(req.params.id)
-        body.image=''
+        body.image=f.image
         await ItemMaster.findByIdAndUpdate(req.params.id,body,{runValidators: true }) 
         res.send({
           message:"item master is successfully updated",
