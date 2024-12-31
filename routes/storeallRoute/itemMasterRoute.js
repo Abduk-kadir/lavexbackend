@@ -111,48 +111,6 @@ router.use((err, req, res, next) => {
   });
 });
 
-router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
-   
-    try{
-      
-      if (!req.file) {
-       
-        res.send({message:"no file uploaded",success:false,})
-      }
-      else{
-        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet=workbook.Sheets[sheetName]
-        const data = xlsx.utils.sheet_to_json(worksheet);
-        console.log('data is:',data)
-        let newdata=data.map(elem=>{
-          let js={}
-          js={...elem,companyname:req.params.companyname}
-        
-        
-          return js
-        }
-        )
-       
-        await ItemMaster.insertMany(newdata)
-        res.send(
-                   {
-                    message:"clients are  successfully added",
-                    success:true,}
-                  )
-                
-      }
-
-
-
-    }
-    catch(err){
-
-       res.send(err.message)
-    }
-   
-
-})
 
 
 
