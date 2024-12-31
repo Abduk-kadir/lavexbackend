@@ -312,6 +312,48 @@ router.get('/getinward/:sid/:name', async (req, res) => {
 
 })
 
+router.get('/inwardReportbydateandCompany',async(req,res)=>{
+  try{
+  let { fromDate, toDate,companyname,sid } = req.query;
+    let query = { companyname: companyname }
+    let data = await Inward.find(query)
+    if (fromDate && toDate) {
+      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+      const [dayTo, monthTo, yearTo] = toDate.split('-');
+      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+      console.log(from)
+      console.log(to)
+      data = data.filter(item => {
+        const [day, month, year] = item.dateCreated.split('-');
+        let itemDate = new Date(`${year}-${month}-${day}`);
+        
+        return itemDate >= from && itemDate <= to;
+      });
+
+    }
+    if(sid){
+      data=data.filter(elem=>elem.sid==sid)
+    }
+  console.log(data.length)  
+  res.send({
+    message:"data is successfully fetched",
+    success:true,
+    data:data
+  })
+  }
+  catch(err){
+
+    res.send({
+      message:err.message,
+      success:false
+    })
+
+  }
+
+
+
+})
 
 
 

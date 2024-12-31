@@ -3,6 +3,49 @@ let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
 const Logs=require('../../modals/logs/logs')
+
+
+router.get('/clientpayentReport',async(req,res)=>{
+    try{
+    let {companyname,fromDate,toDate}=req.query
+    let query={$expr:{$ne:['$total','$pendingAmount']}}
+    if(companyname){query.companyname=companyname}
+    let data=await Invoice.find(query);
+    if (fromDate && toDate) {
+        const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+        const [dayTo, monthTo, yearTo] = toDate.split('-');
+        const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+        const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+        data = data.filter(item => {
+          const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+          let itemDate = new Date(`${year}-${month}-${day}`);
+          return itemDate >= from && itemDate <= to;
+        });
+  
+      }
+    res.send({
+        message:'data is successfully fetched',
+        success:true,
+        data:data
+    })
+    }
+    catch(err){
+        res.send({
+            message:err.message,
+            success:false,
+            data:null
+        })
+
+    } 
+    
+})
+
+
+
+
+
+
+
 router.delete('/deletePayment/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
