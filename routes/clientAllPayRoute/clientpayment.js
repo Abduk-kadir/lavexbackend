@@ -7,7 +7,7 @@ const Logs=require('../../modals/logs/logs')
 
 router.get('/clientpayentReport',async(req,res)=>{
     try{
-    let {companyname,fromDate,toDate}=req.query
+    let {companyname,fromDate,toDate,cid}=req.query
     let query={$expr:{$ne:['$total','$pendingAmount']}}
     if(companyname){query.companyname=companyname}
     let data=await Invoice.find(query);
@@ -23,6 +23,10 @@ router.get('/clientpayentReport',async(req,res)=>{
         });
   
       }
+    if(cid){
+        data=data.filter(elem=>elem.clientDetail.id==cid)
+    }
+
     res.send({
         message:'data is successfully fetched',
         success:true,
