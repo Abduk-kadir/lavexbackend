@@ -54,6 +54,7 @@ router.delete('/deletePayment/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
+       
         for(let i=0;i<invoiceList.length;i++){
            
             let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
