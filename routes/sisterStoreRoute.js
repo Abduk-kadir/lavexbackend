@@ -68,10 +68,20 @@ router.put("/changestatus/:id/:companyId", async (req, res) => {
           );
           if (f.matchedCount == 0) {
             let elem = readyStock[i];
-            parr.push(elem);
+            let f=parr.find((elem2)=>elem2.id==elem.id)
+           if(f){
+            f.quantity+=elem.quantity
+           }
+           else{
+             parr.push(elem);
+           }
+
+
           }
         }
         if (parr.length > 0) {
+         // parr=parr.reduce((acc,curr)=>curr)
+         console.log('parr is:',parr)
           let product = new SisterStock({companyname:req.params.companyId, readyStock: parr });
           await product.save();
         }
