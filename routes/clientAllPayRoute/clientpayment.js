@@ -54,7 +54,17 @@ router.delete('/deletePayment/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
+        for(let i=0;i<invoiceList.length;i++){
+           
+            let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+             await Invoice.updateOne(
+                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
+                 {$set:{pendingAmount:f.pendingAmount+invoiceList[i].paid+invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
+             
+             )
+         }
         let inarr=rs.invoiceList.map(elem=>elem.invoiceMov)
+
         let str=`payment for  invoice no  ${inarr.join(',')} is deleted`
         let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
         console.log(js)
