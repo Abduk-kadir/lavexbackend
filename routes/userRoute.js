@@ -96,10 +96,9 @@ router.post('/login',async(req,res)=>{
     try{
     let user=await Registration.findOne({email:req.body.email})
     if(user){
-       
         let u = await Registration.findOne({'email':req.body.email,"permission.companyname":""});
         if(u){
-            return(res.send({message:"it have not any company access",success:"false"}))
+            return(res.send({message:"it have not any company access",success:false}))
         }
     }
    
