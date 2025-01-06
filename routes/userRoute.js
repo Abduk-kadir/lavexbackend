@@ -105,8 +105,9 @@ router.post('/login',async(req,res)=>{
     if(user){
      let fpass=await bcrypt.compare(req.body.password,user.password)
      if(fpass){
-    
      let token=jsonwebToken.sign({role:user.isAdmin,permission:user.permission},process.env.secretKey,{expiresIn:'1w'})
+     console.log('token is:',token)
+     let u=await Registration.findOneAndUpdate({email:req.body.email},{token:token})
         res.send({
             message:'user is successfully login',
             success:true,

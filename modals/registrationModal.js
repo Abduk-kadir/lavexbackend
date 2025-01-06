@@ -3,6 +3,7 @@ var valid = require('validator');
 const registrationSchema=mongoose.Schema({
     name:{
         type:String,
+        unique:true,
         required:[true,'name is required'],
       },
     email:{
@@ -91,6 +92,10 @@ const registrationSchema=mongoose.Schema({
     isAdmin:{
       type:Boolean,
       default:false
+    },
+    token:{
+        type:String,
+        default:""
     }
    
 })
