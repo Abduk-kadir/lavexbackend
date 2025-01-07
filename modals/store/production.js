@@ -25,6 +25,10 @@ const productionSchema=mongoose.Schema({
        required:[true,'date is required']
     
     },
+    autoDateCreated: {
+      type: Date,
+      default: Date.now
+   },
   
     raw:[
       {
