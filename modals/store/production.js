@@ -25,10 +25,14 @@ const productionSchema=mongoose.Schema({
        required:[true,'date is required']
     
     },
-    autoDateCreated: {
-      type: Date,
-      default: Date.now
-   },
+   
+   autoDateCreated: {
+    type: String,
+    default: () => {
+      const date = new Date();
+      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+    }
+  },
   
     raw:[
       {

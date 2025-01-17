@@ -9,10 +9,10 @@ const SisterStock = require('../../modals/sisterStock');
 const Logs=require('../../modals/logs/logs')
 const Supplier = require('../../modals/supplierModal')
 const ClientPayment=require('../../modals/cashmodals/cashClientPayment')
-router.delete('/invoice/:id/:companyname',async(req,res)=>{
+router.delete('/invoice/:id/:companyname/:role',async(req,res)=>{
   try{
+    let role=req.params.role
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
-
     if(f){
       res.send({
         message:"can not deleted it is ussing in Payment",
@@ -20,9 +20,25 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
       })
     }
     else{
+     let inv=await Invoice.findById(req.params.id)
+     let suplierInvoiceNo=inv.mov
+     console.log('supInvoce:',suplierInvoiceNo)
+     let isInSis=await SisterStore.findOne({suplierInvoiceNo:suplierInvoiceNo,status:"confirmed"})
+     if(isInSis){
+      return(  
+        res.send({
+        message:'can not deleted item confirmed in sister store',
+        success:false,
+      })
+      )
+     }
+     
     let rs= await Invoice.findByIdAndDelete(req.params.id)
-    //mainting stor
+    let itemsist=await SisterStore.findOneAndDelete({suplierInvoiceNo:rs.mov,status:"pending"})
+    //mainting store
     let {item}=rs
+    if(role=='master'){
+      console.log('in master company')
     for (let i = 0; i <item.length; i++) {
       let { id, quantity } = item[i];
       const f = await ProductionStore.updateOne(
@@ -31,22 +47,26 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
         { arrayFilters: [{ "elem.id": id }] }
       );
     }
-// end
+   
+  }
+  else{
+    console.log('insister company')
+     for (let i = 0; i < item.length; i++) {
+              let { id, quantity } = item[i];
+              console.log(id,quantity)
+              const f = await SisterStock.updateOne(
+                {companyname:req.params.companyname,'readyStock.id':id},
+                { $inc: { "readyStock.$[elem].quantity":-quantity } },
+                { arrayFilters: [{ "elem.id": id }] }
+              );
+             
+            }
 
+  }
 
-
-
-
-
-    //log is creating
-    let itmnamearr=rs.item.map(elem=>elem.name)
-    let itmqtyarr=rs.item.map(elem=>elem.quantity)
-    let str=`ivoice no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
-    let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
     
-    let log=new Logs(j) 
-    await log.save()
-    //ending
+   
+   
     res.send({
       message:"deleted successfully",
       success:true,
@@ -66,9 +86,10 @@ router.delete('/invoice/:id/:companyname',async(req,res)=>{
   }
 
 })
-
-router.put('/invoice/:id/:companyname',async(req,res)=>{
+router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
   let body=req.body
+  let item=req.body.item
+  let role=req.params.role
   let total = req.body.item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
     req.body.total = total;
     req.body.pendingAmount = total;
@@ -82,68 +103,79 @@ router.put('/invoice/:id/:companyname',async(req,res)=>{
       })
     }
     else{
+      let inv=await Invoice.findById(req.params.id)
+      let suplierInvoiceNo=inv.mov
+      console.log('supInvoce:',suplierInvoiceNo)
+      let isInSis=await SisterStore.findOne({suplierInvoiceNo:suplierInvoiceNo,status:"confirmed"})
+      if(isInSis){
+       return(  
+         res.send({
+         message:'can not updated item confirmed in sister store',
+         success:false,
+       })
+       )
+      }
      let rs=await Invoice.findById(req.params.id) 
      await Invoice.findByIdAndUpdate(req.params.id,req.body, {runValidators: true })
-     //mainting store
-    console.log('prevItem',rs.item)
-    console.log('curItem',body.item)
-    for (let i = 0; i <rs.item.length; i++) {
-      let { id, quantity } = rs.item[i];
-      const f = await ProductionStore.updateOne(
-        { companyname: rs.companyname, 'readyStock.id': id },
-        { $inc: { "readyStock.$[elem].quantity": quantity } },
-        { arrayFilters: [{ "elem.id": id }] }
-      );
+     if(role=='master'){
+      console.log('inmaster')
+       const branch = req.body.clientDetail.Branch.trim().toUpperCase();
+       let isSister = await Company.findOne({ Branch: branch })
+       if (isSister) {
+        let mascompany = await Company.findById(req.params.companyname)
+        let s = await Supplier.findOne({ companyname: isSister._id, supplier: mascompany.company + ' ' + mascompany.Branch })
+        let js ={address:body.clientDetail.address, gstNumber: body.clientDetail.gstNumber, total: total, pendingAmount: total, sid: s._id, dateCreated: req.body.invoiceDetail.invoiceDate, companyname: isSister._id, readyStock: item }
+        await SisterStore.findOneAndUpdate({ suplierInvoiceNo: inv.mov }, { $set: js });
+      }
     
-    }
+      for (let i = 0; i <rs.item.length; i++) {
+        let { id, quantity } = rs.item[i];
+        const f = await ProductionStore.updateOne(
+          { companyname: rs.companyname, 'readyStock.id': id },
+          { $inc: { "readyStock.$[elem].quantity": quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+      
+      }
+  
+      for (let i = 0; i <body.item.length; i++) {
+        let { id, quantity } = body.item[i];
+        const f2 = await ProductionStore.updateOne(
+          { companyname: rs.companyname, 'readyStock.id': id },
+          { $inc: { "readyStock.$[elem].quantity":-quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+      }
+      if (parr.length > 0) {
+        let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
+        await product.save();
+      }
+     }
+     else{
+      console.log('insister company')
+      for (let i = 0; i < rs.item.length; i++) {
+        let { id, quantity } = rs.item[i];
+        console.log(id,quantity)
+        const f = await SisterStock.updateOne(
+          {companyname:req.params.companyname,'readyStock.id':id},
+          { $inc: { "readyStock.$[elem].quantity":quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+       
+      }
+      for (let i = 0; i < body.item.length; i++) {
+        let { id, quantity } = body.item[i];
+        console.log(id,quantity)
+        const f = await SisterStock.updateOne(
+          {companyname:req.params.companyname,'readyStock.id':id},
+          { $inc: { "readyStock.$[elem].quantity":-quantity } },
+          { arrayFilters: [{ "elem.id": id }] }
+        );
+       
+      }
 
-    for (let i = 0; i <body.item.length; i++) {
-      let { id, quantity } = body.item[i];
-      const f2 = await ProductionStore.updateOne(
-        { companyname: rs.companyname, 'readyStock.id': id },
-        { $inc: { "readyStock.$[elem].quantity":-quantity } },
-        { arrayFilters: [{ "elem.id": id }] }
-      );
-     /* if (f2.matchedCount == 0) {
-        let elem = readyStock[i];
-        parr.push(elem);
-      }*/
-    }
-    console.log('newarr is:',parr)
-    if (parr.length > 0) {
-      let product = new ProductionStore({companyname:req.params.companyId,readyStock: parr });
-      await product.save();
-    }
-
-     //mainting log
-           let {
-            clientDetail,
-            invoiceDetail,
-            selectDc,
-            item, 
-        }=rs
-           let str='';
-           if(clientDetail.client!=body.clientDetail.client){str+=`client ${clientDetail.client} is changed to ${body.clientDetail.client}  `}
-           if(clientDetail.grade!=body.clientDetail.grade){str+=`${clientDetail.grade} is changed to ${body.clientDetail.grade}  `}
-           if(clientDetail.gstNumber!=body.clientDetail.gstNumber){str+=`${clientDetail.gstNumber} is changed to ${body.clientDetail.gstNumber}  `}
-           if(clientDetail.address!=body.clientDetail.address){str+=`${clientDetail.address} is changed to ${body.clientDetail.address}  `}
-           let pitmarr=rs.item.map(elem=>elem.name)
-           let nitmarr=body.item.map(elem=>elem.name)
-           let pqitmarr=rs.item.map(elem=>elem.quantity)
-           let nqitmarr=body.item.map(elem=>elem.quantity)
-           str+=pitmarr.join(',')==nitmarr.join(',')?'':` items  ${pitmarr.join(',')}are changed to ${nitmarr.join(',')}`
-           str+=pqitmarr.join(',')==nqitmarr.join(',')?'':` quantity ${pqitmarr.join(',')}are changed to ${nqitmarr.join(',')}`
-           if(str!=''){
-           let js={companyname:rs.companyname,itemId:rs.mov,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Invoice"}
-           let log=new Logs(js)
-           await log.save()
-           }
-
-
-
-
-
-     //mainting delivery chalan
+     }
+      //mainting  delivery chalan
      rs.selectDc.map(async (elem) => {
       await DeliveryChalan.updateOne(
         { _id:elem},
@@ -318,7 +350,7 @@ router.post('/invoiceCreate',async (req, res) => {
           let max2 = data2.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
           max2 = max2 + 1;
         
-          let js = {mov:max2,address: body.clientDetail.address, gstNumber: body.clientDetail.gstNumber, total: total, pendingAmount: total, sid: s._id, dateCreated: req.body.invoiceDetail.invoiceDate, companyname: isSister._id, readyStock: item }
+          let js = {suplierInvoiceNo:max,mov:max2,address: body.clientDetail.address, gstNumber: body.clientDetail.gstNumber, total: total, pendingAmount: total, sid: s._id, dateCreated: req.body.invoiceDetail.invoiceDate, companyname: isSister._id, readyStock: item }
           let sisterstore = new SisterStore(js)
           await sisterstore.save()
         }
