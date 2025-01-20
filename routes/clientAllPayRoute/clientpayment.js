@@ -4,7 +4,6 @@ const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
 const Logs=require('../../modals/logs/logs')
 
-
 router.get('/clientpayentReport',async(req,res)=>{
     try{
     let {companyname,fromDate,toDate,cid}=req.query
@@ -44,30 +43,27 @@ router.get('/clientpayentReport',async(req,res)=>{
     
 })
 
-
-
-
-
-
-
-router.delete('/deletePayment/:id',async(req,res)=>{
+router.delete('/deletePayment/:companyname/:cid/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
+    
         for(let i=0;i<invoiceList.length;i++){
             let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+            console.log()
              await Invoice.updateOne(
                  {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
                  {$set:{pendingAmount:f.pendingAmount+invoiceList[i].paid+invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
-             
              )
          }
+         /*
         let inarr=rs.invoiceList.map(elem=>elem.invoiceMov)
         let str=`payment for  invoice no  ${inarr.join(',')} is deleted`
         let js={companyname:rs.companyname,itemId:rs.paymentNumber,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
         console.log(js)
         let log=new Logs(js) 
         await log.save()
+        */
         res.send({
            message:"payment is successfully deleted",
            success:true, 
@@ -83,11 +79,12 @@ router.delete('/deletePayment/:id',async(req,res)=>{
        }
 
 })
-router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
+router.put('/updatePayment/:companyname/:id',async(req,res)=>{
     try{
         let body=req.body;
         let c=await ClientPayment.findById(req.params.id)
-        let pInarr=c.invoiceList.map(elem=>elem.invoiceMov)
+        let {invoiceList}=body
+       /* let pInarr=c.invoiceList.map(elem=>elem.invoiceMov)
         let nInarr=body.invoiceList.map(elem=>elem.invoiceMov)
         let {
             cid,
@@ -110,21 +107,29 @@ router.put('/updatePayment/:companyname/:cid/:id',async(req,res)=>{
               if(pInarr.join()!=nInarr.join()){
                str+=`invoice list ${pInarr.join(',')} is changed to ${nInarr.join(',')}`
               }
-              console.log('str is:',str)
+             
               if(str!=''){
                let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"client Payment"}
                let log=new Logs(js)
                await log.save()
                }
-
-        await ClientPayment.findByIdAndUpdate(req.params.id,body);
-        let {invoiceList}=body
-        for(let i=0;i<invoiceList.length;i++){
-           
-           let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+      
+        let {invoiceList}=body*/
+       let p=await ClientPayment.findById(req.params.id)
+       let preInvoicList=p.invoiceList
+       let newInvoceList=invoiceList.map(elem=>{
+          let p=preInvoicList.find(elem2=>elem2.invoiceId==elem.invoiceId)
+          elem.paid=elem.paid>p.paid?elem.paid-p.paid:p.paid-elem.paid
+          elem.discount=elem.discount>p.discount?elem.discount-p.discount:p.discount-elem.discount
+          let js={...elem,pendingAmount:p.pendingAmount-elem.paid-elem.discount}
+          return js
+       })
+       body.invoiceList=newInvoceList
+       await ClientPayment.findByIdAndUpdate(req.params.id,body);
+        for(let i=0;i<newInvoceList.length;i++){
             await Invoice.updateOne(
-                {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                {$set:{pendingAmount:f.pendingAmount-invoiceList[i].paid-invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
+                {companyname:req.params.companyname,_id:newInvoceList[i].invoiceId},
+                {$set:{pendingAmount:newInvoceList[i].pendingAmount,discountAmount:newInvoceList[i].discount}}
             
             )
         }
@@ -166,30 +171,36 @@ router.get('/allpayment/:companyname',async(req,res)=>{
 })
 
 
-router.post('/addclientPayment/:companyname/:cid',async(req,res)=>{
+router.post('/addclientPayment/:companyname',async(req,res)=>{
     try{
         let body=req.body;
         body.companyname=req.params.companyname;
-        body.cid=req.params.cid
-        //let data=await ClientPayment.find({companyname:req.params.companyname})
-        //let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
-        //max=max+1;
-        //body.paymentNumber=max;
-        let clientPayment=new ClientPayment(body);
         let {invoiceList}=body
+        let newinvoiceList=await Promise.all(invoiceList.map(async(elem)=>{
+            let p= await Invoice.findOne({companyname:req.params.companyname,_id:elem.invoiceId})
+            let js={}
+           
+            if(p){
+               console.log(elem.total-elem.paid-p.pendingAmount-elem.discount-p.discountAmount) 
+              js={...elem,pendingAmount:p.pendingAmount-elem.paid-elem.discount}
+           
+            }
+            else{
+            
+             js={...elem,pendingAmount:elem.total-elem.paid-elem.discount}
+           
+            }
+            return js
+        }))
+        //console.log('new invoice list:',newinvoiceList)
+        body.invoiceList=newinvoiceList
+        let clientPayment=new ClientPayment(body);
         await clientPayment.save();
-       // let inarr=invoiceList.map(elem=>elem.invoiceMov)
-       // let str=`payment for invoice no: ${inarr.join()} is created`
-       // let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Client"}
-       // let log=new Logs(js)
-        //await log.save()
         for(let i=0;i<invoiceList.length;i++){
-            //for requesting arbaj to maintin front end
-           let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
-            //end
-
+           let f= await Invoice.findOne({companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+           
             await Invoice.updateOne(
-                {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
+                {companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
                 {$set:{pendingAmount:f.pendingAmount-invoiceList[i].paid-invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
             
             )

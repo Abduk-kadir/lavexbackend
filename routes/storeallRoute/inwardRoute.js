@@ -94,11 +94,14 @@ router.put('/changestatus/:companyId/:id', async (req, res) => {
       console.log(req.params.id)
       //here updating purchase store
       for (let i = 0; i < item.length; i++) {
-        let { id, quantity } = item[i]
+        let { id, quantity ,price} = item[i]
 
         const f = await PurchaseStore.updateOne(
           { companyname: req.params.companyId, 'item.id': id },
-          { $inc: { "item.$[elem].quantity": quantity } },
+          {
+          $inc: { "item.$[elem].quantity": quantity },
+          $set: { "item.$[elem].price": price }
+         },
           { arrayFilters: [{ "elem.id": id }] }
         );
         console.log(f)
@@ -354,10 +357,6 @@ router.get('/inwardReportbydateandCompany',async(req,res)=>{
 
 
 })
-
-
-
-
 
 router.get('/purchaseReport',async(req,res)=>{
   try{

@@ -280,7 +280,7 @@ router.get('/invoicesbyClient/:clientname', async (req, res) => {
 })
 
 
-router.post('/invoiceCreate',invoiceAddMidd,async (req, res) => {
+router.post('/invoiceCreate',async (req, res) => {
   let { type, role } = req.query;
   console.log(type,role)
   let { item } = req.body
