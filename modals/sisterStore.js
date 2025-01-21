@@ -51,6 +51,11 @@ const sisterStoreSchema=mongoose.Schema({
      default:0
     
    },
+   discountAmount:{
+    type:Number,
+    default:0
+
+   },
     dateCreated:{
       type:String,
       default:Date()

@@ -43,17 +43,16 @@ router.get('/clientpayentReport',async(req,res)=>{
     
 })
 
-router.delete('/deletePayment/:companyname/:cid/:id',async(req,res)=>{
+router.delete('/deletePayment/:companyname/:id',async(req,res)=>{
     try{
         let rs=await ClientPayment.findByIdAndDelete(req.params.id);
         let {invoiceList}=rs
-    
         for(let i=0;i<invoiceList.length;i++){
-            let f= await Invoice.findOne({"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
+            let f= await Invoice.findOne({companyname:req.params.companyname,_id:invoiceList[i].invoiceId})
             console.log()
              await Invoice.updateOne(
-                 {"clientDetail.id":req.params.cid,companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
-                 {$set:{pendingAmount:f.pendingAmount+invoiceList[i].paid+invoiceList[i].discount,discountAmount:invoiceList[i].discount+f.discountAmount}}
+                 {companyname:req.params.companyname,_id:invoiceList[i].invoiceId},
+                 {$set:{pendingAmount:f.pendingAmount+invoiceList[i].paid+invoiceList[i].discount,discountAmount:f.discountAmount-invoiceList[i].discount}}
              )
          }
          /*
@@ -119,9 +118,10 @@ router.put('/updatePayment/:companyname/:id',async(req,res)=>{
        let preInvoicList=p.invoiceList
        let newInvoceList=invoiceList.map(elem=>{
           let p=preInvoicList.find(elem2=>elem2.invoiceId==elem.invoiceId)
-          elem.paid=elem.paid>p.paid?elem.paid-p.paid:p.paid-elem.paid
-          elem.discount=elem.discount>p.discount?elem.discount-p.discount:p.discount-elem.discount
-          let js={...elem,pendingAmount:p.pendingAmount-elem.paid-elem.discount}
+          let el={...elem}
+          el.paid=el.paid>p.paid?el.paid-p.paid:p.paid-el.paid
+          el.discount=el.discount>p.discount?el.discount-p.discount:p.discount-el.discount
+          let js={...elem,pendingAmount:p.pendingAmount-el.paid-el.discount}
           return js
        })
        body.invoiceList=newInvoceList

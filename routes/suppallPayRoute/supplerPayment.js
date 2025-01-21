@@ -41,7 +41,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
         let body=req.body;
         let {inwardList}=body
         let c=await SupplierPayment.findById(req.params.id) 
-        let pInarr=c.inwardList.map(elem=>elem.inwardMov)
+       /* let pInarr=c.inwardList.map(elem=>elem.inwardMov)
         let nInarr=inwardList.map(elem=>elem.inwardMov)
         
         let {
@@ -70,7 +70,7 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
             let js={companyname:c.companyname,itemId:c.paymentNumber,actionType:'UPDATE',changedBy:"ABDUL",changeDetails:str,model:"Supplier Payment"}
             let log=new Logs(js)
             await log.save()
-            }
+            }*/
         await SupplierPayment.findByIdAndUpdate(req.params.id,body)
 
         
@@ -108,60 +108,69 @@ router.put('/updatesupplierPayment/:companyname/:sid/:role/:id',async(req,res)=>
 
 })
 
-router.post('/addsupplerPayment/:companyname/:sid/:role',async(req,res)=>{
+router.post('/addsupplerPayment/:companyname/:role',async(req,res)=>{
     try{
         let body=req.body;
         body.companyname=req.params.companyname;
-        body.sid=req.params.sid
+      
         let {inwardList}=body
-        let availpay=await SupplierPayment.findOne({companyname:req.params.companyname,paymentNumber:body.paymentNumber})
-        if(availpay){
-          res.send({
-            message:'payment number is already exist',
-            success:false
-          })
-        }
-       else{
-        /*let data=await SupplierPayment.find({companyname:req.params.companyname})
-        let max=data.reduce((acc,curr)=>curr.paymentNumber>acc?curr.paymentNumber:acc,0)
-        max=max+1;
-        body.paymentNumber=max;*/
-        let supplierPayment=new SupplierPayment(body)
-        await supplierPayment.save();
-       /* let {inwardList}=body
-        let inarr=inwardList.map(elem=>elem.inwardMov)
-        let str=`payment for inward no: ${inarr.join()} is created`
-        let js={companyname:req.params.companyname,itemId:max,actionType:'CREATE',changedBy:"ABDUL",changeDetails:str,model:"Suppler"}
-        let log=new Logs(js)
-        await log.save()*/
-        
-        for(let i=0;i<inwardList.length;i++){
-            if(req.params.role=='sister'){
-                console.log('insister')
-                console.log(inwardList[i].inwardId)
-                console.log(req.params.sid)
-                console.log(req.params.companyname)
-                await SisterStore.updateOne(
-                    {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
-                    {$set:{pendingAmount:inwardList[i].pendingAmount}}
-                
-                )
+        if(role=='master'){
+        let newInwardList=await Promise.all(inwardList.map(async(elem)=>{
+                    let p= await Inward.findOne({companyname:req.params.companyname,_id:elem.inwardId})
+                    let js={}
+                    if(p){
+                      js={...elem,pendingAmount:p.pendingAmount-elem.paid-elem.discount}
+                    }
+                    else{
+                     js={...elem,pendingAmount:elem.total-elem.paid-elem.discount}
+                    }
+                    return js
+                }))
+                body.inwardList=newInwardList
+                let supplierPayment=new SupplierPayment(body);
+                await supplierPayment.save();
+                for(let i=0;i<inwardList.length;i++){
+                    let f= await Inward.findOne({companyname:req.params.companyname,_id:inwardList[i].inwardId})
+                     await Inward.updateOne(
+                         {companyname:req.params.companyname,_id:inwardList[i].invoiceId},
+                         {$set:{pendingAmount:f.pendingAmount-inwardList[i].paid-inwardList[i].discount,discountAmount:inwardList[i].discount+f.discountAmount}}
+                     
+                     )
+                 }
 
-            }
-            else{
-             console.log('in master')   
-            await Inward.updateOne(
-                {sid:req.params.sid,companyname:req.params.companyname,_id:inwardList[i].inwardId},
-                {$set:{pendingAmount:inwardList[i].pendingAmount}}
-            
-            )
-        }
-        }
+        } 
+        else{
+            let newInwardList=await Promise.all(inwardList.map(async(elem)=>{
+                let p= await SisterStore.findOne({companyname:req.params.companyname,_id:elem.inwardId})
+                let js={}
+                if(p){
+                  js={...elem,pendingAmount:p.pendingAmount-elem.paid-elem.discount}
+                }
+                else{
+                 js={...elem,pendingAmount:elem.total-elem.paid-elem.discount}
+                }
+                return js
+            }))
+            body.inwardList=newInwardList
+            let supplierPayment=new SupplierPayment(body);
+            await supplierPayment.save();
+
+            for(let i=0;i<inwardList.length;i++){
+                let f= await SisterStore.findOne({companyname:req.params.companyname,_id:inwardList[i].inwardId})
+                 await SisterStore.updateOne(
+                     {companyname:req.params.companyname,_id:inwardList[i].inwardId},
+                     {$set:{pendingAmount:f.pendingAmount-inwardList[i].paid-inwardList[i].discount,discountAmount:inwardList[i].discount+f.discountAmount}}
+                 
+                 )
+             }
+
+        }   
+               
         res.send({
            message:"data is successfully added",
            success:true, 
         })
-       }
+       
     }
        catch(err){
            res.send({

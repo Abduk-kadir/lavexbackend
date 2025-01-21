@@ -68,6 +68,10 @@ const invardSchema=mongoose.Schema({
        default:0
       
      },
+     discountAmount:{
+      type:Number,
+      default:0
+     },
      item:[{
         "id":{
          type:String,
