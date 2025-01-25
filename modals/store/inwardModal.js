@@ -70,6 +70,7 @@ const invardSchema=mongoose.Schema({
      },
      discountAmount:{
       type:Number,
+      required:[true,'discount amount is required'],
       default:0
      },
      item:[{

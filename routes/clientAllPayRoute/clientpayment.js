@@ -119,9 +119,9 @@ router.put('/updatePayment/:companyname/:id',async(req,res)=>{
        let newInvoceList=invoiceList.map(elem=>{
           let p=preInvoicList.find(elem2=>elem2.invoiceId==elem.invoiceId)
           let el={...elem}
-          el.paid=el.paid>p.paid?el.paid-p.paid:p.paid-el.paid
-          el.discount=el.discount>p.discount?el.discount-p.discount:p.discount-el.discount
-          let js={...elem,pendingAmount:p.pendingAmount-el.paid-el.discount}
+          el.paid=p.paid-el.paid
+          el.discount=p.discount-el.discount
+          let js={...elem,pendingAmount:p.pendingAmount+el.paid+el.discount}
           return js
        })
        body.invoiceList=newInvoceList
