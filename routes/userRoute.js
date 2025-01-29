@@ -3,6 +3,34 @@ const jsonwebToken=require('jsonwebtoken')
 const router=express.Router()
 const Registration=require('../modals/registrationModal')
 const bcrypt = require('bcryptjs');
+
+router.delete('/deleteuser/:id',async(req,res)=>{
+    try{
+    let user=await Registration.findById(req.params.id)
+    if(!user){
+        res.send({
+            message:'this is not registered user',
+            success:false, 
+        })
+    }
+    else{
+        let f=await Registration.findByIdAndDelete(req.params.id)
+        res.send({
+            message:'user is deleted',
+            success:true, 
+        })
+
+    }
+}
+catch(err){
+    res.send({
+        message:err,
+        success:false, 
+    })
+
+}
+})
+
 router.get('/allUsers',async(req,res)=>{
     try{
          let data=await Registration.find()
