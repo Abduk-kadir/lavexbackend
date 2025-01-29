@@ -1,5 +1,6 @@
 const jsonwebToken=require('jsonwebtoken')
 require('dotenv').config()
+const Company=require('../modals/companyModal')
 module.exports=(req,res,next)=>{
     let token=req.headers.authorization
     if(!token){
@@ -9,17 +10,16 @@ module.exports=(req,res,next)=>{
         })
     }
     else{
-        jsonwebToken.verify(token,process.env.secretKey,(err,data)=>{
+        jsonwebToken.verify(token,process.env.secretKey,async(err,data)=>{
             if(err){
                res.send({
                   message:"authentication failed login first",
                   success:false
-                  
                })
             }
             else{
-                console.log(data)
-                let allcompany=data.permission.map(elem=>elem.companyname)
+                console.log(console.log('token is:',data.role))
+                let allcompany=data.role==true?await Company.find():data.permission.map(elem=>elem.companyname)
                 req.com=allcompany
                 
                next()

@@ -25,8 +25,8 @@ router.get('/allUsers',async(req,res)=>{
 })
 
 router.patch('/givePermission/:id',async(req,res)=>{
-    let {body}=req;
-    let {permission}=body
+   let {body}=req;
+   let {permission}=body
    let id=req.params.id
    let f= await Registration.findOne({_id:id})
    if(f){
@@ -47,6 +47,48 @@ router.patch('/givePermission/:id',async(req,res)=>{
    }
 
 
+})
+
+router.patch('/updatePassword',async(req,res)=>{
+    let {body}=req;
+   let {password,email}=body
+    try{
+     let user=await Registration.findOne({email:email});
+     console.log('user:',user.email)
+     if(!user){
+        res.send({
+            message:'please register first',
+            success:false,
+            data:null
+        })
+     }
+     else{
+        let hassPassword=await bcrypt.hash(password,10)
+        let f = await Registration.findOneAndUpdate(
+            { email: email },  // make sure to use an object filter with the id field
+            { $set: { password: hassPassword } },  // make sure you set the hashed password
+            { runValidators: true, new: true }    // `new: true` will return the updated document
+          );
+        console.log(f)
+        res.send({
+            message:'user password is successfully updated',
+            success:true,
+            data:body
+
+        })
+
+     }
+
+    }
+    catch(err){
+        res.send({
+            merrage:err.message,
+            success:false,
+            data:null
+        })
+
+    }
+        
 })
 
 

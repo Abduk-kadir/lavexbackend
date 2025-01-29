@@ -151,7 +151,6 @@ router.post('/addsupplerPayment/:companyname/:role',async(req,res)=>{
     try{
         let body=req.body;
         let role=req.params.role
-
         body.companyname=req.params.companyname;
         let {inwardList}=body
         if(role=='master'){
