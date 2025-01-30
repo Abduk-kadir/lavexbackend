@@ -11,8 +11,6 @@ const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 router=express.Router()
-
-
 router.put('/deliveryUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
   try{
     let body=req.body
@@ -201,7 +199,7 @@ router.post('/deliveryChalanCreate',invoiceAddMidd,async(req,res)=>{
             let sup=new Supplier(js2);
             s= await  sup.save()
             }
-            let js={address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:s._id,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
+            let js={mov:max,address:body.clientDetail.address,gstNumber:body.clientDetail.gstNumber,total:total,pendingAmount:total,sid:s._id,dateCreated:req.body.invoiceDetail.invoiceDate,companyname:isSister._id,readyStock:item}
             js.total=total;
             js.pendingAmount=total;
             let sisterstore=new SisterStore(js)

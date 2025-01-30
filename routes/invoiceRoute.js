@@ -15,6 +15,83 @@ const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 
+router.get('/topProductSale/:companyname', async (req, res) => {
+  const companyName = req.params.companyname;
+
+  try {
+    const topFive = await Invoice.aggregate([
+      // Match documents by company name
+      { $match: { companyname: companyName } },
+      
+      // Unwind the item array to process individual items
+      { $unwind: { path: "$item" } },
+      
+      // Group by product ID and sum the total quantity
+      { 
+        $group: { 
+          _id: "$item.id", 
+          productName: { $first: "$item.name" },
+          totalQuantity: { $sum: "$item.quantity" } 
+        }
+      },
+      
+      // Sort by total quantity in descending order
+      { $sort: {totalQuantity: -1 } },
+      
+      // Limit to top 5 products
+      { $limit: 5 }
+    ]);
+
+    res.send({
+      message: "Top five products fetched successfully",
+      success: true,
+      data: topFive
+    });
+
+  } catch (err) {
+    res.status(500).send({
+      message: "Error fetching top products",
+      success: false,
+      error: err.message
+    });
+  }
+});
+
+
+
+router.get('/topClient/:companyname', async (req, res) => {
+  try {
+    let companyname = req.params.companyname; // Correctly extract the company name from the URL
+
+    let topfive = await Invoice.aggregate([
+      { $match: { companyname: companyname } }, // Corrected match
+      {
+        $group: {
+          _id: "$clientDetail.id", // Corrected grouping
+          clientName: { $first: "$clientDetail.client" }, // Get the first client name
+          total: { $sum: "$total" }, // Sum of total invoice amounts
+          totalInvoices: { $sum: 1 } // Count the number of invoices
+        }
+      },
+      { $sort: { total: -1 } }, // Correct sorting
+      { $limit: 5 } // Limit to top 5
+    ]);
+
+    res.send({
+      message: "Top five clients fetched successfully",
+      success: true,
+      data: topfive
+    });
+  } 
+  catch (err) {
+    res.status(500).send({
+      message: err.message || "Server error",
+      success: false,
+      data: null
+    });
+  }
+});
+
 router.delete('/invoice/:id/:companyname/:role',async(req,res)=>{
   try{
     let role=req.params.role
