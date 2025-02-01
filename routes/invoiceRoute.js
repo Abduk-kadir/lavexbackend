@@ -174,9 +174,19 @@ router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
   let body=req.body
   let item=req.body.item
   let role=req.params.role
-  let total = req.body.item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+
+    let total = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty * (1 + curr.gst / 100):acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+    let totalwithoutgst = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty :acc + curr.price * curr.quantity, 0)
     req.body.total = total;
     req.body.pendingAmount = total;
+    req.body.totalwithoutgst = totalwithoutgst;
+
+
+
+
+
+
+    
   let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
