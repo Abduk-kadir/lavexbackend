@@ -227,15 +227,19 @@ router.get('/myInvoices',async(req,res)=>{
             case "invoice":
               console.log('armab')
               arr= await Invoice.aggregate([
-                {$unwind:{path:"$item"}},
-                {$match:{companyname:req.query.companyname}},
-              
-                {$group:{_id:"$_id",pending:{$first:"$pendingAmount"},mov:{$first:"$mov"},branch: { $first: "$clientDetail.Branch" },client: { $first: "$clientDetail.client" },date: { $first: "$invoiceDetail.invoiceDate" },status:{ $first: "$status" },
-                total: {$sum:{$multiply: ["$item.price","$item.quantity",{ $add: [1, { $divide: ["$item.gst", 100] }] }]}},totalwithoutgst:{$sum:{ $multiply: [ "$item.price", "$item.quantity" ] }}}},
-                { $sort: { mov: 1 } }
                 
-        
-              
+                {$match:{companyname:req.query.companyname}},
+                {$project:{
+                  _id: 1,
+                 pending: "$pendingAmount",
+                 mov: 1,
+                branch: "$clientDetail.Branch",
+                client: "$clientDetail.client",
+                date: "$invoiceDetail.invoiceDate",
+                status: 1,
+                total: 1,
+                totalwithoutgst: 1
+                }}
               ])
             break;
             case "creditnote":

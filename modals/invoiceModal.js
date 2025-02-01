@@ -161,6 +161,11 @@ const invoiceSchema=mongoose.Schema({
    default:0
 
   },
+  totalwithoutgst:{
+   type:Number,
+   default:0
+
+  },
   pendingAmount:{
    type:Number,
    default:0

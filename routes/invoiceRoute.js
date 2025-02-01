@@ -370,7 +370,9 @@ router.post('/invoiceCreate',async (req, res) => {
     max = max + 1;
     js.mov = max;
     let total = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty * (1 + curr.gst / 100):acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+    let totalwithoutgst = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty :acc + curr.price * curr.quantity, 0)
     js.total = total;
+    js.totalwithoutgst=totalwithoutgst
     js.pendingAmount = total;
     let invoice = new Invoice(js);
      await invoice.save();
