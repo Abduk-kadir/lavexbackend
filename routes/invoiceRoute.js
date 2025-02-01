@@ -74,7 +74,7 @@ router.get('/topClient/:companyname', async (req, res) => {
         }
       },
       { $sort: { total: -1 } }, // Correct sorting
-      { $limit: 5 } // Limit to top 5
+      { $limit: 5 } // Limit to top 5cu
     ]);
 
     res.send({
@@ -369,7 +369,7 @@ router.post('/invoiceCreate',async (req, res) => {
     let max = data.reduce((acc, curr) => curr.mov > acc ? curr.mov : acc, 0)
     max = max + 1;
     js.mov = max;
-    let total = item.reduce((acc, curr) => acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
+    let total = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty * (1 + curr.gst / 100):acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
     js.total = total;
     js.pendingAmount = total;
     let invoice = new Invoice(js);
