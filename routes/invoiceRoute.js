@@ -180,13 +180,6 @@ router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
     req.body.total = total;
     req.body.pendingAmount = total;
     req.body.totalwithoutgst = totalwithoutgst;
-
-
-
-
-
-
-    
   let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
