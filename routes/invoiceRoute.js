@@ -30,8 +30,8 @@ router.get('/topProductSale/:companyname', async (req, res) => {
       { 
         $group: { 
           _id: "$item.id", 
-          productName: { $first: "$item.name" },
-          totalQuantity: { $sum: "$item.quantity" } 
+          Name: { $first: "$item.name" },
+          count: { $sum: "$item.quantity" } 
         }
       },
       
@@ -68,9 +68,9 @@ router.get('/topClient/:companyname', async (req, res) => {
       {
         $group: {
           _id: "$clientDetail.id", // Corrected grouping
-          clientName: { $first: "$clientDetail.client" }, // Get the first client name
+          Name: { $first: "$clientDetail.client" }, // Get the first client name
           total: { $sum: "$total" }, // Sum of total invoice amounts
-          totalInvoices: { $sum: 1 } // Count the number of invoices
+          count: { $sum: 1 } // Count the number of invoices
         }
       },
       { $sort: { total: -1 } }, // Correct sorting
@@ -180,7 +180,7 @@ router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
     req.body.total = total;
     req.body.pendingAmount = total;
     req.body.totalwithoutgst = totalwithoutgst;
-  let parr=[]
+    let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
     if(f){
