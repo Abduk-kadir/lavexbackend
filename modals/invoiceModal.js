@@ -11,9 +11,10 @@ const invoiceSchema=mongoose.Schema({
    },
    companyname:{
       type:String,
-      required:['compayname is required']
+      required:['id of company  is required']
 
    },
+   
    status:{
       type:String,
       default:"issue"

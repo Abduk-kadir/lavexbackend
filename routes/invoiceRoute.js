@@ -9,11 +9,108 @@ const SisterStock = require('../modals/sisterStock')
 const Supplier = require('../modals/supplierModal');
 const ClientPayment = require('../modals/clientPayment/clientPayment');
 const Logs=require('../modals/logs/logs');
-
-
 const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+router.get('/companywiseInward',async(req,res)=>{
+  try{
+    
+      let data = await Company.aggregate([
+        {
+          $addFields: {
+            companyId: { $toString: "$_id" } 
+          }
+        },
+        {
+          $lookup: {
+            from: "inwards",
+            localField: "companyId",
+            foreignField: "companyname",
+            as: "inwards"
+          }
+        },
+        {
+          $project:{
+            company:1,
+            name:{$size:"$inwards"},
+            total:{$sum:"$inwards.total"}
+
+          }
+
+        }
+
+      ]);
+
+     res.send({
+      message: "company wise inwards are fetched successfully",
+      success: true,
+      data: data
+    });
+
+  }
+  catch(err){
+    res.send({
+      message: err.message,
+      success: false,
+     
+    });
+
+  }
+
+})
+
+
+
+
+router.get('/companywiseInvoice',async(req,res)=>{
+    try{
+      
+
+        let data = await Company.aggregate([
+          {
+            $addFields: {
+              companyId: { $toString: "$_id" } // Convert _id to string
+            }
+          },
+          {
+            $lookup: {
+              from: "invoices",
+              localField: "companyId",
+              foreignField: "companyname",
+              as: "invoices"
+            }
+          },
+          {
+            $project:{
+              company:1,
+              name:{$size:"$invoices"},
+              total:{$sum:"$invoice.total"}
+
+            }
+
+          }
+
+        ]);
+
+       res.send({
+        message: "company wise invoice are fetched successfully",
+        success: true,
+        data: data
+      });
+
+    }
+    catch(err){
+      res.send({
+        message: err.message,
+        success: false,
+       
+      });
+
+    }
+
+})
+
+
 
 router.get('/topProductSale/:companyname', async (req, res) => {
   const companyName = req.params.companyname;
