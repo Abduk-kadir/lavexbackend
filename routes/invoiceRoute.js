@@ -31,7 +31,7 @@ router.get('/companywiseInward',async(req,res)=>{
         },
         {
           $project:{
-            name:"$company",
+            Name:"$company",
             count:{$size:"$inwards"},
             total:{$sum:"$inwards.total"}
 
@@ -82,7 +82,7 @@ router.get('/companywiseInvoice',async(req,res)=>{
           },
           {
             $project:{
-              name:"$company",
+              Name:"$company",
               count:{$size:"$invoices"},
               total:{$sum:"$invoice.total"}
 
