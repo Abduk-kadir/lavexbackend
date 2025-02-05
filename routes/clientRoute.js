@@ -11,6 +11,26 @@ const multer  = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const xlsx=require('xlsx')
 let ItemMaster=require('../modals/store/itemMaster')
+
+router.patch('/blockedClint/:id',async(req,res)=>{
+    try{
+       await Client.findOne({_id:req.params.id,},{$set:{block:true}})
+       res.send(
+        {
+         message:"client is block status changed successfully",
+         success:true,
+        })
+     }
+    
+    catch(err){
+        res.send(
+            {
+             message:err.message,
+             success:false,
+            })
+    }
+})
+
 router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
    
     try{

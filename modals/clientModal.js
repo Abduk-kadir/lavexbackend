@@ -172,6 +172,10 @@ const clientSchema=mongoose.Schema({
     salesman:{
         type:String,
         
+    },
+    blocked:{
+       type:Boolean,
+       default:false
     }
       
 })
