@@ -11,47 +11,52 @@ const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 const axios = require('axios');
 
-router.patch('/convertInvoce/:id/:companyname/:role',async(req,res)=>{
-     try{
-      let companyname =req.params.companyname 
-      let role=req.params.role
-      let p=await Porfarma.findById(req.params.id)
-      if(p){
-        await Porfarma.findByIdAndUpdate(
-            {_id:req.params.id},
-            {$set:{convertInvoice:req.body.convertInvoice}}
-          )
-          console.log(p)
-          //creating invoice
-        // let response=await axios.post(`http://localhost:5000//api/invoice/invoiceCreate?type=${companyname}&role=${role}`)
-
+router.patch('/convertInvoce/:id/:companyname/:role', async (req, res) => {
+    try {
+        const { id, companyname, role } = req.params;
+    
+        // Fetch the proforma document
+        const proforma = await Porfarma.findById(id);
+    
+        if (proforma) {
+          // Update the proforma to mark it as converted
+          await Porfarma.findByIdAndUpdate(
+            id,
+            { $set: { convertInvoice: req.body.convertInvoice } }
+          );
+    
+          // Exclude the `mov` field
+         const { mov, _id, ...filteredProformaData } = proforma.toObject();
+           console.log('filter data :',filteredProformaData)
+          // Creating invoice by calling the external API
+          const response = await axios.post(
+            `http://localhost:5000/api/invoice/invoiceCreate?type=${companyname}&role=${role}`,
+            filteredProformaData
+          );
+    
+          const { data } = response;
+          console.log('Invoice Data:', data);
+    
           res.status(200).send({
-            message: "porfarma is changed to invoce successfully",
+            message: "Proforma successfully converted to invoice",
             success: true,
           });
-
-      }
-      else{
-        res.status(200).send({
-            message: "there is no proforma",
-            success: faslse,
-          });
-
-      }
-     
-     
-    }
-    catch(err){
-        res.status(200).send({
-            message:err,
+        } else {
+          res.status(404).send({
+            message: "Proforma not found",
             success: false,
           });
-
-    }
-
-    
-
-})
+        }
+      } catch (err) {
+        console.error('Error:', err.message);
+        res.status(500).send({
+          message: "Error converting proforma to invoice",
+          error: err.message,
+          success: false,
+        });
+      }
+  });
+  
 
 
 router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
