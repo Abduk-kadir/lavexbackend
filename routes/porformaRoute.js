@@ -11,17 +11,19 @@ const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 const axios = require('axios');
 
-router.patch('/convertInvoce/:id/:companyname',async(req,res)=>{
+router.patch('/convertInvoce/:id/:companyname/:role',async(req,res)=>{
      try{
       let companyname =req.params.companyname 
+      let role=req.params.role
       let p=await Porfarma.findById(req.params.id)
       if(p){
         await Porfarma.findByIdAndUpdate(
             {_id:req.params.id},
             {$set:{convertInvoice:req.body.convertInvoice}}
           )
+          console.log(p)
           //creating invoice
-        // let response=await axios.post(`http://localhost:5000//api/invoice/invoiceCreate?type=${companyname}`)
+        // let response=await axios.post(`http://localhost:5000//api/invoice/invoiceCreate?type=${companyname}&role=${role}`)
 
           res.status(200).send({
             message: "porfarma is changed to invoce successfully",

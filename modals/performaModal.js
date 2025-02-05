@@ -22,53 +22,61 @@ const performaSchema=mongoose.Schema({
    clientDetail:{
       id:{
          type:String,
-         default:[true,'id is required']
-      },
-    client:{
-        type:String,
-        required:[true,'client is required'],
+         required:[true,'id is required']
+  
        },
-       grade:{
-       type:String,
-       default:" "
-       }, 
-       address:{
-        type:String,
-        required:['true','address is required']
+      client:{
+          type:String,
+          required:[true,'client is required'],
+         },
+         grade:{
+         type:String,
+         default:" "
+         }, 
+         address:{
+          type:String,
+          required:['true','address is required']
+         },
+         area:{
+           type:String,
+           required:[true,'area is required']
+         },
+        gstNumber:{
+           type:String,
+           default:null
+        },
+        fcAmount:{
+           type:Number,
+           required:[true,'first credit limit is required']
        },
-      gstNumber:{
-         type:String,
-         default:null
-      },
-      fcAmount:{
-         type:Number,
-         required:[true,'first credit limit is required']
-     },
-     stateCode:{
-      type:String,
-     
-     },
-     
-     fcDays:{
-         type:Number,
-         required:[true,'first credit days is required']
-     },
-     
-     scAmount:{
-         type:Number,
-         required:[true,'second credit limit is required']
-     },
-     scDays:{
-         type:Number,
-         required:[true,'second credit days is required']
-     },
-     branch:{
-      type:String,
-     },
-     shipTo:{
-         type:String,
+       
+       fcDays:{
+           type:Number,
+           required:[true,'first credit days is required']
+       },
+       
+       scAmount:{
+           type:Number,
+           required:[true,'second credit limit is required']
+       },
+       scDays:{
+           type:Number,
+           required:[true,'second credit days is required']
+       },
+       stateCode:{
+        type:String,
         
-     },
+       
+       },
+       Branch:{
+        type:String,
+       
+       },
+        
+       shipTo:{
+           type:String,
+          
+       },
       
    },
    invoiceDetail:{
@@ -96,6 +104,11 @@ const performaSchema=mongoose.Schema({
     poNo:{
         type:String,    
        },
+       selectDc:{
+         type:Array,
+         default:[]
+       },
+       
 
    },
   
