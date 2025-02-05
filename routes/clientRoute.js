@@ -12,25 +12,33 @@ const upload = multer({ storage: multer.memoryStorage() })
 const xlsx=require('xlsx')
 let ItemMaster=require('../modals/store/itemMaster')
 
-router.patch('/blockedClint/:id',async(req,res)=>{
-    try{
-       await Client.findOne({_id:req.params.id,},{$set:{block:true}})
-       res.send(
-        {
-         message:"client is block status changed successfully",
-         success:true,
-        })
-     }
-    
-    catch(err){
-        res.send(
-            {
-             message:err.message,
-             success:false,
-            })
+router.patch('/blockedClient/:id', async (req, res) => {
+    try {
+      const updatedClient = await Client.findByIdAndUpdate(
+        req.params.id,
+        { $set: { blocked: req.body.blocked } },
+        { new: true } // Return the updated document
+      );
+  
+      if (updatedClient) {
+        res.status(200).send({
+          message: "Client block status changed successfully",
+          success: true,
+        });
+      } else {
+        res.status(404).send({
+          message: "Client not found",
+          success: false,
+        });
+      }
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+        success: false,
+      });
     }
-})
-
+  });
+  
 router.post('/itemImport/:companyname', upload.single('file'),async(req,res)=>{
    
     try{

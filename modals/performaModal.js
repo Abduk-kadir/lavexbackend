@@ -149,6 +149,10 @@ const performaSchema=mongoose.Schema({
   createdAt: {
    type: Date,
    default: Date.now
+},
+convertInvoice:{
+   type:Boolean,
+   default:false
 }
    
 
