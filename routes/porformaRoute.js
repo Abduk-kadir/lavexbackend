@@ -9,6 +9,48 @@ const Logs=require('../modals/logs/logs')
 const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+const axios = require('axios');
+
+router.patch('/convertInvoce/:id/:companyname',async(req,res)=>{
+     try{
+      let companyname =req.params.companyname 
+      let p=await Porfarma.findById(req.params.id)
+      if(p){
+        await Porfarma.findByIdAndUpdate(
+            {_id:req.params.id},
+            {$set:{convertInvoice:req.body.convertInvoice}}
+          )
+          //creating invoice
+        // let response=await axios.post(`http://localhost:5000//api/invoice/invoiceCreate?type=${companyname}`)
+
+          res.status(200).send({
+            message: "porfarma is changed to invoce successfully",
+            success: true,
+          });
+
+      }
+      else{
+        res.status(200).send({
+            message: "there is no proforma",
+            success: faslse,
+          });
+
+      }
+     
+     
+    }
+    catch(err){
+        res.status(200).send({
+            message:err,
+            success: false,
+          });
+
+    }
+
+    
+
+})
+
 
 router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
     try{

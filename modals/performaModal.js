@@ -157,4 +157,4 @@ convertInvoice:{
    
 
 })
-module.exports=mongoose.model('CashPerforma',performaSchema)
+module.exports=mongoose.model('Performa',performaSchema)
