@@ -104,13 +104,12 @@ const performaSchema=mongoose.Schema({
     poNo:{
         type:String,    
        },
-       selectDc:{
-         type:Array,
-         default:[]
-       },
        
-
    },
+   selectDc:{
+      type:Array,
+      default:[]
+    },
   
   item:[{
     id:{
