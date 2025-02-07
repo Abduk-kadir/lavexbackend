@@ -19,11 +19,8 @@ router.patch('/convertInvoce/:id/:companyname/:role', async (req, res) => {
         const proforma = await Porfarma.findById(id);
     
         if (proforma) {
-          // Update the proforma to mark it as converted
-          await Porfarma.findByIdAndUpdate(
-            id,
-            { $set: { convertInvoice: req.body.convertInvoice } }
-          );
+         
+          await Porfarma.findByIdAndDelete(id);
     
           // Exclude the `mov` field
          const { mov, _id, ...filteredProformaData } = proforma.toObject();
@@ -33,10 +30,8 @@ router.patch('/convertInvoce/:id/:companyname/:role', async (req, res) => {
             `http://localhost:5000/api/invoice/invoiceCreate?type=${companyname}&role=${role}`,
             filteredProformaData
           );
-    
           const { data } = response;
           console.log('Invoice Data:', data);
-    
           res.status(200).send({
             message: "Proforma successfully converted to invoice",
             success: true,
@@ -59,13 +54,26 @@ router.patch('/convertInvoce/:id/:companyname/:role', async (req, res) => {
   
 
 
-router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
+router.put('/porpharmaUpdate/:id/:companyname',async(req,res)=>{
     try{
-        await Porfarma.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
-        res.send({
-            message:"data is successfully updated",
-            success:true,
-         })
+        let f=await Porfarma.findById(req.params.id)
+        if(f){
+          
+            await Porfarma.findByIdAndUpdate(req.params.id,req.body,{runValidators: true })
+            res.send({
+                message:"data is successfully updated",
+                success:true,
+             })
+
+         
+        }
+        else{
+            res.send({
+                message:"proform is not found",
+                success:false,
+             })
+
+        }   
 
     }
     catch(err){
@@ -80,19 +88,33 @@ router.put('/porpharmaUpdate/:id/:companyname',invoiceUpMidd,async(req,res)=>{
 
 router.delete('/porpharmaDelete/:id/:companyname',invoiceDelMidd,async(req,res)=>{
     try{
-       let rs=await Porfarma.findByIdAndDelete(req.params.id)
-        let itmnamearr=rs.item.map(elem=>elem.name)
-        let itmqtyarr=rs.item.map(elem=>elem.quantity)
-        let str=`Profarman no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
-        let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Porfarma"}
-        console.log(j)
-        let log=new Logs(j) 
-        await log.save()
-        res.send({
-            message:"data is successfully deleted",
-            success:true,
+       let f=await Porfarma.findById(req.params.id)
+        if(f){
+           
+            let rs=await Porfarma.findByIdAndDelete(req.params.id)
+
+            res.send({
+                message:"data is successfully delted",
+                success:true,
+             })
+
           
-         })
+        }
+        else{
+            res.send({
+                message:"proform is not found",
+                success:false,
+             })
+
+        }   
+       // let itmnamearr=rs.item.map(elem=>elem.name)
+       // let itmqtyarr=rs.item.map(elem=>elem.quantity)
+       // let str=`Profarman no ${rs.mov}  and that have item ${itmnamearr.join(',')} and quantity is ${itmqtyarr.join(',')} is deleted `
+       // let j={companyname:rs.companyname,itemId:rs.mov,actionType:'DELETE',changedBy:"ABDUL",changeDetails:str,model:"Porfarma"}
+        //console.log(j)
+        //let log=new Logs(j) 
+       // await log.save()
+       
 
     }
     catch(err){
