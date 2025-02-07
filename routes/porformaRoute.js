@@ -20,7 +20,8 @@ router.patch('/convertInvoce/:id/:companyname/:role', async (req, res) => {
     
         if (proforma) {
          
-          await Porfarma.findByIdAndDelete(id);
+          let f=await Porfarma.findByIdAndDelete(id);
+          console.log('deleted',f)
     
           // Exclude the `mov` field
          const { mov, _id, ...filteredProformaData } = proforma.toObject();
