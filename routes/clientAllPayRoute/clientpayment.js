@@ -3,6 +3,7 @@ let router=express.Router()
 const ClientPayment= require('../../modals/clientPayment/clientPayment');
 const Invoice=require('../../modals/invoiceModal')
 const Logs=require('../../modals/logs/logs')
+let Client=require('../../modals/clientModal')
 
 router.get('/clientpayentReport',async(req,res)=>{
     try{
@@ -176,6 +177,40 @@ router.post('/addclientPayment/:companyname',async(req,res)=>{
         let body=req.body;
         body.companyname=req.params.companyname;
         let {invoiceList}=body
+        let {cid}=body
+        let invoiceDate=invoiceList[0].invoiceDate
+        let  {paymentDate}=body
+        
+        //calulating days
+        const parseDate = (dateString) => {
+            const [day, month, year] = dateString.split('-').map(Number);
+            return new Date(year, month - 1, day);
+          };
+          const calculateDateDifferenceInDays = (date1, date2) => {
+            const d1 = parseDate(date1);
+            const d2 = parseDate(date2);
+          
+            // Normalize time and calculate day difference directly
+            d1.setHours(0, 0, 0, 0);
+            d2.setHours(0, 0, 0, 0);
+          
+            const diffInDays = (d2 - d1) / (24 * 60 * 60 * 1000);
+            return Math.abs(diffInDays);
+          };
+           
+          let days= calculateDateDifferenceInDays(invoiceDate, paymentDate)
+          console.log('difference:',days)
+          
+         let client= await Client.findById(cid)
+         let fcDays=Number(client.fcDays)
+         let grade=days<fcDays?"A+":days==fcDays?"A":"C"
+         
+         console.log('grade is:grade',grade)
+         console.log('company name:',req.params.companyname)
+         f=await Client.updateOne({_id:cid,company:req.params.companyname},{$set:{grade:grade}})
+        // console.log('cid',cid)
+        console.log('client is:',f)
+
         let newinvoiceList=await Promise.all(invoiceList.map(async(elem)=>{
             let p= await Invoice.findOne({companyname:req.params.companyname,_id:elem.invoiceId})
             let js={}
