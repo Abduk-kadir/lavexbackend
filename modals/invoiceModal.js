@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 var valid = require('validator');
+const salesMan = require('./drop/salesMan');
 const invoiceSchema=mongoose.Schema({
    mov:{
       type:Number,
@@ -78,6 +79,12 @@ const invoiceSchema=mongoose.Schema({
          type:String,
         
      },
+     salesMan:{
+      type:String,
+     },
+     com:{
+       type:Number,
+     }
       
    },
    invoiceDetail:{
