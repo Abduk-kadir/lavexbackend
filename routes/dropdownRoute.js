@@ -258,8 +258,6 @@ router.post('/createTermAndCondition', async (req, res) => {
 })
 
 
-
-
 router.post('/createSalesMan', async (req, res) => {
   try {
 
