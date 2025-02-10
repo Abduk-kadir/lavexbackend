@@ -12,6 +12,52 @@ const Logs=require('../modals/logs/logs');
 const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+
+router.get('/salesManReport',async(req,res)=>{
+  try{
+
+    let { fromDate, toDate,  companyname, salesMan,clientId} = req.query;
+  
+    let query = { companyname: companyname}
+    let data = await Invoice.find(query)
+    if (fromDate && toDate) {
+      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
+      const [dayTo, monthTo, yearTo] = toDate.split('-');
+      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
+      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
+      console.log(from)
+      console.log(to)
+      data = data.filter(item => {
+        const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
+        let itemDate = new Date(`${year}-${month}-${day}`);
+        
+        return itemDate >= from && itemDate <= to;
+      });
+    }
+    if(salesMan){
+      data=data.filter(elem=>elem.salesMan==salesMan)
+    }
+    if(clientId){
+      data=data.filter(elem=>elem.salesMan==salesMan&&elem.clientDetail.id==clientId)
+    }
+    res.send({
+      message: "data is successfully attached",
+      success: true,
+      data: data
+    });
+
+  }catch(err){
+    res.send({
+      message: err.message,
+      success: false,
+    });
+
+  }
+
+})
+
+
+
 router.get('/companywiseInward',async(req,res)=>{
   try{
     
@@ -274,9 +320,11 @@ router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
 
     let total = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty * (1 + curr.gst / 100):acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
     let totalwithoutgst = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty :acc + curr.price * curr.quantity, 0)
+    let totalCom=(total*body.com)/100
     req.body.total = total;
     req.body.pendingAmount = total;
     req.body.totalwithoutgst = totalwithoutgst;
+    req.body.totalCom=totalCom
     let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
@@ -474,6 +522,10 @@ router.post('/invoiceCreate',async (req, res) => {
     js.total = total;
     js.totalwithoutgst=totalwithoutgst
     js.pendingAmount = total;
+    
+    let totalCom=(total*body.com)/100
+    js.totalCom=totalCom
+
     let invoice = new Invoice(js);
      await invoice.save();
     let itmnamearr=body.item.map(elem=>elem.name)
