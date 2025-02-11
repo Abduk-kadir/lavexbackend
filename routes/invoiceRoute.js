@@ -14,11 +14,67 @@ const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
 
 router.get('/salesManReport',async(req,res)=>{
-  try{
 
+  try {
+    let { fromDate, toDate, companyname, salesMan } = req.query;
+
+    const matchStage = {
+      companyname: companyname
+    };
+
+    if (salesMan) {
+      matchStage.salesMan = salesMan;
+    }
+
+    const dateFilterStage = {};
+
+    if (fromDate && toDate) {
+      dateFilterStage.$expr = {
+        $and: [
+          { $gte: [{ $dateFromString: { dateString: "$invoiceDetail.invoiceDate" } }, new Date(fromDate)] },
+          { $lte: [{ $dateFromString: { dateString: "$invoiceDetail.invoiceDate" } }, new Date(toDate)] }
+        ]
+      };
+    }
+
+    const data = await Invoice.aggregate([
+      { $match: matchStage },
+      { $match: dateFilterStage },
+      {
+        $group: {
+          _id: "$salesMan",
+          totalSales: { $sum: "$invoiceDetail.totalAmount" },
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    res.send({
+      message: "Data successfully fetched",
+      success: true,
+      data
+    });
+  } catch (err) {
+    res.send({
+      message: err.message,
+      success: false,
+    });
+  }
+
+
+
+
+
+
+
+
+
+  /*try{
     let { fromDate, toDate,  companyname, salesMan,clientId} = req.query;
-  
     let query = { companyname: companyname}
+    if(salesMan)query.salesMan=salesMan
+   
+
     let data = await Invoice.find(query)
     if (fromDate && toDate) {
       const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
@@ -34,12 +90,12 @@ router.get('/salesManReport',async(req,res)=>{
         return itemDate >= from && itemDate <= to;
       });
     }
+  
+
     if(salesMan){
       data=data.filter(elem=>elem.salesMan==salesMan)
     }
-    if(clientId){
-      data=data.filter(elem=>elem.salesMan==salesMan&&elem.clientDetail.id==clientId)
-    }
+   
     res.send({
       message: "data is successfully attached",
       success: true,
@@ -52,7 +108,7 @@ router.get('/salesManReport',async(req,res)=>{
       success: false,
     });
 
-  }
+  }*/
 
 })
 
@@ -318,11 +374,12 @@ router.put('/invoice/:id/:companyname/:role',async(req,res)=>{
 
     let total = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty * (1 + curr.gst / 100):acc + curr.price * curr.quantity * (1 + curr.gst / 100), 0)
     let totalwithoutgst = item.reduce((acc, curr) =>curr.loosePack?acc + curr.price * curr.quantity*curr.qty :acc + curr.price * curr.quantity, 0)
-    let totalCom=(total*body.com)/100
+    let totalCom=(total*body.clientDetail.com)/100
     req.body.total = total;
     req.body.pendingAmount = total;
     req.body.totalwithoutgst = totalwithoutgst;
-    req.body.totalCom=totalCom
+    
+    req.body.clientDetail.totalCom=totalCom
     let parr=[]
   try{
     let f=await ClientPayment.findOne({companyname:req.params.companyname,"invoiceList.invoiceId":req.params.id})
@@ -521,8 +578,8 @@ router.post('/invoiceCreate',async (req, res) => {
     js.totalwithoutgst=totalwithoutgst
     js.pendingAmount = total;
     
-    let totalCom=(total*body.com)/100
-    js.totalCom=totalCom
+    let totalCom=(total*body.clientDetail.com)/100
+    js.clientDetail.totalCom=totalCom
 
     let invoice = new Invoice(js);
      await invoice.save();
