@@ -56,8 +56,6 @@ router.get('/salesManReport',async(req,res)=>{
 
 })
 
-
-
 router.get('/companywiseInward',async(req,res)=>{
   try{
     
