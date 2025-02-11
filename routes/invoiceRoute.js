@@ -12,42 +12,76 @@ const Logs=require('../modals/logs/logs');
 const invoiceDelMidd=require('../middleware/invoiceDelMidd')
 const invoiceAddMidd=require('../middleware/invoiceAddMidd')
 const invoiceUpMidd=require('../middleware/invoiceUpMidd')
+function parseDate(dateStr) {
+  const [day, month, year] = dateStr.split('-');
+  return new Date(`${year}-${month}-${day}`);
+}
 
 router.get('/salesManReport',async(req,res)=>{
-
   try {
-    let { fromDate, toDate, companyname, salesMan } = req.query;
-
-    const matchStage = {
-      companyname: companyname
-    };
-
-    if (salesMan) {
-      matchStage.salesMan = salesMan;
-    }
-
-    const dateFilterStage = {};
+    let { fromDate, toDate, companyname, salesMan, clientId } = req.query;
+    
+    
 
     if (fromDate && toDate) {
-      dateFilterStage.$expr = {
-        $and: [
-          { $gte: [{ $dateFromString: { dateString: "$invoiceDetail.invoiceDate" } }, new Date(fromDate)] },
-          { $lte: [{ $dateFromString: { dateString: "$invoiceDetail.invoiceDate" } }, new Date(toDate)] }
-        ]
-      };
+      fromDate = parseDate(fromDate);
+      toDate = parseDate(toDate);
     }
+   
 
-    const data = await Invoice.aggregate([
-      { $match: matchStage },
-      { $match: dateFilterStage },
+    const pipeline = [
+      {
+        $addFields: {
+          newDate: {
+            $dateFromString: {
+              dateString: "$invoiceDetail.invoiceDate",
+              format: "%d-%m-%Y",
+              onError: null // Handle invalid date gracefully
+            }
+          }
+        }
+      },
+      {
+        $match: {
+          companyname:companyname,
+          ...(fromDate && toDate
+            ? {
+                $expr: {
+                  $and: [
+                    { $gte: ["$newDate", fromDate] },
+                    { $lte: ["$newDate", toDate] }
+                  ]
+                }
+              }
+            : {}),
+            ...(salesMan?{"clientDetail.salesMan":salesMan}:{})
+
+          
+        }
+      },
       {
         $group: {
-          _id: "$salesMan",
-          totalSales: { $sum: "$invoiceDetail.totalAmount" },
-          count: { $sum: 1 }
+          _id: "$clientDetail.salesMan",
+          total: { $sum: { $ifNull: ["$clientDetail.totalCom", 0] } },
+          com: { $first: "$clientDetail.com" },
+          totalInvoce:{$sum:"$total"}
+        }
+      },
+      {
+        $project: {
+          salesMan: "$_id",  // Rename _id to salesMan
+          _id: 0,            // Exclude the default _id field
+          total: 1,
+          com: 1,
+          totalInvoce:1
         }
       }
-    ]);
+    ];
+
+    
+
+    const data = await Invoice.aggregate(pipeline);
+    console.log('Data is:', data);
 
     res.send({
       message: "Data successfully fetched",
@@ -57,58 +91,11 @@ router.get('/salesManReport',async(req,res)=>{
   } catch (err) {
     res.send({
       message: err.message,
-      success: false,
+      success: false
     });
+    
   }
 
-
-
-
-
-
-
-
-
-  /*try{
-    let { fromDate, toDate,  companyname, salesMan,clientId} = req.query;
-    let query = { companyname: companyname}
-    if(salesMan)query.salesMan=salesMan
-   
-
-    let data = await Invoice.find(query)
-    if (fromDate && toDate) {
-      const [dayFrom, monthFrom, yearFrom] = fromDate.split('-');
-      const [dayTo, monthTo, yearTo] = toDate.split('-');
-      const from = new Date(`${yearFrom}-${monthFrom}-${dayFrom}`);
-      const to = new Date(`${yearTo}-${monthTo}-${dayTo}`);
-      console.log(from)
-      console.log(to)
-      data = data.filter(item => {
-        const [day, month, year] = item.invoiceDetail.invoiceDate.split('-');
-        let itemDate = new Date(`${year}-${month}-${day}`);
-        
-        return itemDate >= from && itemDate <= to;
-      });
-    }
-  
-
-    if(salesMan){
-      data=data.filter(elem=>elem.salesMan==salesMan)
-    }
-   
-    res.send({
-      message: "data is successfully attached",
-      success: true,
-      data: data
-    });
-
-  }catch(err){
-    res.send({
-      message: err.message,
-      success: false,
-    });
-
-  }*/
 
 })
 
