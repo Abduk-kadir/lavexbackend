@@ -86,7 +86,8 @@ const invoiceSchema=mongoose.Schema({
        type:Number,
      },
      totalCom:{
-      type:Number
+      type:Number,
+      default:0
      }
       
    },
