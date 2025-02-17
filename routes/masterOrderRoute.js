@@ -17,6 +17,25 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+router.get('/supplierOrderbycompany/:companyname',async(req,res)=>{
+  try{
+   let data=await SupplierOrder.findOne({companyname:req.params.companyname})
+   res.send({
+    message:'data is successfully attached',
+    success:true,
+    data:data
+  })
+  }
+
+  catch(err){
+    res.send({
+      message:'data is successfully attached',
+      success:true,
+      data:data
+    })
+
+  }
+})
 
 router.post("/makeSupplierOrder", async (req, res) => {
   try {
@@ -104,7 +123,10 @@ router.post("/makeSupplierOrder", async (req, res) => {
     
    
   } catch (err) {
-    res.send(err);
+    res.send({
+      message:err,
+      success:false
+    });
   }
 });
 

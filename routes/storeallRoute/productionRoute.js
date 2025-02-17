@@ -14,6 +14,10 @@ router.get('/allLowProduction/:companyname',async(req,res)=>{
     const companyname = req.params.companyname;
     let data = await ProductionStore.aggregate([
       { $match: { companyname } },
+      { 
+        $addFields: { "readyStock.type": "readyStock" } // Move before unwind
+      },
+     
       {
           $unwind: "$readyStock"
       },
@@ -36,6 +40,9 @@ router.get('/allLowProduction/:companyname',async(req,res)=>{
     { $match: { companyname } },
     {
         $unwind: "$item"
+    },
+    { 
+      $addFields: { "item.type": "raw" } // Move before unwind
     },
     {
         $match: {
