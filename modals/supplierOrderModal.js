@@ -1,40 +1,28 @@
 const mongoose=require('mongoose')
 const valid=require('validator')
 const { v4: uuidv4 } = require('uuid');
-const orderSchema=mongoose.Schema({
-   mov:{
-    type:Number,
-    required:[true,'movement number is required']
-   },
+const OrderSchema=mongoose.Schema({
    companyname:{
       type:String,
-      //required:[true,'company name is required']
+      required:[true,'company name is required']
    },
    sid:{
       type:String,
-     // required:[true,'suplier id is required']
+      required:[true,'suplier id is required']
    },
     name:{
         type:String,
-       // required:[true,'name is required of supplier']
+        required:[true,'name is required of supplier']
     },
     email:{
-       type:String,
-       required:[true,'email is required'] 
-    },
-    gstNumber:{
         type:String,
-       // default:[true,'gst number is required'],
-       
-     },
+        required:[true,'email is required']
+    },
      address:{
         type:String,
-       // required:['true', 'address is required']
+        required:['true', 'address is required']
      },
-     contactPersonName:{
-      type:String,
-
-     },
+    
      dateCreated:{
         type:String,
         validate: {
@@ -43,18 +31,11 @@ const orderSchema=mongoose.Schema({
             },
             message: props => `date should be dd/mm/yyyy or dd-mm-yyyy`
           },
-       // required:[true ,'date is important'] 
+        required:[true ,'date is important'] 
        
      },
-     inwardCreated: {
-      type: String,
-      default: () => {
-        const date = new Date();
-        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
-      }
-    },
-     
-     
+    
+    
      
      item:[{
         "id":{
@@ -104,8 +85,6 @@ const orderSchema=mongoose.Schema({
    
      }],
     
-     
-
 })
      
-module.exports=mongoose.model('MasterOrder',orderSchema)
+module.exports=mongoose.model('SupplierOrder',OrderSchema)

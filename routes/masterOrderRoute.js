@@ -1,5 +1,5 @@
 const express = require("express");
-const MasterOrder = require("../modals/masterOrderModal");
+const SupplierOrder=require('../modals/supplierOrderModal')
 const router = express.Router();
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
@@ -22,6 +22,8 @@ router.post("/makeSupplierOrder", async (req, res) => {
   try {
     let { item, email,dateCreated,name,address,companyname} = req.body;
     let company=await Company.findById(companyname)
+    let order=new SupplierOrder(req.body)
+              await  order.save()
     let doc = new PDFDocument();
     let filepath = "order.pdf";
     doc.pipe(fs.createWriteStream(filepath));
